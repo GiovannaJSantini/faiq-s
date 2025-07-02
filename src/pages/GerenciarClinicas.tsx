@@ -1,0 +1,386 @@
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { sampleClinics, sampleAssessments } from "@/data/faiqData";
+import { Building2, MapPin, Plus, Edit, Trash2, Eye, Calendar } from "lucide-react";
+import { ClassificationBadge } from "@/components/ui/classification-badge";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { useToast } from "@/hooks/use-toast";
+
+export default function GerenciarClinicas() {
+  const { toast } = useToast();
+  const [clinics, setClinics] = useState(sampleClinics);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingClinic, setEditingClinic] = useState<any>(null);
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    location: "",
+    type: "",
+    phone: "",
+    email: "",
+    responsibleName: "",
+    responsibleTitle: ""
+  });
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      location: "",
+      type: "",
+      phone: "",
+      email: "",
+      responsibleName: "",
+      responsibleTitle: ""
+    });
+    setEditingClinic(null);
+  };
+
+  const openAddDialog = () => {
+    resetForm();
+    setIsDialogOpen(true);
+  };
+
+  const openEditDialog = (clinic: any) => {
+    setFormData({
+      name: clinic.name,
+      location: clinic.location,
+      type: clinic.type,
+      phone: clinic.phone || "",
+      email: clinic.email || "",
+      responsibleName: clinic.responsibleName || "",
+      responsibleTitle: clinic.responsibleTitle || ""
+    });
+    setEditingClinic(clinic);
+    setIsDialogOpen(true);
+  };
+
+  const handleSave = () => {
+    if (!formData.name.trim() || !formData.location.trim() || !formData.type) {
+      toast({
+        variant: "destructive",
+        title: "Dados obrigatórios",
+        description: "Nome, localização e tipo são obrigatórios."
+      });
+      return;
+    }
+
+    if (editingClinic) {
+      // Editar clínica existente
+      setClinics(prev => prev.map(clinic => 
+        clinic.id === editingClinic.id 
+          ? { ...clinic, ...formData }
+          : clinic
+      ));
+      toast({
+        title: "Clínica atualizada!",
+        description: `${formData.name} foi atualizada com sucesso.`
+      });
+    } else {
+      // Adicionar nova clínica
+      const newClinic = {
+        id: `clinic-${Date.now()}`,
+        ...formData,
+        assessments: []
+      };
+      setClinics(prev => [...prev, newClinic]);
+      toast({
+        title: "Clínica adicionada!",
+        description: `${formData.name} foi adicionada com sucesso.`
+      });
+    }
+
+    setIsDialogOpen(false);
+    resetForm();
+  };
+
+  const handleDelete = (clinicId: string) => {
+    const clinic = clinics.find(c => c.id === clinicId);
+    setClinics(prev => prev.filter(c => c.id !== clinicId));
+    toast({
+      title: "Clínica removida",
+      description: `${clinic?.name} foi removida do sistema.`
+    });
+  };
+
+  const getClinicAssessments = (clinicId: string) => {
+    return sampleAssessments.filter(assessment => assessment.clinicId === clinicId);
+  };
+
+  const getLatestAssessment = (clinicId: string) => {
+    const assessments = getClinicAssessments(clinicId);
+    return assessments.sort((a, b) => 
+      new Date(b.assessmentDate).getTime() - new Date(a.assessmentDate).getTime()
+    )[0];
+  };
+
+  return (
+    <div className="container mx-auto p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Gerenciar Clínicas</h1>
+          <p className="text-muted-foreground">Cadastro e gestão de clínicas no sistema FAIQ-S</p>
+        </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button onClick={openAddDialog} className="bg-primary text-primary-foreground">
+              <Plus className="w-4 h-4 mr-2" />
+              Nova Clínica
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>
+                {editingClinic ? "Editar Clínica" : "Nova Clínica"}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Nome da Clínica *</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="Ex: Clínica São Lucas"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="location">Localização *</Label>
+                  <Input
+                    id="location"
+                    value={formData.location}
+                    onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                    placeholder="Ex: São Paulo - SP"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="type">Tipo *</Label>
+                  <Select 
+                    value={formData.type} 
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="especializada">Especializada</SelectItem>
+                      <SelectItem value="geral">Geral</SelectItem>
+                      <SelectItem value="hospital">Hospital</SelectItem>
+                      <SelectItem value="consultorio">Consultório</SelectItem>
+                      <SelectItem value="centro_reabilitacao">Centro de Reabilitação</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Telefone</Label>
+                  <Input
+                    id="phone"
+                    value={formData.phone}
+                    onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                    placeholder="(11) 99999-9999"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">E-mail</Label>
+                  <Input
+                    id="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="contato@clinica.com"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="responsibleName">Nome do Responsável</Label>
+                  <Input
+                    id="responsibleName"
+                    value={formData.responsibleName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, responsibleName: e.target.value }))}
+                    placeholder="Dr. João Silva"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="responsibleTitle">Cargo do Responsável</Label>
+                  <Input
+                    id="responsibleTitle"
+                    value={formData.responsibleTitle}
+                    onChange={(e) => setFormData(prev => ({ ...prev, responsibleTitle: e.target.value }))}
+                    placeholder="Diretor Clínico"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsDialogOpen(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button onClick={handleSave}>
+                  {editingClinic ? "Atualizar" : "Adicionar"}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="bg-card shadow-soft border-0">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                <Building2 className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-foreground">{clinics.length}</h3>
+                <p className="text-sm text-muted-foreground">Total de Clínicas</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card shadow-soft border-0">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center">
+                <Eye className="w-6 h-6 text-success" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-foreground">
+                  {clinics.filter(clinic => getClinicAssessments(clinic.id).length > 0).length}
+                </h3>
+                <p className="text-sm text-muted-foreground">Com Avaliações</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card shadow-soft border-0">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-warning/10 rounded-lg flex items-center justify-center">
+                <Calendar className="w-6 h-6 text-warning" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-foreground">
+                  {clinics.filter(clinic => getClinicAssessments(clinic.id).length === 0).length}
+                </h3>
+                <p className="text-sm text-muted-foreground">Pendentes</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Lista de Clínicas */}
+      <Card className="bg-card shadow-soft border-0">
+        <CardHeader>
+          <CardTitle>Clínicas Cadastradas</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Clínica</TableHead>
+                <TableHead>Localização</TableHead>
+                <TableHead>Tipo</TableHead>
+                <TableHead>Última Avaliação</TableHead>
+                <TableHead>Classificação</TableHead>
+                <TableHead className="text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {clinics.map((clinic) => {
+                const latestAssessment = getLatestAssessment(clinic.id);
+                const assessmentCount = getClinicAssessments(clinic.id).length;
+                
+                return (
+                  <TableRow key={clinic.id}>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{clinic.name}</div>
+                        {assessmentCount > 0 && (
+                          <div className="text-sm text-muted-foreground">
+                            {assessmentCount} avaliação{assessmentCount !== 1 ? 'ões' : ''}
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-4 h-4 text-muted-foreground" />
+                        {clinic.location}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary" className="capitalize">
+                        {clinic.type.replace('_', ' ')}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {latestAssessment ? (
+                        <div className="text-sm">
+                          {format(new Date(latestAssessment.assessmentDate), "dd/MM/yyyy", { locale: ptBR })}
+                          <div className="text-xs text-muted-foreground">
+                            {latestAssessment.overallPercentage.toFixed(1)}%
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground text-sm">Sem avaliação</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {latestAssessment ? (
+                        <ClassificationBadge 
+                          classification={latestAssessment.classification}
+                          className="text-xs px-2 py-1"
+                        />
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openEditDialog(clinic)}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDelete(clinic.id)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
