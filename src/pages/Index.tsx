@@ -1,11 +1,45 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { DashboardHeader } from "@/components/dashboard/header";
+import { StatsCards } from "@/components/dashboard/stats-cards";
+import { PerformanceChart } from "@/components/dashboard/performance-chart";
+import { AreasAnalysis } from "@/components/dashboard/areas-analysis";
+import { RecentAssessments } from "@/components/dashboard/recent-assessments";
+import { sampleAssessments, sampleClinics } from "@/data/faiqData";
 
 const Index = () => {
+  // Calcular estatísticas
+  const totalClinics = sampleClinics.length;
+  const totalAssessments = sampleAssessments.length;
+  const avgScore = totalAssessments > 0 
+    ? sampleAssessments.reduce((sum, assessment) => sum + assessment.overallPercentage, 0) / totalAssessments 
+    : 0;
+  
+  const classificationsCount = {
+    excelencia: sampleAssessments.filter(a => a.classification === 'excelencia').length,
+    qualidade: sampleAssessments.filter(a => a.classification === 'qualidade').length,
+    padrao: sampleAssessments.filter(a => a.classification === 'padrao').length,
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-background">
+      <DashboardHeader />
+      
+      <div className="max-w-7xl mx-auto p-6 space-y-8">
+        {/* Cards de estatísticas */}
+        <StatsCards 
+          totalClinics={totalClinics}
+          totalAssessments={totalAssessments}
+          avgScore={avgScore}
+          classificationsCount={classificationsCount}
+        />
+        
+        {/* Gráficos de performance */}
+        <PerformanceChart assessments={sampleAssessments} />
+        
+        {/* Análise detalhada por áreas */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <AreasAnalysis assessments={sampleAssessments} />
+          <RecentAssessments assessments={sampleAssessments} />
+        </div>
       </div>
     </div>
   );
