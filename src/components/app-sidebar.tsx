@@ -45,7 +45,7 @@ export function AppSidebar() {
             <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
               <Activity className="w-4 h-4 text-white" />
             </div>
-            {!collapsed && (
+            {state !== "collapsed" && (
               <div>
                 <h2 className="font-bold text-primary">FAIQ-S</h2>
                 <p className="text-xs text-muted-foreground">Sistema de Qualidade</p>
