@@ -12,7 +12,7 @@ import { ChevronDown, ChevronRight, Save, FileText, CheckCircle } from "lucide-r
 import { useToast } from "@/hooks/use-toast";
 import { sampleClinics } from "@/data/faiqData";
 
-// Complete FAIQ structure with all 10 areas (abbreviated for space)
+// Complete FAIQ structure with all 10 areas
 const faiqStructure = [
   {
     id: 1,
@@ -26,6 +26,42 @@ const faiqStructure = [
           "Possui uma matriz de cargos x salários estabelecidos de acordo com a descrição de cargos",
           "Possui diretrizes claras para política de remuneração, mérito e promoção para seus profissionais"
         ]
+      },
+      {
+        id: 2,
+        name: "2. Onboarding Profissional",
+        indicators: [
+          "Possui processo estruturado de integração para novos colaboradores",
+          "Oferece treinamento inicial obrigatório sobre políticas e procedimentos da organização",
+          "Define mentor ou supervisor responsável pelo acompanhamento inicial do novo colaborador"
+        ]
+      },
+      {
+        id: 3,
+        name: "3. Cargos x Competências",
+        indicators: [
+          "Possui matriz de competências técnicas e comportamentais para cada cargo",
+          "Define claramente os requisitos de formação e experiência para cada posição",
+          "Estabelece critérios objetivos para progressão de carreira"
+        ]
+      },
+      {
+        id: 4,
+        name: "4. Treinamentos",
+        indicators: [
+          "Possui plano anual de capacitação para todos os colaboradores",
+          "Oferece treinamentos específicos para desenvolvimento técnico continuado",
+          "Mantém registro de participação e aproveitamento em treinamentos"
+        ]
+      },
+      {
+        id: 5,
+        name: "5. Desenvolvimento",
+        indicators: [
+          "Realiza avaliações periódicas de desempenho dos colaboradores",
+          "Oferece feedback estruturado e planos de desenvolvimento individual",
+          "Possui sistema de reconhecimento e recompensa por performance"
+        ]
       }
     ]
   },
@@ -38,12 +74,366 @@ const faiqStructure = [
         name: "1. Admissão do Cliente",
         indicators: [
           "Possui diretrizes claras sobre o escopo de atendimento da clínica, e perfil de cliente que é atendido",
-          "Possui diretrizes e processos para captação de leads"
+          "Possui diretrizes e processos para captação de leads",
+          "Possui processo estruturado de triagem e avaliação inicial do cliente"
+        ]
+      },
+      {
+        id: 7,
+        name: "2. Onboarding & Avaliação Inicial",
+        indicators: [
+          "Possui processo padronizado de acolhimento do cliente e família",
+          "Aplica instrumentos de avaliação inicial validados e apropriados",
+          "Estabelece metas iniciais baseadas na avaliação realizada"
+        ]
+      },
+      {
+        id: 8,
+        name: "3. Intervenção",
+        indicators: [
+          "Desenvolve planos de intervenção individualizados baseados em evidências",
+          "Registra sistematicamente o progresso do cliente durante as sessões",
+          "Realiza ajustes no plano de intervenção baseados no progresso observado"
+        ]
+      },
+      {
+        id: 9,
+        name: "4. Recursos Clínicos",
+        indicators: [
+          "Possui materiais e recursos adequados para diferentes tipos de intervenção",
+          "Mantém ambiente terapêutico apropriado e seguro para os atendimentos",
+          "Utiliza tecnologias e ferramentas que apoiam o processo terapêutico"
+        ]
+      }
+    ]
+  },
+  {
+    id: 3,
+    name: "III. Cuidado Interdisciplinar",
+    categories: [
+      {
+        id: 10,
+        name: "1. Diretrizes",
+        indicators: [
+          "Possui protocolos claros para comunicação entre diferentes especialidades",
+          "Define papéis e responsabilidades de cada área profissional",
+          "Estabelece fluxos de trabalho integrados entre as especialidades"
+        ]
+      },
+      {
+        id: 11,
+        name: "2. Avaliação",
+        indicators: [
+          "Realiza avaliações multidisciplinares de forma coordenada",
+          "Integra resultados de diferentes avaliações em um relatório único",
+          "Define consenso entre profissionais sobre diagnóstico e necessidades"
+        ]
+      },
+      {
+        id: 12,
+        name: "3. Plano Individualizado",
+        indicators: [
+          "Desenvolve planos de intervenção com participação de todas as especialidades envolvidas",
+          "Define metas compartilhadas e complementares entre as áreas",
+          "Estabelece cronograma integrado de intervenções"
+        ]
+      },
+      {
+        id: 13,
+        name: "4. Rotinas de Qualidade",
+        indicators: [
+          "Realiza reuniões regulares de discussão de casos entre equipes",
+          "Monitora a efetividade da comunicação interdisciplinar",
+          "Implementa melhorias baseadas no feedback das equipes"
+        ]
+      }
+    ]
+  },
+  {
+    id: 4,
+    name: "IV. Jornada dos Stakeholders",
+    categories: [
+      {
+        id: 14,
+        name: "1. Coordenação e Participação do Cuidador",
+        indicators: [
+          "Envolve cuidadores no planejamento e definição de metas terapêuticas",
+          "Oferece orientação e treinamento para cuidadores sobre estratégias de intervenção",
+          "Mantém comunicação regular com cuidadores sobre progresso e ajustes necessários"
+        ]
+      },
+      {
+        id: 15,
+        name: "2. Parceria com Agência Financiadora",
+        indicators: [
+          "Mantém comunicação clara e regular com operadoras de saúde",
+          "Fornece documentação adequada e no prazo para autorização de procedimentos",
+          "Estabelece fluxos eficientes para renovação e continuidade de autorizações"
+        ]
+      }
+    ]
+  },
+  {
+    id: 5,
+    name: "V. Documentação Clínica",
+    categories: [
+      {
+        id: 16,
+        name: "1. Avaliação",
+        indicators: [
+          "Utiliza instrumentos padronizados e validados para avaliação inicial",
+          "Registra de forma completa e organizada os resultados das avaliações",
+          "Estabelece hipóteses diagnósticas baseadas em evidências coletadas"
+        ]
+      },
+      {
+        id: 17,
+        name: "2. Intervenção",
+        indicators: [
+          "Documenta planos de intervenção de forma clara e detalhada",
+          "Registra sistematicamente as sessões e progresso do cliente",
+          "Mantém histórico organizado de todas as intervenções realizadas"
+        ]
+      },
+      {
+        id: 18,
+        name: "3. Coleta e Análise de Dados",
+        indicators: [
+          "Coleta dados de forma sistemática e consistente durante as sessões",
+          "Analisa dados coletados para orientar tomada de decisões clínicas",
+          "Utiliza gráficos e relatórios para visualizar progresso do cliente"
+        ]
+      },
+      {
+        id: 19,
+        name: "4. Alta e Interrupção do Tratamento",
+        indicators: [
+          "Estabelece critérios claros para alta e interrupção de tratamento",
+          "Elabora relatório final completo sobre evolução do cliente",
+          "Fornece orientações para continuidade do cuidado após alta"
+        ]
+      }
+    ]
+  },
+  {
+    id: 6,
+    name: "VI. Qualidade & Sustentabilidade",
+    categories: [
+      {
+        id: 20,
+        name: "1. Diretrizes Clínicas",
+        indicators: [
+          "Possui protocolos clínicos baseados em evidências científicas atualizadas",
+          "Define procedimentos padronizados para diferentes tipos de intervenção",
+          "Mantém diretrizes atualizadas conforme evolução da área"
+        ]
+      },
+      {
+        id: 21,
+        name: "2. Treinamento das Diretrizes",
+        indicators: [
+          "Oferece treinamento inicial obrigatório sobre diretrizes clínicas",
+          "Realiza atualizações periódicas sobre mudanças em protocolos",
+          "Avalia conhecimento e aplicação das diretrizes pelos profissionais"
+        ]
+      },
+      {
+        id: 22,
+        name: "3. Monitoramento da Implementação",
+        indicators: [
+          "Monitora regularmente a adesão às diretrizes clínicas estabelecidas",
+          "Identifica desvios e implementa ações corretivas quando necessário",
+          "Mantém registros de conformidade com protocolos estabelecidos"
+        ]
+      },
+      {
+        id: 23,
+        name: "4. Dashboard sobre Fidelidade da Implementação",
+        indicators: [
+          "Possui sistema de monitoramento em tempo real da fidelidade aos protocolos",
+          "Gera relatórios automáticos sobre conformidade com diretrizes",
+          "Utiliza indicadores visuais para facilitar acompanhamento da qualidade"
+        ]
+      },
+      {
+        id: 24,
+        name: "5. Medida de Qualidade do Serviço",
+        indicators: [
+          "Estabelece métricas claras para avaliação da qualidade dos serviços",
+          "Coleta feedback regular de clientes e familiares sobre satisfação",
+          "Implementa melhorias baseadas em indicadores de qualidade identificados"
+        ]
+      }
+    ]
+  },
+  {
+    id: 7,
+    name: "VII. Compliance",
+    categories: [
+      {
+        id: 25,
+        name: "1. Políticas de Privacidade",
+        indicators: [
+          "Possui políticas claras de proteção de dados pessoais e de saúde",
+          "Implementa medidas de segurança da informação adequadas",
+          "Treina colaboradores sobre políticas de privacidade e confidencialidade"
+        ]
+      },
+      {
+        id: 26,
+        name: "2. Proteção ao Paciente",
+        indicators: [
+          "Estabelece protocolos para garantir segurança física e emocional dos pacientes",
+          "Possui procedimentos para prevenção de situações de risco ou abuso",
+          "Mantém ambiente seguro e adequado para atendimento de diferentes perfis"
+        ]
+      },
+      {
+        id: 27,
+        name: "3. Requisitos Gerais e Responsabilidade Legal",
+        indicators: [
+          "Cumpre todas as exigências legais para funcionamento da clínica",
+          "Mantém documentação legal atualizada e em conformidade",
+          "Possui seguros e coberturas adequadas para proteção da organização"
+        ]
+      },
+      {
+        id: 28,
+        name: "4. Ética, Integridade e Profissionalismo",
+        indicators: [
+          "Possui código de ética claro e conhecido por todos os colaboradores",
+          "Estabelece procedimentos para denúncia e apuração de questões éticas",
+          "Promove cultura organizacional baseada em integridade e profissionalismo"
+        ]
+      },
+      {
+        id: 29,
+        name: "5. Saúde, Segurança e Preparação para Emergências",
+        indicators: [
+          "Possui planos de emergência e procedimentos de segurança estabelecidos",
+          "Treina colaboradores para situações de emergência e primeiros socorros",
+          "Mantém equipamentos de segurança e emergência em bom funcionamento"
+        ]
+      },
+      {
+        id: 30,
+        name: "6. Mídia, Comunicação e Representação",
+        indicators: [
+          "Estabelece diretrizes claras para comunicação externa e uso de mídias sociais",
+          "Possui políticas para uso de imagem e informações de pacientes",
+          "Mantém comunicação institucional consistente e profissional"
+        ]
+      }
+    ]
+  },
+  {
+    id: 8,
+    name: "VIII. Diversidade, Equidade e Inclusão",
+    categories: [
+      {
+        id: 31,
+        name: "1. Colaboradores",
+        indicators: [
+          "Promove diversidade na contratação e composição das equipes",
+          "Oferece oportunidades iguais de desenvolvimento para todos os colaboradores",
+          "Estabelece políticas antidiscriminação e de respeito à diversidade"
+        ]
+      },
+      {
+        id: 32,
+        name: "2. Treinamento",
+        indicators: [
+          "Oferece treinamentos sobre diversidade, equidade e inclusão",
+          "Sensibiliza colaboradores sobre questões de preconceito e discriminação",
+          "Promove cultura organizacional inclusiva e respeitosa"
+        ]
+      },
+      {
+        id: 33,
+        name: "3. Plano Estratégico",
+        indicators: [
+          "Inclui metas de diversidade e inclusão no planejamento estratégico",
+          "Estabelece parcerias com organizações que promovem diversidade",
+          "Monitora indicadores de diversidade e inclusão na organização"
+        ]
+      },
+      {
+        id: 34,
+        name: "4. Clientes",
+        indicators: [
+          "Garante acesso equitativo aos serviços independente de background",
+          "Adapta atendimento para diferentes necessidades culturais e linguísticas",
+          "Promove ambiente acolhedor e inclusivo para todos os clientes"
+        ]
+      }
+    ]
+  },
+  {
+    id: 9,
+    name: "IX. Envolvimento com a Comunidade",
+    categories: [
+      {
+        id: 35,
+        name: "1. Comunidade Local",
+        indicators: [
+          "Participa ativamente de eventos e iniciativas da comunidade local",
+          "Oferece ações educativas e de conscientização para a comunidade",
+          "Estabelece parcerias com organizações locais para projetos conjuntos"
+        ]
+      },
+      {
+        id: 36,
+        name: "2. Comunidade Científica",
+        indicators: [
+          "Participa de eventos científicos da área com apresentação de trabalhos",
+          "Publica pesquisas e estudos de caso em revistas científicas",
+          "Colabora com instituições de ensino e pesquisa da área"
+        ]
+      }
+    ]
+  },
+  {
+    id: 10,
+    name: "X. Operações Administrativas",
+    categories: [
+      {
+        id: 37,
+        name: "1. Gestão Financeira",
+        indicators: [
+          "Possui controles financeiros adequados e atualizados",
+          "Realiza planejamento orçamentário anual com acompanhamento mensal",
+          "Mantém fluxo de caixa organizado e relatórios gerenciais regulares"
+        ]
+      },
+      {
+        id: 38,
+        name: "2. Princípios Orientadores",
+        indicators: [
+          "Possui missão, visão e valores claramente definidos e comunicados",
+          "Alinha decisões organizacionais com princípios e valores estabelecidos",
+          "Promove cultura organizacional consistente com princípios orientadores"
+        ]
+      },
+      {
+        id: 39,
+        name: "3. Governança",
+        indicators: [
+          "Possui estrutura de governança clara com papéis e responsabilidades definidos",
+          "Realiza reuniões regulares de governança com documentação adequada",
+          "Estabelece processos de tomada de decisão transparentes e eficazes"
+        ]
+      },
+      {
+        id: 40,
+        name: "4. Plano Estratégico",
+        indicators: [
+          "Possui plano estratégico formal com objetivos e metas claras",
+          "Realiza acompanhamento regular do progresso das metas estratégicas",
+          "Revisa e atualiza periodicamente o planejamento estratégico da organização"
         ]
       }
     ]
   }
-  // Note: Full 10 areas structure would be included here
 ];
 
 const NovaAvaliacao = () => {
