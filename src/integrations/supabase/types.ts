@@ -9,7 +9,282 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      areas: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          order_index: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          order_index: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          order_index?: number
+        }
+        Relationships: []
+      }
+      assessments: {
+        Row: {
+          assessment_date: string
+          assessor_id: string
+          classification:
+            | Database["public"]["Enums"]["classification_type"]
+            | null
+          clinic_id: string
+          created_at: string
+          id: string
+          max_score: number | null
+          notes: string | null
+          overall_percentage: number | null
+          status: Database["public"]["Enums"]["assessment_status"]
+          total_score: number | null
+          updated_at: string
+        }
+        Insert: {
+          assessment_date: string
+          assessor_id: string
+          classification?:
+            | Database["public"]["Enums"]["classification_type"]
+            | null
+          clinic_id: string
+          created_at?: string
+          id?: string
+          max_score?: number | null
+          notes?: string | null
+          overall_percentage?: number | null
+          status?: Database["public"]["Enums"]["assessment_status"]
+          total_score?: number | null
+          updated_at?: string
+        }
+        Update: {
+          assessment_date?: string
+          assessor_id?: string
+          classification?:
+            | Database["public"]["Enums"]["classification_type"]
+            | null
+          clinic_id?: string
+          created_at?: string
+          id?: string
+          max_score?: number | null
+          notes?: string | null
+          overall_percentage?: number | null
+          status?: Database["public"]["Enums"]["assessment_status"]
+          total_score?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessments_assessor_id_fkey"
+            columns: ["assessor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessments_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      categories: {
+        Row: {
+          area_id: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          order_index: number
+        }
+        Insert: {
+          area_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          order_index: number
+        }
+        Update: {
+          area_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          order_index?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clinics: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          location: string
+          name: string
+          type: Database["public"]["Enums"]["clinic_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          location: string
+          name: string
+          type: Database["public"]["Enums"]["clinic_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          location?: string
+          name?: string
+          type?: Database["public"]["Enums"]["clinic_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clinics_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      indicator_scores: {
+        Row: {
+          assessment_id: string
+          created_at: string
+          id: string
+          indicator_id: string
+          notes: string | null
+          score: number
+        }
+        Insert: {
+          assessment_id: string
+          created_at?: string
+          id?: string
+          indicator_id: string
+          notes?: string | null
+          score: number
+        }
+        Update: {
+          assessment_id?: string
+          created_at?: string
+          id?: string
+          indicator_id?: string
+          notes?: string | null
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "indicator_scores_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "indicator_scores_indicator_id_fkey"
+            columns: ["indicator_id"]
+            isOneToOne: false
+            referencedRelation: "indicators"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      indicators: {
+        Row: {
+          category_id: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          order_index: number
+          weight: number
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          order_index: number
+          weight?: number
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          order_index?: number
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "indicators_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          is_active: boolean
+          name: string
+          phone: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+          is_active?: boolean
+          name: string
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +293,15 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      assessment_status: "em_andamento" | "concluida" | "revisao"
+      classification_type: "excelencia" | "qualidade" | "padrao"
+      clinic_type:
+        | "hospital"
+        | "clinica"
+        | "posto_saude"
+        | "laboratorio"
+        | "outro"
+      user_role: "admin" | "avaliador" | "cliente"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +416,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      assessment_status: ["em_andamento", "concluida", "revisao"],
+      classification_type: ["excelencia", "qualidade", "padrao"],
+      clinic_type: [
+        "hospital",
+        "clinica",
+        "posto_saude",
+        "laboratorio",
+        "outro",
+      ],
+      user_role: ["admin", "avaliador", "cliente"],
+    },
   },
 } as const
