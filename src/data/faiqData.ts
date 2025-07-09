@@ -8,75 +8,75 @@ export const faiqAreas: Area[] = [
     categories: [
       {
         id: 'cat-1-1',
-        name: 'Recrutamento e Seleção',
+        name: '1. Recrutamento e Seleção',
         description: 'Processos de contratação e integração',
         indicators: [
           {
             id: 'ind-1-1-1',
-            name: 'Processo estruturado de recrutamento',
-            description: 'Existência de processo formal e documentado',
+            name: 'I.1.a - Processo estruturado de recrutamento',
+            description: 'A organização possui processo formal e documentado para recrutamento e seleção de profissionais',
             weight: 1
           },
           {
             id: 'ind-1-1-2',
-            name: 'Critérios técnicos definidos',
-            description: 'Critérios claros para seleção de profissionais',
+            name: 'I.1.b - Critérios técnicos definidos',
+            description: 'Existem critérios claros e objetivos para seleção de profissionais baseados em competências técnicas',
             weight: 1
           },
           {
             id: 'ind-1-1-3',
-            name: 'Programa de integração',
-            description: 'Processo estruturado de onboarding',
+            name: 'I.1.c - Programa de integração',
+            description: 'A organização possui processo estruturado de onboarding para novos colaboradores',
             weight: 1
           }
         ]
       },
       {
         id: 'cat-1-2',
-        name: 'Desenvolvimento Profissional',
+        name: '2. Desenvolvimento Profissional',
         description: 'Capacitação e crescimento profissional',
         indicators: [
           {
             id: 'ind-1-2-1',
-            name: 'Plano de desenvolvimento individual',
-            description: 'PDI estruturado para cada profissional',
+            name: 'I.2.a - Plano de desenvolvimento individual',
+            description: 'Cada profissional possui PDI estruturado com metas e prazos definidos',
             weight: 1
           },
           {
             id: 'ind-1-2-2',
-            name: 'Programa de educação continuada',
-            description: 'Treinamentos regulares e atualizações técnicas',
+            name: 'I.2.b - Programa de educação continuada',
+            description: 'A organização oferece treinamentos regulares e atualizações técnicas',
             weight: 1
           },
           {
             id: 'ind-1-2-3',
-            name: 'Avaliação de desempenho',
-            description: 'Sistema regular de feedback e avaliação',
+            name: 'I.2.c - Avaliação de desempenho',
+            description: 'Existe sistema regular de feedback e avaliação de desempenho profissional',
             weight: 1
           }
         ]
       },
       {
         id: 'cat-1-3',
-        name: 'Ambiente de Trabalho',
+        name: '3. Ambiente de Trabalho',
         description: 'Qualidade do ambiente e relações interpessoais',
         indicators: [
           {
             id: 'ind-1-3-1',
-            name: 'Clima organizacional',
-            description: 'Pesquisa e monitoramento do clima',
+            name: 'I.3.a - Clima organizacional',
+            description: 'A organização realiza pesquisa e monitoramento do clima organizacional',
             weight: 1
           },
           {
             id: 'ind-1-3-2',
-            name: 'Comunicação interna',
-            description: 'Canais efetivos de comunicação',
+            name: 'I.3.b - Comunicação interna',
+            description: 'Existem canais efetivos de comunicação interna entre equipes',
             weight: 1
           },
           {
             id: 'ind-1-3-3',
-            name: 'Reconhecimento e recompensas',
-            description: 'Sistema de reconhecimento profissional',
+            name: 'I.3.c - Reconhecimento e recompensas',
+            description: 'A organização possui sistema de reconhecimento e recompensas profissionais',
             weight: 1
           }
         ]
@@ -335,19 +335,44 @@ export const faiqAreas: Area[] = [
     categories: [
       {
         id: 'cat-3-1',
-        name: 'Mapeamento de Processos',
+        name: '1. Mapeamento de Processos',
         description: 'Documentação e padronização de processos',
         indicators: [
           {
             id: 'ind-3-1-1',
-            name: 'Processos mapeados',
-            description: 'Documentação completa dos processos',
+            name: 'III.1.a - Processos mapeados e documentados',
+            description: 'A organização possui documentação completa dos processos críticos de trabalho',
             weight: 1
           },
           {
             id: 'ind-3-1-2',
-            name: 'Indicadores de processo',
-            description: 'Métricas de monitoramento definidas',
+            name: 'III.1.b - Indicadores de processo definidos',
+            description: 'Existem métricas de monitoramento definidas para os processos principais',
+            weight: 1
+          },
+          {
+            id: 'ind-3-1-3',
+            name: 'III.1.c - Revisão periódica dos processos',
+            description: 'Os processos são revisados e atualizados periodicamente',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: 'cat-3-2',
+        name: '2. Controle de Qualidade',
+        description: 'Sistemas de controle e garantia da qualidade',
+        indicators: [
+          {
+            id: 'ind-3-2-1',
+            name: 'III.2.a - Sistema de auditoria interna',
+            description: 'A organização possui sistema estruturado de auditoria interna',
+            weight: 1
+          },
+          {
+            id: 'ind-3-2-2',
+            name: 'III.2.b - Planos de ação corretiva',
+            description: 'Existem planos de ação para correção de não conformidades identificadas',
             weight: 1
           }
         ]
@@ -388,7 +413,7 @@ export const sampleClinics: Clinic[] = [
   }
 ];
 
-// Avaliações de exemplo
+// Enhanced sample assessments with multiple areas
 export const sampleAssessments: Assessment[] = [
   {
     id: 'assess-1',
@@ -437,71 +462,72 @@ export const sampleAssessments: Assessment[] = [
         totalScore: 7,
         maxScore: 9,
         percentage: 77.78
+      },
+      {
+        areaId: 'area-2',
+        categoryScores: [
+          {
+            categoryId: 'cat-2-1',
+            indicatorScores: [
+              { indicatorId: 'ind-2-1-1', score: 1 },
+              { indicatorId: 'ind-2-1-2', score: 0.5 },
+              { indicatorId: 'ind-2-1-3', score: 1 },
+              { indicatorId: 'ind-2-1-4', score: 0 },
+              { indicatorId: 'ind-2-1-5', score: 1 },
+              { indicatorId: 'ind-2-1-6', score: 1 },
+              { indicatorId: 'ind-2-1-7', score: 0.5 },
+              { indicatorId: 'ind-2-1-8', score: 1 },
+              { indicatorId: 'ind-2-1-9', score: 1 },
+              { indicatorId: 'ind-2-1-10', score: 0.5 },
+              { indicatorId: 'ind-2-1-11', score: 0 },
+              { indicatorId: 'ind-2-1-12', score: 1 },
+              { indicatorId: 'ind-2-1-13', score: 0.5 }
+            ],
+            totalScore: 9,
+            maxScore: 13,
+            percentage: 69.23
+          }
+        ],
+        totalScore: 9,
+        maxScore: 13,
+        percentage: 69.23
+      },
+      {
+        areaId: 'area-3',
+        categoryScores: [
+          {
+            categoryId: 'cat-3-1',
+            indicatorScores: [
+              { indicatorId: 'ind-3-1-1', score: 0.5 },
+              { indicatorId: 'ind-3-1-2', score: 1 },
+              { indicatorId: 'ind-3-1-3', score: 0 }
+            ],
+            totalScore: 1.5,
+            maxScore: 3,
+            percentage: 50
+          },
+          {
+            categoryId: 'cat-3-2',
+            indicatorScores: [
+              { indicatorId: 'ind-3-2-1', score: 0 },
+              { indicatorId: 'ind-3-2-2', score: 0.5 }
+            ],
+            totalScore: 0.5,
+            maxScore: 2,
+            percentage: 25
+          }
+        ],
+        totalScore: 2,
+        maxScore: 5,
+        percentage: 40
       }
     ],
-    totalScore: 7,
-    maxScore: 9,
-    overallPercentage: 77.78,
+    totalScore: 18,
+    maxScore: 27,
+    overallPercentage: 66.67,
     classification: 'qualidade',
     status: 'concluida',
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-15')
-  },
-  {
-    id: 'assess-2',
-    clinicId: 'clinic-2',
-    clinicName: 'Centro Médico Esperança',
-    assessmentDate: new Date('2024-01-20'),
-    assessorName: 'Dra. Maria Santos',
-    areaScores: [
-      {
-        areaId: 'area-1',
-        categoryScores: [
-          {
-            categoryId: 'cat-1-1',
-            indicatorScores: [
-              { indicatorId: 'ind-1-1-1', score: 1 },
-              { indicatorId: 'ind-1-1-2', score: 1 },
-              { indicatorId: 'ind-1-1-3', score: 1 }
-            ],
-            totalScore: 3,
-            maxScore: 3,
-            percentage: 100
-          },
-          {
-            categoryId: 'cat-1-2',
-            indicatorScores: [
-              { indicatorId: 'ind-1-2-1', score: 1 },
-              { indicatorId: 'ind-1-2-2', score: 1 },
-              { indicatorId: 'ind-1-2-3', score: 0.5 }
-            ],
-            totalScore: 2.5,
-            maxScore: 3,
-            percentage: 83.33
-          },
-          {
-            categoryId: 'cat-1-3',
-            indicatorScores: [
-              { indicatorId: 'ind-1-3-1', score: 1 },
-              { indicatorId: 'ind-1-3-2', score: 1 },
-              { indicatorId: 'ind-1-3-3', score: 1 }
-            ],
-            totalScore: 3,
-            maxScore: 3,
-            percentage: 100
-          }
-        ],
-        totalScore: 8.5,
-        maxScore: 9,
-        percentage: 94.44
-      }
-    ],
-    totalScore: 8.5,
-    maxScore: 9,
-    overallPercentage: 94.44,
-    classification: 'excelencia',
-    status: 'concluida',
-    createdAt: new Date('2024-01-20'),
-    updatedAt: new Date('2024-01-20')
   }
 ];

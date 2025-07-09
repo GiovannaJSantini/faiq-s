@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { AssessmentLevelsChart } from "./assessment-levels-chart";
 import { Button } from "@/components/ui/button";
-import { faiqAreas } from "@/data/faiqData";
+import { faiqAreas, sampleAssessments } from "@/data/faiqData";
 
 export function FaiqAssessmentCharts() {
   const [selectedAreaIndex, setSelectedAreaIndex] = useState(0);
@@ -13,6 +13,9 @@ export function FaiqAssessmentCharts() {
   // Extract category names and count indicators per category
   const categoryNames = selectedArea.categories.map(cat => cat.name);
   const indicatorsPerCategory = Math.max(...selectedArea.categories.map(cat => cat.indicators.length));
+
+  // Get the most recent assessment for demonstration
+  const latestAssessment = sampleAssessments[0]; // Using the first sample assessment
 
   return (
     <div className="space-y-6">
@@ -46,7 +49,24 @@ export function FaiqAssessmentCharts() {
         categories={categoryNames}
         indicatorsPerCategory={indicatorsPerCategory}
         areaData={selectedArea}
+        assessmentData={latestAssessment}
       />
+      
+      {/* Legend for scoring */}
+      <div className="flex justify-center space-x-6 mt-4">
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 rounded-full bg-green-500" />
+          <span className="text-sm">Atende (1.0)</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 rounded-full bg-yellow-500" />
+          <span className="text-sm">Parcial (0.5)</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 rounded-full bg-gray-200" />
+          <span className="text-sm">Não Atende (0.0)</span>
+        </div>
+      </div>
     </div>
   );
 }
