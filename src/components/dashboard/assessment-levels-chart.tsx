@@ -101,18 +101,6 @@ export function AssessmentLevelsChart({
           })
         ))}
       </TooltipProvider>
-      
-      {/* Círculos de marcação abaixo de cada categoria */}
-      {categories.map((_, categoryIndex) => (
-        <div key={`circles-${categoryIndex}`} className="flex justify-center items-center space-x-1 py-3">
-          {Array.from({ length: 5 }, (_, circleIndex) => (
-            <div 
-              key={circleIndex} 
-              className="w-3 h-3 border-2 border-gray-400 rounded-full bg-white hover:bg-gray-100 cursor-pointer transition-colors"
-            />
-          ))}
-        </div>
-      ))}
     </div>
   );
 

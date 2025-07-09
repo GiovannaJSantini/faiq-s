@@ -1,4 +1,5 @@
-import { Activity, BarChart3, Users } from "lucide-react";
+
+import { Activity, BarChart3, Users, Grid2X2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -36,6 +37,15 @@ export function DashboardHeader() {
             >
               <Users className="w-4 h-4 mr-2" />
               Gerenciar Clínicas
+            </Button>
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              className="bg-white/10 text-white border-white/20 hover:bg-white/20"
+              onClick={() => navigate('/graficos-niveis')}
+            >
+              <Grid2X2 className="w-4 h-4 mr-2" />
+              Gráficos de Níveis
             </Button>
             <Button 
               variant="secondary" 
