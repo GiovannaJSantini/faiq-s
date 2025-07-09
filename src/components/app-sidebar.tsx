@@ -1,5 +1,6 @@
+
 import { NavLink, useLocation } from "react-router-dom";
-import { BarChart3, Building2, FileText, Activity, Home, Users, Settings } from "lucide-react";
+import { BarChart3, Building2, FileText, Activity, Home, Users, Grid2X2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,13 +17,13 @@ const mainItems = [
   { title: "Dashboard", url: "/", icon: Home },
   { title: "Nova Avaliação", url: "/avaliacao", icon: Activity },
   { title: "Gerenciar Clínicas", url: "/clinicas", icon: Building2 },
+  { title: "Gráficos de Níveis", url: "/graficos-niveis", icon: Grid2X2 },
   { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
 ];
 
 const systemItems = [
   { title: "Indicadores FAIQ", url: "/indicadores", icon: FileText },
   { title: "Usuários", url: "/usuarios", icon: Users },
-  { title: "Configurações", url: "/configuracoes", icon: Settings },
 ];
 
 export function AppSidebar() {
