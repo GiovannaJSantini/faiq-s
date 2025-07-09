@@ -1,9 +1,11 @@
+
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { StatsCards } from "@/components/dashboard/stats-cards";
 import { PerformanceChart } from "@/components/dashboard/performance-chart";
 import { AreasAnalysis } from "@/components/dashboard/areas-analysis";
 import { RecentAssessments } from "@/components/dashboard/recent-assessments";
+import { FaiqAssessmentCharts } from "@/components/dashboard/faiq-assessment-charts";
 import { sampleAssessments, sampleClinics } from "@/data/faiqData";
 
 const Index = () => {
@@ -39,6 +41,9 @@ const Index = () => {
         <AreasAnalysis assessments={sampleAssessments} />
         <RecentAssessments assessments={sampleAssessments} />
       </div>
+
+      {/* Novos gráficos FAIQ em camadas */}
+      <FaiqAssessmentCharts />
     </div>
   );
 };
