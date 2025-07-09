@@ -1,14 +1,15 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Area } from "@/types/faiq";
 
 interface AssessmentLevelsChartProps {
   title: string;
   categories: string[];
   indicatorsPerCategory: number;
+  areaData: Area;
 }
 
-export function AssessmentLevelsChart({ title, categories, indicatorsPerCategory }: AssessmentLevelsChartProps) {
+export function AssessmentLevelsChart({ title, categories, indicatorsPerCategory, areaData }: AssessmentLevelsChartProps) {
   const levels = [
     { name: 'Excelência', color: 'bg-blue-500', textColor: 'text-white', level: 3 },
     { name: 'Qualidade', color: 'bg-green-500', textColor: 'text-white', level: 2 },
@@ -16,26 +17,33 @@ export function AssessmentLevelsChart({ title, categories, indicatorsPerCategory
   ];
 
   const renderGrid = (levelColor: string, levelName: string) => (
-    <div className="grid grid-cols-12 gap-1 mb-4">
+    <div className="grid gap-1 mb-6" style={{ gridTemplateColumns: `repeat(${categories.length}, 1fr)` }}>
       {/* Header com nome do nível */}
-      <div className={`${levelColor} text-white p-2 text-center font-semibold col-span-12 rounded-t`}>
+      <div className={`${levelColor} text-white p-3 text-center font-semibold rounded-t`} style={{ gridColumn: `1 / ${categories.length + 1}` }}>
         {levelName}
       </div>
       
       {/* Headers das categorias */}
       {categories.map((category, categoryIndex) => (
-        <div key={categoryIndex} className="bg-gray-100 p-2 text-center font-medium text-sm border">
-          {category}
+        <div key={categoryIndex} className="bg-gray-100 p-2 text-center font-medium text-xs border min-h-[60px] flex items-center justify-center">
+          <span className="leading-tight">{category}</span>
         </div>
       ))}
       
-      {/* Grid de indicadores */}
+      {/* Grid de indicadores com números reais */}
       {Array.from({ length: indicatorsPerCategory }, (_, rowIndex) => (
         categories.map((_, categoryIndex) => {
-          const indicatorNumber = (categoryIndex * indicatorsPerCategory) + rowIndex + 1;
+          const category = areaData.categories[categoryIndex];
+          const indicator = category?.indicators[rowIndex];
+          const indicatorNumber = indicator ? `${category.name.split('.')[0]}.${rowIndex + 1}` : '';
+          
           return (
-            <div key={`${categoryIndex}-${rowIndex}`} className="border border-gray-300 h-12 flex items-center justify-center bg-white hover:bg-gray-50 transition-colors">
-              <span className="text-xs text-gray-500">{indicatorNumber}</span>
+            <div key={`${categoryIndex}-${rowIndex}`} className="border border-gray-300 h-16 flex items-center justify-center bg-white hover:bg-gray-50 transition-colors">
+              {indicator && (
+                <span className="text-xs text-gray-600 font-medium text-center px-1">
+                  {indicatorNumber}
+                </span>
+              )}
             </div>
           );
         })
@@ -43,7 +51,7 @@ export function AssessmentLevelsChart({ title, categories, indicatorsPerCategory
       
       {/* Círculos de marcação abaixo de cada categoria */}
       {categories.map((_, categoryIndex) => (
-        <div key={`circles-${categoryIndex}`} className="flex justify-center items-center space-x-1 py-2">
+        <div key={`circles-${categoryIndex}`} className="flex justify-center items-center space-x-1 py-3">
           {Array.from({ length: 5 }, (_, circleIndex) => (
             <div 
               key={circleIndex} 
