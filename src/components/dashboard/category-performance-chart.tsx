@@ -35,10 +35,9 @@ interface CategoryData {
 }
 
 export function CategoryPerformanceChart() {
-  const [selectedArea, setSelectedArea] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'bars' | 'radar' | 'pie'>('bars');
 
-  // Processar dados das categorias
+  // Processar dados das categorias - TODAS as categorias de TODAS as áreas
   const categoryData: CategoryData[] = [];
   
   faiqAreas.forEach(area => {
@@ -58,7 +57,7 @@ export function CategoryPerformanceChart() {
       
       categoryData.push({
         name: category.name,
-        shortName: category.name.split('.')[1]?.trim() || category.name,
+        shortName: category.name.length > 30 ? category.name.substring(0, 30) + '...' : category.name,
         areaName: area.name,
         percentage: Math.round(percentage * 100) / 100,
         level,
@@ -68,22 +67,21 @@ export function CategoryPerformanceChart() {
     });
   });
 
-  // Filtrar dados por área selecionada
-  const filteredData = selectedArea 
-    ? categoryData.filter(cat => cat.areaName === selectedArea)
-    : categoryData;
-
-  // Estatísticas resumidas
+  // Estatísticas resumidas de TODAS as categorias
   const stats = {
-    totalCategories: filteredData.length,
-    excellenceCount: filteredData.filter(cat => cat.level === 'excelencia').length,
-    qualityCount: filteredData.filter(cat => cat.level === 'qualidade').length,
-    standardCount: filteredData.filter(cat => cat.level === 'padrao').length,
-    averagePerformance: Math.round(filteredData.reduce((acc, cat) => acc + cat.percentage, 0) / filteredData.length)
+    totalCategories: categoryData.length,
+    excellenceCount: categoryData.filter(cat => cat.level === 'excelencia').length,
+    qualityCount: categoryData.filter(cat => cat.level === 'qualidade').length,
+    standardCount: categoryData.filter(cat => cat.level === 'padrao').length,
+    averagePerformance: Math.round(categoryData.reduce((acc, cat) => acc + cat.percentage, 0) / categoryData.length)
   };
 
-  // Dados para gráfico de radar
-  const radarData = filteredData.map(cat => ({
+  // Dados para gráfico de radar - top 10 categorias para melhor visualização
+  const topCategories = categoryData
+    .sort((a, b) => b.percentage - a.percentage)
+    .slice(0, 10);
+
+  const radarData = topCategories.map(cat => ({
     category: cat.shortName,
     performance: cat.percentage,
     fullMark: 100
@@ -130,15 +128,16 @@ export function CategoryPerformanceChart() {
   const renderChart = () => {
     if (viewMode === 'bars') {
       return (
-        <BarChart data={filteredData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+        <BarChart data={categoryData} margin={{ top: 20, right: 30, left: 20, bottom: 120 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis 
             dataKey="shortName" 
             angle={-45}
             textAnchor="end"
-            height={100}
-            fontSize={12}
+            height={140}
+            fontSize={10}
             stroke="hsl(var(--muted-foreground))"
+            interval={0}
           />
           <YAxis stroke="hsl(var(--muted-foreground))" />
           <Tooltip content={<CustomTooltip />} />
@@ -147,7 +146,7 @@ export function CategoryPerformanceChart() {
             radius={[4, 4, 0, 0]}
             fill="hsl(var(--primary))"
           >
-            {filteredData.map((entry, index) => (
+            {categoryData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={getLevelColor(entry.level)} />
             ))}
           </Bar>
@@ -159,7 +158,7 @@ export function CategoryPerformanceChart() {
       return (
         <RadarChart data={radarData}>
           <PolarGrid stroke="hsl(var(--border))" />
-          <PolarAngleAxis dataKey="category" fontSize={12} />
+          <PolarAngleAxis dataKey="category" fontSize={10} />
           <PolarRadiusAxis 
             angle={45} 
             domain={[0, 100]} 
@@ -206,60 +205,37 @@ export function CategoryPerformanceChart() {
       <div className="text-center space-y-4">
         <h2 className="section-header">Desempenho por Categoria FAIQ-S</h2>
         <p className="section-description max-w-2xl mx-auto">
-          Análise detalhada do desempenho de cada categoria dentro das áreas de avaliação, 
-          proporcionando insights granulares sobre pontos fortes e oportunidades de melhoria.
+          Análise completa do desempenho de todas as categorias do FAIQ-S, 
+          proporcionando uma visão abrangente de todas as áreas de avaliação.
         </p>
       </div>
 
-      {/* Filtros e controles */}
-      <div className="flex flex-wrap gap-4 justify-between items-center">
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant={selectedArea === null ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedArea(null)}
-          >
-            Todas as Áreas
-          </Button>
-          {faiqAreas.map(area => (
-            <Button
-              key={area.id}
-              variant={selectedArea === area.name ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedArea(area.name)}
-              className="text-xs"
-            >
-              {area.name.split('.')[0]}
-            </Button>
-          ))}
-        </div>
-        
-        <div className="flex gap-2">
-          <Button
-            variant={viewMode === 'bars' ? "default" : "outline"}
-            size="sm"
-            onClick={() => setViewMode('bars')}
-          >
-            <BarChart3 className="w-4 h-4 mr-1" />
-            Barras
-          </Button>
-          <Button
-            variant={viewMode === 'radar' ? "default" : "outline"}
-            size="sm"
-            onClick={() => setViewMode('radar')}
-          >
-            <Target className="w-4 h-4 mr-1" />
-            Radar
-          </Button>
-          <Button
-            variant={viewMode === 'pie' ? "default" : "outline"}
-            size="sm"
-            onClick={() => setViewMode('pie')}
-          >
-            <Award className="w-4 h-4 mr-1" />
-            Distribuição
-          </Button>
-        </div>
+      {/* Controles de visualização */}
+      <div className="flex justify-center gap-2">
+        <Button
+          variant={viewMode === 'bars' ? "default" : "outline"}
+          size="sm"
+          onClick={() => setViewMode('bars')}
+        >
+          <BarChart3 className="w-4 h-4 mr-1" />
+          Barras
+        </Button>
+        <Button
+          variant={viewMode === 'radar' ? "default" : "outline"}
+          size="sm"
+          onClick={() => setViewMode('radar')}
+        >
+          <Target className="w-4 h-4 mr-1" />
+          Radar (Top 10)
+        </Button>
+        <Button
+          variant={viewMode === 'pie' ? "default" : "outline"}
+          size="sm"
+          onClick={() => setViewMode('pie')}
+        >
+          <Award className="w-4 h-4 mr-1" />
+          Distribuição
+        </Button>
       </div>
 
       {/* Cards de estatísticas */}
@@ -267,7 +243,7 @@ export function CategoryPerformanceChart() {
         <div className="metric-card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Categorias</p>
+              <p className="text-sm font-medium text-muted-foreground">Total Categorias</p>
               <p className="text-2xl font-bold text-card-foreground">{stats.totalCategories}</p>
             </div>
             <BarChart3 className="w-8 h-8 text-primary" />
@@ -314,13 +290,13 @@ export function CategoryPerformanceChart() {
                 {viewMode === 'bars' && <BarChart3 className="w-5 h-5" />}
                 {viewMode === 'radar' && <Target className="w-5 h-5" />}
                 {viewMode === 'pie' && <Award className="w-5 h-5" />}
-                {viewMode === 'bars' && 'Desempenho por Categoria'}
-                {viewMode === 'radar' && 'Perfil de Desempenho'}
+                {viewMode === 'bars' && 'Todas as Categorias FAIQ-S'}
+                {viewMode === 'radar' && 'Top 10 Categorias (Radar)'}
                 {viewMode === 'pie' && 'Distribuição por Nível'}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
+              <ResponsiveContainer width="100%" height={500}>
                 {renderChart()}
               </ResponsiveContainer>
             </CardContent>
@@ -331,20 +307,25 @@ export function CategoryPerformanceChart() {
         <div className="space-y-4">
           <Card className="chart-container h-fit">
             <CardHeader>
-              <CardTitle>Categorias por Desempenho</CardTitle>
+              <CardTitle>Ranking de Categorias</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 max-h-96 overflow-y-auto">
-              {filteredData
+            <CardContent className="space-y-3 max-h-[500px] overflow-y-auto">
+              {categoryData
                 .sort((a, b) => b.percentage - a.percentage)
                 .map((category, index) => (
                   <div key={category.name} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-card-foreground truncate">
-                        {category.shortName}
-                      </p>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {category.areaName}
-                      </p>
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <span className="text-xs font-bold bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center">
+                        {index + 1}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-card-foreground truncate">
+                          {category.shortName}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {category.areaName}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-bold" style={{ color: getLevelColor(category.level) }}>
