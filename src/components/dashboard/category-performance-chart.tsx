@@ -127,6 +127,79 @@ export function CategoryPerformanceChart() {
     return null;
   };
 
+  const renderChart = () => {
+    if (viewMode === 'bars') {
+      return (
+        <BarChart data={filteredData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <XAxis 
+            dataKey="shortName" 
+            angle={-45}
+            textAnchor="end"
+            height={100}
+            fontSize={12}
+            stroke="hsl(var(--muted-foreground))"
+          />
+          <YAxis stroke="hsl(var(--muted-foreground))" />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar 
+            dataKey="percentage" 
+            radius={[4, 4, 0, 0]}
+            fill="hsl(var(--primary))"
+          >
+            {filteredData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={getLevelColor(entry.level)} />
+            ))}
+          </Bar>
+        </BarChart>
+      );
+    }
+    
+    if (viewMode === 'radar') {
+      return (
+        <RadarChart data={radarData}>
+          <PolarGrid stroke="hsl(var(--border))" />
+          <PolarAngleAxis dataKey="category" fontSize={12} />
+          <PolarRadiusAxis 
+            angle={45} 
+            domain={[0, 100]} 
+            fontSize={10}
+            stroke="hsl(var(--muted-foreground))"
+          />
+          <Radar
+            name="Performance"
+            dataKey="performance"
+            stroke="hsl(var(--primary))"
+            fill="hsl(var(--primary))"
+            fillOpacity={0.2}
+            strokeWidth={2}
+          />
+          <Tooltip />
+        </RadarChart>
+      );
+    }
+    
+    return (
+      <PieChart>
+        <Pie
+          data={pieData}
+          cx="50%"
+          cy="50%"
+          outerRadius={120}
+          fill="#8884d8"
+          dataKey="value"
+          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+        >
+          {pieData.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={entry.color} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </PieChart>
+    );
+  };
+
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
@@ -248,72 +321,7 @@ export function CategoryPerformanceChart() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={400}>
-                {viewMode === 'bars' && (
-                  <BarChart data={filteredData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis 
-                      dataKey="shortName" 
-                      angle={-45}
-                      textAnchor="end"
-                      height={100}
-                      fontSize={12}
-                      stroke="hsl(var(--muted-foreground))"
-                    />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Bar 
-                      dataKey="percentage" 
-                      radius={[4, 4, 0, 0]}
-                      fill="hsl(var(--primary))"
-                    >
-                      {filteredData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={getLevelColor(entry.level)} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                )}
-                
-                {viewMode === 'radar' && (
-                  <RadarChart data={radarData}>
-                    <PolarGrid stroke="hsl(var(--border))" />
-                    <PolarAngleAxis dataKey="category" fontSize={12} />
-                    <PolarRadiusAxis 
-                      angle={45} 
-                      domain={[0, 100]} 
-                      fontSize={10}
-                      stroke="hsl(var(--muted-foreground))"
-                    />
-                    <Radar
-                      name="Performance"
-                      dataKey="performance"
-                      stroke="hsl(var(--primary))"
-                      fill="hsl(var(--primary))"
-                      fillOpacity={0.2}
-                      strokeWidth={2}
-                    />
-                    <Tooltip />
-                  </RadarChart>
-                )}
-                
-                {viewMode === 'pie' && (
-                  <PieChart>
-                    <Pie
-                      data={pieData}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={120}
-                      fill="#8884d8"
-                      dataKey="value"
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                )}
+                {renderChart()}
               </ResponsiveContainer>
             </CardContent>
           </Card>
