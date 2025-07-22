@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { GoogleAuthButton } from './GoogleAuthButton';
 
 interface AuthModalProps {
   open: boolean;
@@ -90,70 +92,100 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
           </TabsList>
 
           <TabsContent value="signin">
-            <form onSubmit={handleSignIn} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="signin-email">Email</Label>
-                <Input
-                  id="signin-email"
-                  type="email"
-                  value={signInData.email}
-                  onChange={(e) => setSignInData({ ...signInData, email: e.target.value })}
-                  required
-                />
+            <div className="space-y-4">
+              <GoogleAuthButton />
+              
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    ou continue com
+                  </span>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="signin-password">Senha</Label>
-                <Input
-                  id="signin-password"
-                  type="password"
-                  value={signInData.password}
-                  onChange={(e) => setSignInData({ ...signInData, password: e.target.value })}
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Entrando...' : 'Entrar'}
-              </Button>
-            </form>
+
+              <form onSubmit={handleSignIn} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="signin-email">Email</Label>
+                  <Input
+                    id="signin-email"
+                    type="email"
+                    value={signInData.email}
+                    onChange={(e) => setSignInData({ ...signInData, email: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signin-password">Senha</Label>
+                  <Input
+                    id="signin-password"
+                    type="password"
+                    value={signInData.password}
+                    onChange={(e) => setSignInData({ ...signInData, password: e.target.value })}
+                    required
+                  />
+                </div>
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? 'Entrando...' : 'Entrar'}
+                </Button>
+              </form>
+            </div>
           </TabsContent>
 
           <TabsContent value="signup">
-            <form onSubmit={handleSignUp} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="signup-name">Nome completo</Label>
-                <Input
-                  id="signup-name"
-                  type="text"
-                  value={signUpData.name}
-                  onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
-                  required
-                />
+            <div className="space-y-4">
+              <GoogleAuthButton />
+              
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    ou continue com
+                  </span>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="signup-email">Email</Label>
-                <Input
-                  id="signup-email"
-                  type="email"
-                  value={signUpData.email}
-                  onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="signup-password">Senha</Label>
-                <Input
-                  id="signup-password"
-                  type="password"
-                  value={signUpData.password}
-                  onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
-                  required
-                  minLength={6}
-                />
-              </div>
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Criando conta...' : 'Criar Conta'}
-              </Button>
-            </form>
+
+              <form onSubmit={handleSignUp} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="signup-name">Nome completo</Label>
+                  <Input
+                    id="signup-name"
+                    type="text"
+                    value={signUpData.name}
+                    onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-email">Email</Label>
+                  <Input
+                    id="signup-email"
+                    type="email"
+                    value={signUpData.email}
+                    onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-password">Senha</Label>
+                  <Input
+                    id="signup-password"
+                    type="password"
+                    value={signUpData.password}
+                    onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
+                    required
+                    minLength={6}
+                  />
+                </div>
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? 'Criando conta...' : 'Criar Conta'}
+                </Button>
+              </form>
+            </div>
           </TabsContent>
         </Tabs>
       </DialogContent>

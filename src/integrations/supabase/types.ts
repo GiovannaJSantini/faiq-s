@@ -290,12 +290,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          level: Database["public"]["Enums"]["user_level"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          level?: Database["public"]["Enums"]["user_level"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          level?: Database["public"]["Enums"]["user_level"]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_level: {
+        Args: { user_uuid: string }
+        Returns: Database["public"]["Enums"]["user_level"]
+      }
     }
     Enums: {
       assessment_status: "em_andamento" | "concluida" | "revisao"
@@ -306,6 +333,7 @@ export type Database = {
         | "posto_saude"
         | "laboratorio"
         | "outro"
+      user_level: "padrao" | "qualidade" | "excelencia"
       user_role: "admin" | "avaliador" | "cliente"
     }
     CompositeTypes: {
@@ -443,6 +471,7 @@ export const Constants = {
         "laboratorio",
         "outro",
       ],
+      user_level: ["padrao", "qualidade", "excelencia"],
       user_role: ["admin", "avaliador", "cliente"],
     },
   },
