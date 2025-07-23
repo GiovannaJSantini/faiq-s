@@ -3,82 +3,82 @@
 @tailwind components;
 @tailwind utilities;
 
-/* FAIQ-S Design System - Professional Healthcare Assessment */
+/* FAIQ-S Design System - Nova Paleta Institucional */
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 0 0% 10%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
+    --card-foreground: 0 0% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
+    --popover-foreground: 0 0% 18%;
 
-    /* Nova paleta principal com verde, laranja, bege */
-    --primary: 160 84% 39%;
+    /* Nova paleta institucional */
+    --primary: 155 56% 40%;        /* Verde: #2AA97C */
     --primary-foreground: 0 0% 98%;
-    --primary-glow: 160 84% 45%;
+    --primary-glow: 155 56% 45%;
 
-    --secondary: 39 84% 56%;
-    --secondary-foreground: 0 0% 10%;
+    --secondary: 38 100% 48%;       /* Laranja: #F4A300 */
+    --secondary-foreground: 0 0% 18%;
 
-    --muted: 39 39% 93%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 35 32% 82%;            /* Bege: #D8C3A5 */
+    --muted-foreground: 0 0% 18%;
 
-    --accent: 39 84% 56%;
-    --accent-foreground: 0 0% 10%;
-
-    --details: 10 73% 58%;
-    --details-foreground: 0 0% 98%;
+    --accent: 38 100% 48%;          /* Laranja: #F4A300 */
+    --accent-foreground: 0 0% 18%;
 
     /* Níveis de qualidade com nova paleta */
-    --excellence: 160 84% 39%;
+    --excellence: 155 56% 40%;      /* Verde: #2AA97C */
     --excellence-foreground: 0 0% 98%;
-    --excellence-light: 160 84% 95%;
+    --excellence-light: 155 56% 95%;
 
-    --quality: 39 84% 56%;
-    --quality-foreground: 0 0% 10%;
-    --quality-light: 39 84% 95%;
+    --quality: 38 100% 48%;         /* Laranja: #F4A300 */
+    --quality-foreground: 0 0% 18%;
+    --quality-light: 38 100% 95%;
 
-    --standard: 22 31% 65%;
-    --standard-foreground: 0 0% 10%;
-    --standard-light: 22 31% 95%;
+    --standard: 35 32% 65%;         /* Bege escuro: #A68A6A */
+    --standard-foreground: 0 0% 18%;
+    --standard-light: 35 32% 92%;
 
-    --success: 160 84% 39%;
+    --success: 155 56% 40%;         /* Verde: #2AA97C */
     --success-foreground: 0 0% 98%;
-    --success-light: 160 84% 95%;
+    --success-light: 155 56% 95%;
 
-    --warning: 39 84% 56%;
-    --warning-foreground: 0 0% 10%;
-    --warning-light: 39 84% 95%;
+    --warning: 38 100% 48%;         /* Laranja: #F4A300 */
+    --warning-foreground: 0 0% 18%;
+    --warning-light: 38 100% 95%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 22 20% 88%;
-    --input: 22 20% 88%;
-    --ring: 160 84% 39%;
+    --border: 35 32% 88%;
+    --input: 35 32% 88%;
+    --ring: 155 56% 40%;
 
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(160 84% 50%));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(45 100% 65%));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(155 56% 50%));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(40 100% 55%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+    --gradient-institutional: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--muted)) 100%);
     
     --shadow-soft: 0 2px 8px -2px hsl(var(--primary) / 0.08);
     --shadow-medium: 0 4px 16px -4px hsl(var(--primary) / 0.12);
     --shadow-strong: 0 8px 32px -8px hsl(var(--primary) / 0.16);
+    --shadow-institutional: 0 10px 40px -10px hsl(var(--primary) / 0.15);
 
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary: 155 56% 40%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 39 39% 93%;
+    --sidebar-accent: 35 32% 85%;
     --sidebar-accent-foreground: 0 0% 20%;
-    --sidebar-border: 22 20% 88%;
-    --sidebar-ring: 160 84% 39%;
+    --sidebar-border: 35 32% 88%;
+    --sidebar-ring: 155 56% 40%;
   }
 
   .dark {
@@ -91,51 +91,51 @@
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 160 84% 45%;
+    --primary: 155 56% 45%;
     --primary-foreground: 0 0% 8%;
-    --primary-glow: 160 84% 55%;
+    --primary-glow: 155 56% 55%;
 
-    --secondary: 39 84% 60%;
+    --secondary: 38 100% 55%;
     --secondary-foreground: 0 0% 8%;
 
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 65%;
 
-    --accent: 39 84% 60%;
+    --accent: 38 100% 55%;
     --accent-foreground: 0 0% 8%;
 
-    --excellence: 160 84% 45%;
+    --excellence: 155 56% 45%;
     --excellence-foreground: 0 0% 8%;
-    --excellence-light: 160 84% 15%;
+    --excellence-light: 155 56% 15%;
 
-    --quality: 39 84% 60%;
+    --quality: 38 100% 55%;
     --quality-foreground: 0 0% 8%;
-    --quality-light: 39 84% 15%;
+    --quality-light: 38 100% 15%;
 
-    --standard: 22 31% 70%;
+    --standard: 35 32% 70%;
     --standard-foreground: 0 0% 8%;
-    --standard-light: 22 31% 15%;
+    --standard-light: 35 32% 15%;
 
-    --success: 160 84% 45%;
+    --success: 155 56% 45%;
     --success-foreground: 0 0% 8%;
-    --success-light: 160 84% 15%;
+    --success-light: 155 56% 15%;
 
-    --warning: 39 84% 60%;
+    --warning: 38 100% 55%;
     --warning-foreground: 0 0% 8%;
-    --warning-light: 39 84% 15%;
+    --warning-light: 38 100% 15%;
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 160 84% 45%;
+    --ring: 155 56% 45%;
 
     --sidebar-background: 0 0% 10%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 160 84% 45%;
+    --sidebar-primary: 155 56% 45%;
     --sidebar-primary-foreground: 0 0% 8%;
     --sidebar-accent: 0 0% 15%;
     --sidebar-accent-foreground: 0 0% 95%;
     --sidebar-border: 0 0% 15%;
-    --sidebar-ring: 160 84% 45%;
+    --sidebar-ring: 155 56% 45%;
   }
 }
 
@@ -145,12 +145,12 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased font-lato;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Melhorias de tipografia e espaçamento */
+/* Melhorias de tipografia e espaçamento para design institucional */
 @layer components {
   .chart-container {
     @apply bg-card border border-border rounded-xl shadow-soft p-6;
@@ -160,11 +160,27 @@
     @apply bg-gradient-to-br from-card to-muted/20 border border-border rounded-lg p-4 shadow-soft hover:shadow-medium transition-all duration-200;
   }
   
+  .institutional-card {
+    @apply bg-white border border-border rounded-xl p-6 shadow-institutional hover:shadow-strong transition-all duration-300;
+  }
+  
+  .hero-gradient {
+    @apply bg-gradient-hero;
+  }
+  
   .section-header {
     @apply text-2xl font-bold text-foreground mb-2 tracking-tight;
   }
   
   .section-description {
     @apply text-muted-foreground leading-relaxed;
+  }
+  
+  .institutional-button {
+    @apply bg-accent hover:bg-accent/90 text-accent-foreground font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-soft hover:shadow-medium;
+  }
+  
+  .institutional-button-secondary {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-soft hover:shadow-medium;
   }
 }

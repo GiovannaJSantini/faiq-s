@@ -13,6 +13,7 @@ import Relatorios from "./pages/Relatorios";
 import IndicadoresFaiq from "./pages/IndicadoresFaiq";
 import Usuarios from "./pages/Usuarios";
 import GraficosNiveis from "./pages/GraficosNiveis";
+import Institucional from "./pages/Institucional";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,19 +25,26 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/avaliacao" element={<NovaAvaliacao />} />
-              <Route path="/clinicas" element={<GerenciarClinicas />} />
-              <Route path="/relatorios" element={<Relatorios />} />
-              <Route path="/indicadores" element={<IndicadoresFaiq />} />
-              <Route path="/usuarios" element={<Usuarios />} />
-              <Route path="/graficos-niveis" element={<GraficosNiveis />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
+          <Routes>
+            {/* Rota institucional (sem sidebar) */}
+            <Route path="/institucional" element={<Institucional />} />
+            
+            {/* Rotas do sistema interno (com sidebar) */}
+            <Route path="/*" element={
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/avaliacao" element={<NovaAvaliacao />} />
+                  <Route path="/clinicas" element={<GerenciarClinicas />} />
+                  <Route path="/relatorios" element={<Relatorios />} />
+                  <Route path="/indicadores" element={<IndicadoresFaiq />} />
+                  <Route path="/usuarios" element={<Usuarios />} />
+                  <Route path="/graficos-niveis" element={<GraficosNiveis />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
+            } />
+          </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
