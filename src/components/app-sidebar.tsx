@@ -1,6 +1,6 @@
 
-import { NavLink, useLocation } from "react-router-dom";
-import { BarChart3, Building2, FileText, Activity, Home, Users, Grid2X2 } from "lucide-react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { BarChart3, Building2, FileText, Activity, Home, Users, Grid2X2, Eye, EyeOff } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,8 +10,11 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 const mainItems = [
   { title: "Dashboard", url: "/", icon: Home },
@@ -29,6 +32,7 @@ const systemItems = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
 
   const isActive = (path: string) => currentPath === path;
@@ -37,6 +41,10 @@ export function AppSidebar() {
     isActive 
       ? "bg-primary/10 text-primary font-medium border-r-2 border-primary" 
       : "hover:bg-muted/50 text-muted-foreground hover:text-foreground";
+
+  const handleViewToggle = () => {
+    navigate("/institucional");
+  };
 
   return (
     <Sidebar className={state === "collapsed" ? "w-16" : "w-64"}>
@@ -98,6 +106,21 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter className="p-4 border-t">
+        <div className="flex flex-col gap-2">
+          <Separator />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleViewToggle}
+            className="w-full justify-start text-muted-foreground hover:text-foreground"
+          >
+            <Eye className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-2'}`} />
+            {state !== "collapsed" && <span>Visualização Cliente</span>}
+          </Button>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }
