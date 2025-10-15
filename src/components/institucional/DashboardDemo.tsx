@@ -1,54 +1,65 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { ClassificationBadge } from "@/components/ui/classification-badge";
 import { TrendingUp, Activity, Users, Award } from "lucide-react";
-
 export function DashboardDemo() {
   // Dados demonstrativos baseados no sistema real
-  const performanceData = [
-    { name: 'Clínica A', score: 92, classification: 'excelencia' },
-    { name: 'Hospital B', score: 78, classification: 'qualidade' },
-    { name: 'Clínica C', score: 85, classification: 'qualidade' },
-    { name: 'Hospital D', score: 95, classification: 'excelencia' },
-    { name: 'Clínica E', score: 68, classification: 'padrao' },
-  ];
-
-  const distributionData = [
-    { name: 'Excelência', value: 40, color: 'hsl(155, 56%, 40%)' },
-    { name: 'Qualidade', value: 45, color: 'hsl(38, 100%, 48%)' },
-    { name: 'Padrão', value: 15, color: 'hsl(35, 32%, 65%)' },
-  ];
-
-  const stats = [
-    {
-      title: "Clínicas Avaliadas",
-      value: "150+",
-      icon: Users,
-      color: "text-primary"
-    },
-    {
-      title: "Avaliações Realizadas",
-      value: "500+",
-      icon: Activity,
-      color: "text-accent"
-    },
-    {
-      title: "Índice Médio",
-      value: "82.5%",
-      icon: TrendingUp,
-      color: "text-success"
-    },
-    {
-      title: "Certificações",
-      value: "95%",
-      icon: Award,
-      color: "text-primary"
-    }
-  ];
-
-  return (
-    <section id="indicadores" className="py-20 bg-muted/30">
+  const performanceData = [{
+    name: 'Clínica A',
+    score: 92,
+    classification: 'excelencia'
+  }, {
+    name: 'Hospital B',
+    score: 78,
+    classification: 'qualidade'
+  }, {
+    name: 'Clínica C',
+    score: 85,
+    classification: 'qualidade'
+  }, {
+    name: 'Hospital D',
+    score: 95,
+    classification: 'excelencia'
+  }, {
+    name: 'Clínica E',
+    score: 68,
+    classification: 'padrao'
+  }];
+  const distributionData = [{
+    name: 'Excelência',
+    value: 40,
+    color: 'hsl(155, 56%, 40%)'
+  }, {
+    name: 'Qualidade',
+    value: 45,
+    color: 'hsl(38, 100%, 48%)'
+  }, {
+    name: 'Padrão',
+    value: 15,
+    color: 'hsl(35, 32%, 65%)'
+  }];
+  const stats = [{
+    title: "Clínicas Avaliadas",
+    value: "150+",
+    icon: Users,
+    color: "text-primary"
+  }, {
+    title: "Avaliações Realizadas",
+    value: "500+",
+    icon: Activity,
+    color: "text-accent"
+  }, {
+    title: "Índice Médio",
+    value: "82.5%",
+    icon: TrendingUp,
+    color: "text-success"
+  }, {
+    title: "Certificações",
+    value: "95%",
+    icon: Award,
+    color: "text-primary"
+  }];
+  return <section id="indicadores" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -62,8 +73,7 @@ export function DashboardDemo() {
 
         {/* Cards de Estatísticas */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          {stats.map((stat, index) => (
-            <Card key={index} className="institutional-card">
+          {stats.map((stat, index) => <Card key={index} className="institutional-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {stat.title}
@@ -73,72 +83,14 @@ export function DashboardDemo() {
               <CardContent>
                 <div className="text-2xl font-bold text-foreground">{stat.value}</div>
               </CardContent>
-            </Card>
-          ))}
+            </Card>)}
         </div>
 
         {/* Gráficos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <Card className="institutional-card">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-foreground">
-                Desempenho por Instituição
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={performanceData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis 
-                    dataKey="name" 
-                    tick={{ fontSize: 12 }}
-                    angle={-45}
-                    textAnchor="end"
-                    height={80}
-                  />
-                  <YAxis 
-                    domain={[0, 100]}
-                    tick={{ fontSize: 12 }}
-                  />
-                  <Tooltip />
-                  <Bar 
-                    dataKey="score" 
-                    radius={[4, 4, 0, 0]}
-                    fill="hsl(var(--primary))"
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+          
 
-          <Card className="institutional-card">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-foreground">
-                Distribuição por Classificação
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={distributionData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, value }) => `${name}: ${value}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {distributionData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+          
         </div>
 
         {/* Classificações */}
@@ -180,6 +132,5 @@ export function DashboardDemo() {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 }
