@@ -14,7 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          name: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id: string
+          name?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      user_consents: {
+        Row: {
+          consent_date: string | null
+          consent_given: boolean
+          consent_type: string
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          updated_at: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          consent_date?: string | null
+          consent_given?: boolean
+          consent_type: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          consent_date?: string | null
+          consent_given?: boolean
+          consent_type?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          level: Database["public"]["Enums"]["user_level"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          level?: Database["public"]["Enums"]["user_level"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          level?: Database["public"]["Enums"]["user_level"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +106,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_level: "padrao" | "qualidade" | "excelencia"
+      user_role: "admin" | "cliente"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +234,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_level: ["padrao", "qualidade", "excelencia"],
+      user_role: ["admin", "cliente"],
+    },
   },
 } as const
