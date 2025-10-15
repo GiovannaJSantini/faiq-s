@@ -1,22 +1,21 @@
-
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Phone, Mail, MapPin } from "lucide-react";
-
 interface InstitutionalLayoutProps {
   children: ReactNode;
 }
-
-export function InstitutionalLayout({ children }: InstitutionalLayoutProps) {
+export function InstitutionalLayout({
+  children
+}: InstitutionalLayoutProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({
+        behavior: 'smooth'
+      });
     }
   };
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header/Navigation */}
       <header className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50">
         <div className="container mx-auto px-4 py-4">
@@ -32,37 +31,13 @@ export function InstitutionalLayout({ children }: InstitutionalLayoutProps) {
             </div>
             
             <nav className="hidden md:flex items-center gap-6">
-              <button
-                onClick={() => scrollToSection('sobre')}
-                className="text-foreground hover:text-primary transition-colors"
-              >
-                Sobre
-              </button>
-              <button
-                onClick={() => scrollToSection('servicos')}
-                className="text-foreground hover:text-primary transition-colors"
-              >
-                Serviços
-              </button>
-              <button
-                onClick={() => scrollToSection('indicadores')}
-                className="text-foreground hover:text-primary transition-colors"
-              >
-                Indicadores
-              </button>
-              <button
-                onClick={() => scrollToSection('contato')}
-                className="text-foreground hover:text-primary transition-colors"
-              >
+              
+              
+              
+              <button onClick={() => scrollToSection('contato')} className="text-foreground hover:text-primary transition-colors">
                 Contato
               </button>
-              <Button 
-                onClick={() => scrollToSection('contato')}
-                className="institutional-button"
-              >
-                Solicitar Avaliação
-                <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
+              
             </nav>
           </div>
         </div>
@@ -124,6 +99,5 @@ export function InstitutionalLayout({ children }: InstitutionalLayoutProps) {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 }
