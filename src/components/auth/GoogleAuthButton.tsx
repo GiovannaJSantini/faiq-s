@@ -1,9 +1,12 @@
-
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-export const GoogleAuthButton = () => {
+interface GoogleAuthButtonProps {
+  disabled?: boolean;
+}
+
+export const GoogleAuthButton = ({ disabled = false }: GoogleAuthButtonProps) => {
   const { toast } = useToast();
 
   const handleGoogleSignIn = async () => {
@@ -11,7 +14,11 @@ export const GoogleAuthButton = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`
+          redirectTo: `${window.location.origin}/`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
         }
       });
 
@@ -35,6 +42,7 @@ export const GoogleAuthButton = () => {
     <Button
       variant="outline"
       onClick={handleGoogleSignIn}
+      disabled={disabled}
       className="w-full flex items-center gap-2"
     >
       <svg className="w-4 h-4" viewBox="0 0 24 24">
