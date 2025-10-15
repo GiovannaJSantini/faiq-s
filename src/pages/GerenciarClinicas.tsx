@@ -7,16 +7,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { sampleClinics, sampleAssessments } from "@/data/faiqData";
 import { Building2, MapPin, Plus, Edit, Trash2, Eye, Calendar } from "lucide-react";
 import { ClassificationBadge } from "@/components/ui/classification-badge";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
+import { useClinics } from "@/hooks/useClinics";
+import { useAssessments } from "@/hooks/useAssessments";
 
 export default function GerenciarClinicas() {
   const { toast } = useToast();
-  const [clinics, setClinics] = useState(sampleClinics);
+  const { clinics, isLoading, createClinic, updateClinic, deleteClinic } = useClinics();
+  const { assessments } = useAssessments();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingClinic, setEditingClinic] = useState<any>(null);
   
@@ -26,8 +28,8 @@ export default function GerenciarClinicas() {
     type: "",
     phone: "",
     email: "",
-    responsibleName: "",
-    responsibleTitle: ""
+    responsible_name: "",
+    responsible_title: ""
   });
 
   const resetForm = () => {
@@ -37,8 +39,8 @@ export default function GerenciarClinicas() {
       type: "",
       phone: "",
       email: "",
-      responsibleName: "",
-      responsibleTitle: ""
+      responsible_name: "",
+      responsible_title: ""
     });
     setEditingClinic(null);
   };
@@ -55,8 +57,8 @@ export default function GerenciarClinicas() {
       type: clinic.type,
       phone: clinic.phone || "",
       email: clinic.email || "",
-      responsibleName: clinic.responsibleName || "",
-      responsibleTitle: clinic.responsibleTitle || ""
+      responsible_name: clinic.responsible_name || "",
+      responsible_title: clinic.responsible_title || ""
     });
     setEditingClinic(clinic);
     setIsDialogOpen(true);
@@ -74,27 +76,13 @@ export default function GerenciarClinicas() {
 
     if (editingClinic) {
       // Editar clínica existente
-      setClinics(prev => prev.map(clinic => 
-        clinic.id === editingClinic.id 
-          ? { ...clinic, ...formData }
-          : clinic
-      ));
-      toast({
-        title: "Clínica atualizada!",
-        description: `${formData.name} foi atualizada com sucesso.`
+      updateClinic.mutate({
+        id: editingClinic.id,
+        updates: formData
       });
     } else {
       // Adicionar nova clínica
-      const newClinic = {
-        id: `clinic-${Date.now()}`,
-        ...formData,
-        assessments: []
-      };
-      setClinics(prev => [...prev, newClinic]);
-      toast({
-        title: "Clínica adicionada!",
-        description: `${formData.name} foi adicionada com sucesso.`
-      });
+      createClinic.mutate(formData);
     }
 
     setIsDialogOpen(false);
@@ -102,22 +90,17 @@ export default function GerenciarClinicas() {
   };
 
   const handleDelete = (clinicId: string) => {
-    const clinic = clinics.find(c => c.id === clinicId);
-    setClinics(prev => prev.filter(c => c.id !== clinicId));
-    toast({
-      title: "Clínica removida",
-      description: `${clinic?.name} foi removida do sistema.`
-    });
+    deleteClinic.mutate(clinicId);
   };
 
   const getClinicAssessments = (clinicId: string) => {
-    return sampleAssessments.filter(assessment => assessment.clinicId === clinicId);
+    return assessments.filter(assessment => assessment.clinic_id === clinicId);
   };
 
   const getLatestAssessment = (clinicId: string) => {
-    const assessments = getClinicAssessments(clinicId);
-    return assessments.sort((a, b) => 
-      new Date(b.assessmentDate).getTime() - new Date(a.assessmentDate).getTime()
+    const clinicAssessments = getClinicAssessments(clinicId);
+    return clinicAssessments.sort((a, b) => 
+      new Date(b.assessment_date).getTime() - new Date(a.assessment_date).getTime()
     )[0];
   };
 
@@ -207,8 +190,8 @@ export default function GerenciarClinicas() {
                   <Label htmlFor="responsibleName">Nome do Responsável</Label>
                   <Input
                     id="responsibleName"
-                    value={formData.responsibleName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, responsibleName: e.target.value }))}
+                    value={formData.responsible_name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, responsible_name: e.target.value }))}
                     placeholder="Dr. João Silva"
                   />
                 </div>
@@ -216,8 +199,8 @@ export default function GerenciarClinicas() {
                   <Label htmlFor="responsibleTitle">Cargo do Responsável</Label>
                   <Input
                     id="responsibleTitle"
-                    value={formData.responsibleTitle}
-                    onChange={(e) => setFormData(prev => ({ ...prev, responsibleTitle: e.target.value }))}
+                    value={formData.responsible_title}
+                    onChange={(e) => setFormData(prev => ({ ...prev, responsible_title: e.target.value }))}
                     placeholder="Diretor Clínico"
                   />
                 </div>
@@ -336,9 +319,9 @@ export default function GerenciarClinicas() {
                     <TableCell>
                       {latestAssessment ? (
                         <div className="text-sm">
-                          {format(new Date(latestAssessment.assessmentDate), "dd/MM/yyyy", { locale: ptBR })}
+                          {format(new Date(latestAssessment.assessment_date), "dd/MM/yyyy", { locale: ptBR })}
                           <div className="text-xs text-muted-foreground">
-                            {latestAssessment.overallPercentage.toFixed(1)}%
+                            {latestAssessment.overall_percentage.toFixed(1)}%
                           </div>
                         </div>
                       ) : (

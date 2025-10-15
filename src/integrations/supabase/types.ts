@@ -14,6 +14,231 @@ export type Database = {
   }
   public: {
     Tables: {
+      area_scores: {
+        Row: {
+          area_id: string
+          area_name: string
+          assessment_id: string
+          created_at: string
+          id: string
+          max_score: number
+          percentage: number
+          total_score: number
+        }
+        Insert: {
+          area_id: string
+          area_name: string
+          assessment_id: string
+          created_at?: string
+          id?: string
+          max_score?: number
+          percentage?: number
+          total_score?: number
+        }
+        Update: {
+          area_id?: string
+          area_name?: string
+          assessment_id?: string
+          created_at?: string
+          id?: string
+          max_score?: number
+          percentage?: number
+          total_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "area_scores_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessments: {
+        Row: {
+          assessment_date: string
+          assessor_id: string
+          assessor_name: string
+          classification: Database["public"]["Enums"]["assessment_classification"]
+          clinic_id: string
+          created_at: string
+          id: string
+          max_score: number
+          observations: string | null
+          overall_percentage: number
+          status: Database["public"]["Enums"]["assessment_status"]
+          total_score: number
+          updated_at: string
+        }
+        Insert: {
+          assessment_date: string
+          assessor_id: string
+          assessor_name: string
+          classification?: Database["public"]["Enums"]["assessment_classification"]
+          clinic_id: string
+          created_at?: string
+          id?: string
+          max_score?: number
+          observations?: string | null
+          overall_percentage?: number
+          status?: Database["public"]["Enums"]["assessment_status"]
+          total_score?: number
+          updated_at?: string
+        }
+        Update: {
+          assessment_date?: string
+          assessor_id?: string
+          assessor_name?: string
+          classification?: Database["public"]["Enums"]["assessment_classification"]
+          clinic_id?: string
+          created_at?: string
+          id?: string
+          max_score?: number
+          observations?: string | null
+          overall_percentage?: number
+          status?: Database["public"]["Enums"]["assessment_status"]
+          total_score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessments_assessor_id_fkey"
+            columns: ["assessor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessments_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      category_scores: {
+        Row: {
+          area_score_id: string
+          category_id: string
+          category_name: string
+          created_at: string
+          id: string
+          max_score: number
+          percentage: number
+          total_score: number
+        }
+        Insert: {
+          area_score_id: string
+          category_id: string
+          category_name: string
+          created_at?: string
+          id?: string
+          max_score?: number
+          percentage?: number
+          total_score?: number
+        }
+        Update: {
+          area_score_id?: string
+          category_id?: string
+          category_name?: string
+          created_at?: string
+          id?: string
+          max_score?: number
+          percentage?: number
+          total_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "category_scores_area_score_id_fkey"
+            columns: ["area_score_id"]
+            isOneToOne: false
+            referencedRelation: "area_scores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clinics: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          location: string
+          name: string
+          phone: string | null
+          responsible_name: string | null
+          responsible_title: string | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          location: string
+          name: string
+          phone?: string | null
+          responsible_name?: string | null
+          responsible_title?: string | null
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          location?: string
+          name?: string
+          phone?: string | null
+          responsible_name?: string | null
+          responsible_title?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      indicator_scores: {
+        Row: {
+          category_score_id: string
+          created_at: string
+          id: string
+          indicator_id: string
+          indicator_name: string
+          notes: string | null
+          score: number
+          weight: number
+        }
+        Insert: {
+          category_score_id: string
+          created_at?: string
+          id?: string
+          indicator_id: string
+          indicator_name: string
+          notes?: string | null
+          score: number
+          weight?: number
+        }
+        Update: {
+          category_score_id?: string
+          created_at?: string
+          id?: string
+          indicator_id?: string
+          indicator_name?: string
+          notes?: string | null
+          score?: number
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "indicator_scores_category_score_id_fkey"
+            columns: ["category_score_id"]
+            isOneToOne: false
+            referencedRelation: "category_scores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -103,9 +328,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["user_level"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      assessment_classification: "excelencia" | "qualidade" | "padrao"
+      assessment_status: "em_andamento" | "concluida" | "revisao"
       user_level: "padrao" | "qualidade" | "excelencia"
       user_role: "admin" | "cliente" | "avaliador"
     }
@@ -235,6 +468,8 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      assessment_classification: ["excelencia", "qualidade", "padrao"],
+      assessment_status: ["em_andamento", "concluida", "revisao"],
       user_level: ["padrao", "qualidade", "excelencia"],
       user_role: ["admin", "cliente", "avaliador"],
     },
