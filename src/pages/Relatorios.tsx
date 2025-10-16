@@ -6,25 +6,63 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
-import { sampleClinics, sampleAssessments, faiqAreas } from "@/data/faiqData";
+import { faiqAreas } from "@/data/faiqData";
 import { Assessment } from "@/types/faiq";
 import { ClassificationBadge } from "@/components/ui/classification-badge";
 import { FileText, Download, TrendingUp, Building2, Calendar } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
+import { useClinics } from "@/hooks/useClinics";
+import { useAssessments } from "@/hooks/useAssessments";
+import { generateAssessmentPDF, generateComparativePDF } from "@/utils/pdfGenerator";
 
 export default function Relatorios() {
   const { toast } = useToast();
   const [selectedClinic, setSelectedClinic] = useState<string>("all");
   const [reportType, setReportType] = useState<string>("geral");
+  const { clinics, isLoading: clinicsLoading } = useClinics();
+  const { getAssessmentWithScores, isLoading: assessmentsLoading } = useAssessments();
+
+  // Converter dados do banco para formato compatível
+  const assessments: Assessment[] = getAssessmentWithScores.map(a => ({
+    id: a.id,
+    clinicId: a.clinic_id,
+    clinicName: a.clinic?.name || 'Desconhecida',
+    assessmentDate: new Date(a.assessment_date),
+    assessorName: a.assessor_name,
+    areaScores: (a.area_scores || []).map(as => ({
+      areaId: as.area_id,
+      categoryScores: (as.category_scores || []).map(cs => ({
+        categoryId: cs.category_id,
+        indicatorScores: (cs.indicator_scores || []).map(is => ({
+          indicatorId: is.indicator_id,
+          score: is.score as 0 | 0.5 | 1,
+          notes: is.notes || undefined,
+        })),
+        totalScore: cs.total_score,
+        maxScore: cs.max_score,
+        percentage: cs.percentage,
+      })),
+      totalScore: as.total_score,
+      maxScore: as.max_score,
+      percentage: as.percentage,
+    })),
+    totalScore: a.total_score,
+    maxScore: a.max_score,
+    overallPercentage: a.overall_percentage,
+    classification: a.classification as 'excelencia' | 'qualidade' | 'padrao',
+    status: a.status as 'em_andamento' | 'concluida' | 'revisao',
+    createdAt: new Date(a.created_at),
+    updatedAt: new Date(a.updated_at || a.created_at),
+  }));
 
   const filteredAssessments = selectedClinic === "all" 
-    ? sampleAssessments 
-    : sampleAssessments.filter(a => a.clinicId === selectedClinic);
+    ? assessments 
+    : assessments.filter(a => a.clinicId === selectedClinic);
 
   const selectedClinicData = selectedClinic !== "all" 
-    ? sampleClinics.find(c => c.id === selectedClinic)
+    ? clinics.find(c => c.id === selectedClinic)
     : null;
 
   // Dados para gráfico radar por área
@@ -41,8 +79,8 @@ export default function Relatorios() {
 
   // Dados para comparação entre clínicas
   const getComparisonData = () => {
-    return sampleClinics.map(clinic => {
-      const clinicAssessments = sampleAssessments.filter(a => a.clinicId === clinic.id);
+    return clinics.map(clinic => {
+      const clinicAssessments = assessments.filter(a => a.clinicId === clinic.id);
       const latestAssessment = clinicAssessments.sort((a, b) => 
         new Date(b.assessmentDate).getTime() - new Date(a.assessmentDate).getTime()
       )[0];
@@ -57,25 +95,83 @@ export default function Relatorios() {
   };
 
   const generateReport = () => {
-    const reportData = {
-      clinic: selectedClinicData?.name || "Todas as Clínicas",
-      date: new Date().toLocaleDateString('pt-BR'),
-      assessments: filteredAssessments.length,
-      type: reportType
-    };
+    try {
+      if (selectedClinic !== "all" && filteredAssessments.length > 0) {
+        // Gerar PDF individual da clínica
+        generateAssessmentPDF(
+          filteredAssessments[0],
+          selectedClinicData?.name || 'Desconhecida'
+        );
+      } else {
+        // Gerar PDF comparativo
+        generateComparativePDF(filteredAssessments, 'Relatório Comparativo de Avaliações');
+      }
 
-    toast({
-      title: "Relatório gerado!",
-      description: `Relatório ${reportType} para ${reportData.clinic} foi gerado com sucesso.`
-    });
+      toast({
+        title: "Relatório gerado!",
+        description: "O arquivo PDF foi baixado com sucesso."
+      });
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      toast({
+        title: "Erro ao gerar relatório",
+        description: "Ocorreu um erro ao gerar o PDF.",
+        variant: "destructive"
+      });
+    }
   };
 
   const exportData = () => {
-    toast({
-      title: "Exportação iniciada",
-      description: "Os dados estão sendo preparados para download em Excel."
-    });
+    try {
+      // Preparar dados para exportação CSV
+      const csvData = filteredAssessments.map(a => ({
+        'Data': format(a.assessmentDate, 'dd/MM/yyyy'),
+        'Clínica': a.clinicName,
+        'Avaliador': a.assessorName,
+        'Pontuação': `${a.overallPercentage.toFixed(1)}%`,
+        'Classificação': a.classification === 'excelencia' ? 'Excelência' : 
+                        a.classification === 'qualidade' ? 'Qualidade' : 'Padrão',
+        'Status': a.status === 'concluida' ? 'Concluída' : 'Em Andamento'
+      }));
+
+      // Converter para CSV
+      const headers = Object.keys(csvData[0] || {});
+      const csv = [
+        headers.join(','),
+        ...csvData.map(row => headers.map(h => `"${row[h as keyof typeof row]}"`).join(','))
+      ].join('\n');
+
+      // Download
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `avaliacoes-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+      link.click();
+
+      toast({
+        title: "Exportação concluída",
+        description: "Os dados foram exportados para CSV."
+      });
+    } catch (error) {
+      console.error('Erro ao exportar dados:', error);
+      toast({
+        title: "Erro na exportação",
+        description: "Ocorreu um erro ao exportar os dados.",
+        variant: "destructive"
+      });
+    }
   };
+
+  if (clinicsLoading || assessmentsLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Carregando dados...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -111,7 +207,7 @@ export default function Relatorios() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todas as Clínicas</SelectItem>
-                  {sampleClinics.map((clinic) => (
+                  {clinics.map((clinic) => (
                     <SelectItem key={clinic.id} value={clinic.id}>
                       {clinic.name}
                     </SelectItem>
@@ -161,7 +257,7 @@ export default function Relatorios() {
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-foreground">
-                  {selectedClinic === "all" ? sampleClinics.length : 1}
+                  {selectedClinic === "all" ? clinics.length : 1}
                 </h3>
                 <p className="text-sm text-muted-foreground">
                   {selectedClinic === "all" ? "Clínicas" : "Clínica Selecionada"}

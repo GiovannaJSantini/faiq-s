@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,127 +7,92 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Shield, UserCheck, User } from "lucide-react";
+import { Plus, Edit, Shield, UserCheck, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useUsers } from "@/hooks/useUsers";
+import { useProfiles } from "@/hooks/useProfiles";
 
-interface User {
+interface UserDisplay {
   id: string;
   name: string;
   email: string;
-  phone: string;
-  accessType: 'admin' | 'avaliador' | 'cliente';
-  isActive: boolean;
+  role: 'admin' | 'avaliador' | 'cliente';
   createdAt: Date;
 }
 
-const accessTypeConfig = {
+const roleConfig = {
   admin: { label: 'Administrador', color: 'bg-red-100 text-red-800', icon: Shield },
   avaliador: { label: 'Avaliador', color: 'bg-blue-100 text-blue-800', icon: UserCheck },
   cliente: { label: 'Cliente', color: 'bg-green-100 text-green-800', icon: User }
 };
 
-const sampleUsers: User[] = [
-  {
-    id: "1",
-    name: "Dr. João Silva",
-    email: "joao.silva@admin.com",
-    phone: "(11) 99999-9999",
-    accessType: "admin",
-    isActive: true,
-    createdAt: new Date("2024-01-15")
-  },
-  {
-    id: "2",
-    name: "Dra. Maria Santos",
-    email: "maria.santos@avaliador.com",
-    phone: "(11) 88888-8888",
-    accessType: "avaliador",
-    isActive: true,
-    createdAt: new Date("2024-02-20")
-  },
-  {
-    id: "3",
-    name: "Ana Oliveira",
-    email: "ana.oliveira@cliente.com",
-    phone: "(11) 77777-7777",
-    accessType: "cliente",
-    isActive: true,
-    createdAt: new Date("2024-03-10")
-  }
-];
-
 const Usuarios = () => {
-  const [users, setUsers] = useState<User[]>(sampleUsers);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editingUser, setEditingUser] = useState<UserDisplay | null>(null);
+  const [password, setPassword] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
-    accessType: "cliente" as User['accessType']
+    role: "cliente" as 'admin' | 'avaliador' | 'cliente'
   });
   const { toast } = useToast();
+  const { users: dbUsers, createUser, updateUser, isLoading } = useUsers();
+  const { profiles } = useProfiles();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Combinar dados de usuários com perfis
+  const users: UserDisplay[] = profiles.map(profile => ({
+    id: profile.id,
+    name: profile.name || profile.email,
+    email: profile.email,
+    role: profile.role as 'admin' | 'avaliador' | 'cliente',
+    createdAt: new Date(profile.created_at || Date.now()),
+  }));
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (editingUser) {
-      // Update existing user
-      setUsers(users.map(user => 
-        user.id === editingUser.id 
-          ? { ...user, ...formData }
-          : user
-      ));
-      toast({
-        title: "Usuário atualizado",
-        description: "As informações do usuário foram atualizadas com sucesso.",
+      // Atualizar usuário existente
+      updateUser.mutate({
+        id: editingUser.id,
+        updates: {
+          name: formData.name,
+          role: formData.role as 'admin' | 'avaliador' | 'cliente',
+        }
       });
     } else {
-      // Create new user
-      const newUser: User = {
-        id: Date.now().toString(),
-        ...formData,
-        isActive: true,
-        createdAt: new Date()
-      };
-      setUsers([...users, newUser]);
-      toast({
-        title: "Usuário criado",
-        description: "Novo usuário foi adicionado ao sistema.",
+      // Criar novo usuário
+      if (!password) {
+        toast({
+          title: "Senha obrigatória",
+          description: "Por favor, forneça uma senha para o novo usuário.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      createUser.mutate({
+        email: formData.email,
+        password: password,
+        name: formData.name,
+        role: formData.role as 'admin' | 'avaliador' | 'cliente',
       });
     }
     
     setIsDialogOpen(false);
     setEditingUser(null);
-    setFormData({ name: "", email: "", phone: "", accessType: "cliente" });
+    setFormData({ name: "", email: "", role: "cliente" });
+    setPassword("");
   };
 
-  const handleEdit = (user: User) => {
+  const handleEdit = (user: UserDisplay) => {
     setEditingUser(user);
     setFormData({
       name: user.name,
       email: user.email,
-      phone: user.phone,
-      accessType: user.accessType
+      role: user.role
     });
     setIsDialogOpen(true);
-  };
-
-  const handleDelete = (userId: string) => {
-    setUsers(users.filter(user => user.id !== userId));
-    toast({
-      title: "Usuário removido",
-      description: "O usuário foi removido do sistema.",
-      variant: "destructive",
-    });
-  };
-
-  const toggleUserStatus = (userId: string) => {
-    setUsers(users.map(user => 
-      user.id === userId 
-        ? { ...user, isActive: !user.isActive }
-        : user
-    ));
   };
 
   return (
@@ -181,20 +146,23 @@ const Usuarios = () => {
                 />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="phone">Telefone</Label>
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  placeholder="(11) 99999-9999"
-                  required
-                />
-              </div>
+              {!editingUser && (
+                <div className="space-y-2">
+                  <Label htmlFor="password">Senha</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Digite uma senha"
+                    required={!editingUser}
+                  />
+                </div>
+              )}
               
               <div className="space-y-2">
-                <Label htmlFor="accessType">Tipo de acesso</Label>
-                <Select value={formData.accessType} onValueChange={(value: User['accessType']) => setFormData({...formData, accessType: value})}>
+                <Label htmlFor="role">Tipo de acesso</Label>
+                <Select value={formData.role} onValueChange={(value: 'admin' | 'avaliador' | 'cliente') => setFormData({...formData, role: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o tipo de acesso" />
                   </SelectTrigger>
@@ -219,7 +187,15 @@ const Usuarios = () => {
         </Dialog>
       </div>
 
-      <Card>
+      {isLoading ? (
+        <div className="flex items-center justify-center p-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Carregando usuários...</p>
+          </div>
+        </div>
+      ) : (
+        <Card>
         <CardHeader>
           <CardTitle>Lista de Usuários</CardTitle>
           <CardDescription>
@@ -232,42 +208,36 @@ const Usuarios = () => {
               <TableRow>
                 <TableHead>Nome</TableHead>
                 <TableHead>E-mail</TableHead>
-                <TableHead>Telefone</TableHead>
                 <TableHead>Tipo de Acesso</TableHead>
-                <TableHead>Status</TableHead>
                 <TableHead>Data de Criação</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => {
-                const config = accessTypeConfig[user.accessType];
-                const IconComponent = config.icon;
-                return (
-                  <TableRow key={user.id}>
-                    <TableCell className="font-medium">{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.phone}</TableCell>
-                    <TableCell>
-                      <Badge className={config.color}>
-                        <IconComponent className="h-3 w-3 mr-1" />
-                        {config.label}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant={user.isActive ? "default" : "secondary"}
-                        size="sm"
-                        onClick={() => toggleUserStatus(user.id)}
-                      >
-                        {user.isActive ? "Ativo" : "Inativo"}
-                      </Button>
-                    </TableCell>
-                    <TableCell>
-                      {user.createdAt.toLocaleDateString("pt-BR")}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+              {users.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                    Nenhum usuário cadastrado
+                  </TableCell>
+                </TableRow>
+              ) : (
+                users.map((user) => {
+                  const config = roleConfig[user.role];
+                  const IconComponent = config.icon;
+                  return (
+                    <TableRow key={user.id}>
+                      <TableCell className="font-medium">{user.name}</TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>
+                        <Badge className={config.color}>
+                          <IconComponent className="h-3 w-3 mr-1" />
+                          {config.label}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {user.createdAt.toLocaleDateString("pt-BR")}
+                      </TableCell>
+                      <TableCell className="text-right">
                         <Button
                           variant="outline"
                           size="sm"
@@ -275,22 +245,16 @@ const Usuarios = () => {
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleDelete(user.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
+      )}
     </div>
   );
 };

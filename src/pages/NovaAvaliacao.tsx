@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight, Save, FileText, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { sampleClinics } from "@/data/faiqData";
+import { useClinics } from "@/hooks/useClinics";
+import { useAssessments } from "@/hooks/useAssessments";
+import { useAuth } from "@/hooks/useAuth";
+import type { AreaScore, CategoryScore, IndicatorScore } from "@/types/faiq";
 
 // Complete FAIQ structure with all 10 areas
 const faiqStructure = [
@@ -437,13 +441,18 @@ const faiqStructure = [
 ];
 
 const NovaAvaliacao = () => {
+  const navigate = useNavigate();
   const [selectedClinic, setSelectedClinic] = useState("");
   const [assessorName, setAssessorName] = useState("");
   const [observations, setObservations] = useState("");
   const [openAreas, setOpenAreas] = useState<number[]>([]);
   const [openCategories, setOpenCategories] = useState<number[]>([]);
   const [scores, setScores] = useState<Record<string, number>>({});
+  const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
+  const { clinics, isLoading: clinicsLoading } = useClinics();
+  const { createAssessment } = useAssessments();
+  const { user } = useAuth();
 
   const toggleArea = (areaId: number) => {
     setOpenAreas(prev => 
@@ -483,7 +492,7 @@ const NovaAvaliacao = () => {
     return { label: "Padrão", color: "bg-standard text-standard-foreground" };
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedClinic || !assessorName) {
       toast({
         title: "Campos obrigatórios",
@@ -493,13 +502,106 @@ const NovaAvaliacao = () => {
       return;
     }
 
-    const overallScore = calculateOverallScore();
-    const classification = getClassification(overallScore);
+    if (!user) {
+      toast({
+        title: "Erro de autenticação",
+        description: "Você precisa estar autenticado para criar uma avaliação.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    toast({
-      title: "Avaliação salva com sucesso!",
-      description: `Pontuação geral: ${overallScore.toFixed(1)}% - ${classification.label}`,
-    });
+    setIsSaving(true);
+
+    try {
+      // Calcular pontuações por área
+      const areaScores: (AreaScore & {
+        categoryScores: (CategoryScore & {
+          indicatorScores: IndicatorScore[];
+        })[];
+      })[] = faiqStructure.map((area) => {
+        const categoryScores = area.categories.map((category) => {
+          const indicatorScores: IndicatorScore[] = category.indicators.map((_, index) => {
+            const key = `${area.id}-${category.id}-${index}`;
+            const score = (scores[key] || 0) as 0 | 0.5 | 1;
+            return {
+              indicatorId: `${area.id}-${category.id}-${index}`,
+              score,
+              notes: '',
+            };
+          });
+
+          const totalScore = indicatorScores.reduce((sum, is) => sum + is.score, 0);
+          const maxScore = indicatorScores.length;
+          const percentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
+
+          return {
+            categoryId: `${area.id}-${category.id}`,
+            indicatorScores,
+            totalScore,
+            maxScore,
+            percentage,
+          };
+        });
+
+        const totalScore = categoryScores.reduce((sum, cs) => sum + cs.totalScore, 0);
+        const maxScore = categoryScores.reduce((sum, cs) => sum + cs.maxScore, 0);
+        const percentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
+
+        return {
+          areaId: `${area.id}`,
+          categoryScores,
+          totalScore,
+          maxScore,
+          percentage,
+        };
+      });
+
+      const totalScore = areaScores.reduce((sum, as) => sum + as.totalScore, 0);
+      const maxScore = areaScores.reduce((sum, as) => sum + as.maxScore, 0);
+      const overallPercentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
+
+      const classificationResult = getClassification(overallPercentage);
+      const classification = 
+        overallPercentage >= 80 ? 'excelencia' as const :
+        overallPercentage >= 60 ? 'qualidade' as const :
+        'padrao' as const;
+
+      await createAssessment.mutateAsync({
+        assessment: {
+          clinic_id: selectedClinic,
+          assessor_id: user.id,
+          assessor_name: assessorName,
+          assessment_date: new Date().toISOString().split('T')[0],
+          overall_percentage: overallPercentage,
+          total_score: totalScore,
+          max_score: maxScore,
+          classification,
+          status: 'concluida',
+          observations: observations || null,
+        },
+        areaScores,
+      });
+
+      toast({
+        title: "Avaliação salva com sucesso!",
+        description: `Pontuação geral: ${overallPercentage.toFixed(1)}% - ${classificationResult.label}`,
+      });
+
+      // Navegar para a página de relatórios
+      setTimeout(() => {
+        navigate('/relatorios');
+      }, 1500);
+    } catch (error: any) {
+      console.error('Erro ao salvar avaliação:', error);
+      toast({
+        title: "Erro ao salvar avaliação",
+        description: error.message || "Ocorreu um erro ao salvar a avaliação.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const overallScore = calculateOverallScore();
@@ -531,11 +633,17 @@ const NovaAvaliacao = () => {
                   <SelectValue placeholder="Selecione a clínica" />
                 </SelectTrigger>
                 <SelectContent>
-                  {sampleClinics.map((clinic) => (
-                    <SelectItem key={clinic.id} value={clinic.id}>
-                      {clinic.name}
-                    </SelectItem>
-                  ))}
+                  {clinicsLoading ? (
+                    <SelectItem value="loading" disabled>Carregando...</SelectItem>
+                  ) : clinics.length === 0 ? (
+                    <SelectItem value="empty" disabled>Nenhuma clínica cadastrada</SelectItem>
+                  ) : (
+                    clinics.map((clinic) => (
+                      <SelectItem key={clinic.id} value={clinic.id}>
+                        {clinic.name}
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -680,9 +788,14 @@ const NovaAvaliacao = () => {
 
       {/* Save Button */}
       <div className="flex justify-end pt-4">
-        <Button onClick={handleSubmit} className="gap-2 bg-details hover:bg-details/90" size="lg">
+        <Button 
+          onClick={handleSubmit} 
+          className="gap-2 bg-details hover:bg-details/90" 
+          size="lg"
+          disabled={isSaving}
+        >
           <Save className="h-4 w-4" />
-          Salvar Avaliação
+          {isSaving ? "Salvando..." : "Salvar Avaliação"}
         </Button>
       </div>
     </div>
