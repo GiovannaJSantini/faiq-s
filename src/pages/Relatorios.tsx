@@ -16,9 +16,13 @@ import { useToast } from "@/hooks/use-toast";
 import { useClinics } from "@/hooks/useClinics";
 import { useAssessments } from "@/hooks/useAssessments";
 import { generateAssessmentPDF, generateComparativePDF } from "@/utils/pdfGenerator";
+import { useUserRole } from "@/hooks/useUserRole";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Relatorios() {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { userRole, isCliente } = useUserRole();
   const [selectedClinic, setSelectedClinic] = useState<string>("all");
   const [reportType, setReportType] = useState<string>("geral");
   const { clinics, isLoading: clinicsLoading } = useClinics();
@@ -57,9 +61,22 @@ export default function Relatorios() {
     updatedAt: new Date(a.updated_at || a.created_at),
   }));
 
-  const filteredAssessments = selectedClinic === "all" 
+  // Filtrar clínicas para clientes - mostrar apenas suas próprias
+  const visibleClinics = isCliente 
+    ? clinics.filter(clinic => 
+        assessments.some(a => a.clinicId === clinic.id && a.assessorName === user?.email)
+      )
+    : clinics;
+
+  // Filtrar assessments por clínica selecionada e por role
+  let filteredAssessments = selectedClinic === "all" 
     ? assessments 
     : assessments.filter(a => a.clinicId === selectedClinic);
+
+  // Clientes veem apenas suas próprias avaliações
+  if (isCliente && user?.email) {
+    filteredAssessments = filteredAssessments.filter(a => a.assessorName === user.email);
+  }
 
   const selectedClinicData = selectedClinic !== "all" 
     ? clinics.find(c => c.id === selectedClinic)
@@ -205,13 +222,13 @@ export default function Relatorios() {
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas as Clínicas</SelectItem>
-                  {clinics.map((clinic) => (
-                    <SelectItem key={clinic.id} value={clinic.id}>
-                      {clinic.name}
-                    </SelectItem>
-                  ))}
+              <SelectContent>
+                <SelectItem value="all">Todas as Clínicas</SelectItem>
+                {visibleClinics.map((clinic) => (
+                  <SelectItem key={clinic.id} value={clinic.id}>
+                    {clinic.name}
+                  </SelectItem>
+                ))}
                 </SelectContent>
               </Select>
             </div>

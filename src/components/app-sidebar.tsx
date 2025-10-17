@@ -1,6 +1,6 @@
 
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { BarChart3, Building2, FileText, Activity, Home, Users, Grid2X2, Eye, EyeOff } from "lucide-react";
+import { BarChart3, Building2, FileText, Activity, Home, Users, Grid2X2, Eye } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -15,18 +15,19 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useUserRole } from "@/hooks/useUserRole";
 
 const mainItems = [
-  { title: "Dashboard", url: "/", icon: Home },
-  { title: "Nova Avaliação", url: "/avaliacao", icon: Activity },
-  { title: "Gerenciar Clínicas", url: "/clinicas", icon: Building2 },
-  { title: "Gráficos de Níveis", url: "/graficos-niveis", icon: Grid2X2 },
-  { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
+  { title: "Dashboard", url: "/", icon: Home, roles: ['admin', 'avaliador'] },
+  { title: "Nova Avaliação", url: "/avaliacao", icon: Activity, roles: ['admin', 'avaliador'] },
+  { title: "Gerenciar Clínicas", url: "/clinicas", icon: Building2, roles: ['admin'] },
+  { title: "Gráficos de Níveis", url: "/graficos-niveis", icon: Grid2X2, roles: ['admin', 'avaliador'] },
+  { title: "Relatórios", url: "/relatorios", icon: BarChart3, roles: ['admin', 'avaliador', 'cliente'] },
 ];
 
 const systemItems = [
-  { title: "Indicadores FAIQ", url: "/indicadores", icon: FileText },
-  { title: "Usuários", url: "/usuarios", icon: Users },
+  { title: "Indicadores FAIQ", url: "/indicadores", icon: FileText, roles: ['admin'] },
+  { title: "Usuários", url: "/usuarios", icon: Users, roles: ['admin'] },
 ];
 
 export function AppSidebar() {
@@ -34,6 +35,7 @@ export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
+  const { userRole, isLoading } = useUserRole();
 
   const isActive = (path: string) => currentPath === path;
   
@@ -45,6 +47,25 @@ export function AppSidebar() {
   const handleViewToggle = () => {
     navigate("/institucional");
   };
+
+  // Filtrar itens baseado no role do usuário
+  const filteredMainItems = mainItems.filter(item => 
+    !item.roles || !userRole || item.roles.includes(userRole)
+  );
+  
+  const filteredSystemItems = systemItems.filter(item => 
+    !item.roles || !userRole || item.roles.includes(userRole)
+  );
+
+  if (isLoading) {
+    return (
+      <Sidebar className={state === "collapsed" ? "w-16" : "w-64"}>
+        <SidebarContent className="bg-card flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </SidebarContent>
+      </Sidebar>
+    );
+  }
 
   return (
     <Sidebar className={state === "collapsed" ? "w-16" : "w-64"}>
@@ -63,48 +84,52 @@ export function AppSidebar() {
           </div>
         </div>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {mainItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink 
-                      to={item.url} 
-                      end 
-                      className={getNavCls}
-                    >
-                      <item.icon className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-2'}`} />
-                      {state !== "collapsed" && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {filteredMainItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {filteredMainItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <NavLink 
+                        to={item.url} 
+                        end 
+                        className={getNavCls}
+                      >
+                        <item.icon className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-2'}`} />
+                        {state !== "collapsed" && <span>{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Sistema</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {systemItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink 
-                      to={item.url} 
-                      className={getNavCls}
-                    >
-                      <item.icon className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-2'}`} />
-                      {state !== "collapsed" && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {filteredSystemItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Sistema</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {filteredSystemItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <NavLink 
+                        to={item.url} 
+                        className={getNavCls}
+                      >
+                        <item.icon className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-2'}`} />
+                        {state !== "collapsed" && <span>{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="p-4 border-t">

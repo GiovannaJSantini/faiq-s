@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,8 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Edit, Shield, UserCheck, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useUsers } from "@/hooks/useUsers";
-import { useProfiles } from "@/hooks/useProfiles";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 interface UserDisplay {
   id: string;
@@ -36,17 +36,120 @@ const Usuarios = () => {
     role: "cliente" as 'admin' | 'avaliador' | 'cliente'
   });
   const { toast } = useToast();
-  const { users: dbUsers, createUser, updateUser, isLoading } = useUsers();
-  const { profiles } = useProfiles();
+  const queryClient = useQueryClient();
 
-  // Combinar dados de usuários com perfis
-  const users: UserDisplay[] = profiles.map(profile => ({
-    id: profile.id,
-    name: profile.name || profile.email,
-    email: profile.email,
-    role: profile.role as 'admin' | 'avaliador' | 'cliente',
-    createdAt: new Date(profile.created_at || Date.now()),
-  }));
+  // Buscar usuários com seus roles da tabela user_roles
+  const { data: users = [], isLoading } = useQuery({
+    queryKey: ['usersWithRoles'],
+    queryFn: async () => {
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (profilesError) throw profilesError;
+
+      const { data: userRoles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id, role');
+      
+      if (rolesError) throw rolesError;
+
+      // Combinar profiles com roles
+      const usersWithRoles: UserDisplay[] = profiles.map(profile => {
+        const userRole = userRoles.find(ur => ur.user_id === profile.id);
+        return {
+          id: profile.id,
+          name: profile.name || profile.email,
+          email: profile.email,
+          role: (userRole?.role as 'admin' | 'avaliador' | 'cliente') || 'cliente',
+          createdAt: new Date(profile.created_at || Date.now()),
+        };
+      });
+
+      return usersWithRoles;
+    },
+  });
+
+  // Mutation para criar usuário
+  const createUser = useMutation({
+    mutationFn: async ({ email, password, name, role }: { 
+      email: string; 
+      password: string; 
+      name: string; 
+      role: 'admin' | 'avaliador' | 'cliente' 
+    }) => {
+      // Criar usuário no auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: { name }
+        }
+      });
+
+      if (authError) throw authError;
+      if (!authData.user) throw new Error('Falha ao criar usuário');
+
+      // Atualizar o role na tabela user_roles
+      const { error: roleError } = await supabase
+        .from('user_roles')
+        .update({ role })
+        .eq('user_id', authData.user.id);
+
+      if (roleError) throw roleError;
+
+      return authData.user;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['usersWithRoles'] });
+      toast({ title: 'Usuário criado com sucesso' });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Erro ao criar usuário',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Mutation para atualizar usuário
+  const updateUser = useMutation({
+    mutationFn: async ({ id, name, role }: { 
+      id: string; 
+      name: string; 
+      role: 'admin' | 'avaliador' | 'cliente' 
+    }) => {
+      // Atualizar perfil
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ name })
+        .eq('id', id);
+
+      if (profileError) throw profileError;
+
+      // Atualizar role
+      const { error: roleError } = await supabase
+        .from('user_roles')
+        .update({ role })
+        .eq('user_id', id);
+
+      if (roleError) throw roleError;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['usersWithRoles'] });
+      toast({ title: 'Usuário atualizado com sucesso' });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Erro ao atualizar usuário',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,10 +158,8 @@ const Usuarios = () => {
       // Atualizar usuário existente
       updateUser.mutate({
         id: editingUser.id,
-        updates: {
-          name: formData.name,
-          role: formData.role as 'admin' | 'avaliador' | 'cliente',
-        }
+        name: formData.name,
+        role: formData.role,
       });
     } else {
       // Criar novo usuário
@@ -75,7 +176,7 @@ const Usuarios = () => {
         email: formData.email,
         password: password,
         name: formData.name,
-        role: formData.role as 'admin' | 'avaliador' | 'cliente',
+        role: formData.role,
       });
     }
     

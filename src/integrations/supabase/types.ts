@@ -307,18 +307,21 @@ export type Database = {
           created_at: string | null
           id: string
           level: Database["public"]["Enums"]["user_level"]
+          role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
           created_at?: string | null
           id?: string
           level?: Database["public"]["Enums"]["user_level"]
+          role?: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
           created_at?: string | null
           id?: string
           level?: Database["public"]["Enums"]["user_level"]
+          role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
         }
         Relationships: []
@@ -328,6 +331,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_app_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["user_level"]
@@ -337,6 +351,7 @@ export type Database = {
       }
     }
     Enums: {
+      app_role: "admin" | "avaliador" | "cliente"
       assessment_classification: "excelencia" | "qualidade" | "padrao"
       assessment_status: "em_andamento" | "concluida" | "revisao"
       user_level: "padrao" | "qualidade" | "excelencia"
@@ -468,6 +483,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "avaliador", "cliente"],
       assessment_classification: ["excelencia", "qualidade", "padrao"],
       assessment_status: ["em_andamento", "concluida", "revisao"],
       user_level: ["padrao", "qualidade", "excelencia"],
