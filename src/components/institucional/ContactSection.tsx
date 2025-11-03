@@ -5,19 +5,40 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { useState } from "react";
+import { contactSchema, type ContactFormData } from "@/lib/validations/contact";
+import { useToast } from "@/hooks/use-toast";
+
 export function ContactSection() {
-  const [formData, setFormData] = useState({
+  const { toast } = useToast();
+  const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     phone: '',
     institution: '',
     message: ''
   });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const validation = contactSchema.safeParse(formData);
+    if (!validation.success) {
+      toast({
+        variant: "destructive",
+        title: "Dados inválidos",
+        description: validation.error.errors[0].message
+      });
+      return;
+    }
+
     // Aqui seria implementada a lógica de envio do formulário
-    console.log('Form submitted:', formData);
-    alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+    console.log('Validated form submitted:', validation.data);
+    
+    toast({
+      title: "Mensagem enviada!",
+      description: "Entraremos em contato em breve."
+    });
+    
     setFormData({
       name: '',
       email: '',
@@ -26,6 +47,7 @@ export function ContactSection() {
       message: ''
     });
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
