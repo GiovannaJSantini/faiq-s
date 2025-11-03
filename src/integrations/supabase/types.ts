@@ -245,7 +245,6 @@ export type Database = {
           email: string
           id: string
           name: string | null
-          role: Database["public"]["Enums"]["user_role"]
           updated_at: string | null
         }
         Insert: {
@@ -253,7 +252,6 @@ export type Database = {
           email: string
           id: string
           name?: string | null
-          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
         }
         Update: {
@@ -261,7 +259,6 @@ export type Database = {
           email?: string
           id?: string
           name?: string | null
-          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
         }
         Relationships: []
@@ -273,7 +270,7 @@ export type Database = {
           consent_type: string
           created_at: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           updated_at: string | null
           user_agent: string | null
           user_id: string
@@ -284,7 +281,7 @@ export type Database = {
           consent_type: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           updated_at?: string | null
           user_agent?: string | null
           user_id: string
@@ -295,7 +292,7 @@ export type Database = {
           consent_type?: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           updated_at?: string | null
           user_agent?: string | null
           user_id?: string
