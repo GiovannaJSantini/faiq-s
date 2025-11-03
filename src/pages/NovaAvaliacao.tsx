@@ -15,6 +15,7 @@ import { useClinics } from "@/hooks/useClinics";
 import { useAssessments } from "@/hooks/useAssessments";
 import { useAuth } from "@/hooks/useAuth";
 import type { AreaScore, CategoryScore, IndicatorScore } from "@/types/faiq";
+import { assessmentFormSchema, indicatorScoreSchema } from "@/lib/validations/assessment";
 
 // Complete FAIQ structure with all 10 areas
 const faiqStructure = [
@@ -493,13 +494,33 @@ const NovaAvaliacao = () => {
   };
 
   const handleSubmit = async () => {
-    if (!selectedClinic || !assessorName) {
+    // Validate form data
+    const formValidation = assessmentFormSchema.safeParse({
+      selectedClinic,
+      assessorName,
+      observations
+    });
+
+    if (!formValidation.success) {
       toast({
-        title: "Campos obrigatórios",
-        description: "Por favor, preencha a clínica e o nome do avaliador.",
+        title: "Dados inválidos",
+        description: formValidation.error.errors[0].message,
         variant: "destructive",
       });
       return;
+    }
+
+    // Validate all indicator scores
+    for (const [key, score] of Object.entries(scores)) {
+      const scoreValidation = indicatorScoreSchema.safeParse(score);
+      if (!scoreValidation.success) {
+        toast({
+          title: "Pontuação inválida",
+          description: `${scoreValidation.error.errors[0].message} (indicador ${key})`,
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     if (!user) {

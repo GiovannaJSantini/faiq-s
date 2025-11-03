@@ -11,6 +11,7 @@ import { Plus, Edit, Shield, UserCheck, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { userSchema, userUpdateSchema } from "@/lib/validations/user";
 
 interface UserDisplay {
   id: string;
@@ -155,28 +156,50 @@ const Usuarios = () => {
     e.preventDefault();
     
     if (editingUser) {
+      // Validate update data
+      const result = userUpdateSchema.safeParse({
+        name: formData.name,
+        role: formData.role
+      });
+      
+      if (!result.success) {
+        toast({
+          title: "Dados inválidos",
+          description: result.error.errors[0].message,
+          variant: "destructive",
+        });
+        return;
+      }
+      
       // Atualizar usuário existente
       updateUser.mutate({
         id: editingUser.id,
-        name: formData.name,
-        role: formData.role,
+        name: result.data.name,
+        role: result.data.role,
       });
     } else {
-      // Criar novo usuário
-      if (!password) {
+      // Validate full user data including password
+      const result = userSchema.safeParse({
+        name: formData.name,
+        email: formData.email,
+        password: password,
+        role: formData.role
+      });
+      
+      if (!result.success) {
         toast({
-          title: "Senha obrigatória",
-          description: "Por favor, forneça uma senha para o novo usuário.",
+          title: "Dados inválidos",
+          description: result.error.errors[0].message,
           variant: "destructive",
         });
         return;
       }
 
       createUser.mutate({
-        email: formData.email,
-        password: password,
-        name: formData.name,
-        role: formData.role,
+        email: result.data.email,
+        password: result.data.password,
+        name: result.data.name,
+        role: result.data.role,
       });
     }
     

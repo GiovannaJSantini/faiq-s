@@ -14,6 +14,7 @@ import { ptBR } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
 import { useClinics } from "@/hooks/useClinics";
 import { useAssessments } from "@/hooks/useAssessments";
+import { clinicSchema } from "@/lib/validations/clinic";
 
 export default function GerenciarClinicas() {
   const { toast } = useToast();
@@ -65,24 +66,38 @@ export default function GerenciarClinicas() {
   };
 
   const handleSave = () => {
-    if (!formData.name.trim() || !formData.location.trim() || !formData.type) {
+    // Validate form data with zod schema
+    const result = clinicSchema.safeParse(formData);
+    
+    if (!result.success) {
       toast({
         variant: "destructive",
-        title: "Dados obrigatórios",
-        description: "Nome, localização e tipo são obrigatórios."
+        title: "Dados inválidos",
+        description: result.error.errors[0].message
       });
       return;
     }
+
+    // Prepare data with required fields guaranteed
+    const validatedData = {
+      name: result.data.name,
+      location: result.data.location,
+      type: result.data.type,
+      phone: result.data.phone,
+      email: result.data.email,
+      responsible_name: result.data.responsible_name,
+      responsible_title: result.data.responsible_title
+    };
 
     if (editingClinic) {
       // Editar clínica existente
       updateClinic.mutate({
         id: editingClinic.id,
-        updates: formData
+        updates: validatedData
       });
     } else {
       // Adicionar nova clínica
-      createClinic.mutate(formData);
+      createClinic.mutate(validatedData);
     }
 
     setIsDialogOpen(false);
