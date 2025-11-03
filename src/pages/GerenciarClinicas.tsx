@@ -19,7 +19,7 @@ import { clinicSchema } from "@/lib/validations/clinic";
 export default function GerenciarClinicas() {
   const { toast } = useToast();
   const { clinics, isLoading, createClinic, updateClinic, deleteClinic } = useClinics();
-  const { assessments } = useAssessments();
+  const { assessments, isLoading: assessmentsLoading } = useAssessments();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingClinic, setEditingClinic] = useState<any>(null);
   
@@ -119,6 +119,19 @@ export default function GerenciarClinicas() {
     )[0];
   };
 
+  if (isLoading || assessmentsLoading) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-muted-foreground">Carregando clínicas...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -138,6 +151,9 @@ export default function GerenciarClinicas() {
               <DialogTitle>
                 {editingClinic ? "Editar Clínica" : "Nova Clínica"}
               </DialogTitle>
+              <p className="text-sm text-muted-foreground">
+                Preencha os dados da clínica abaixo
+              </p>
             </DialogHeader>
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -304,7 +320,18 @@ export default function GerenciarClinicas() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {clinics.map((clinic) => {
+              {clinics.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8">
+                    <div className="text-muted-foreground">
+                      <Building2 className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                      <p>Nenhuma clínica cadastrada</p>
+                      <p className="text-sm mt-1">Clique em "Nova Clínica" para começar</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                clinics.map((clinic) => {
                 const latestAssessment = getLatestAssessment(clinic.id);
                 const assessmentCount = getClinicAssessments(clinic.id).length;
                 
@@ -374,7 +401,8 @@ export default function GerenciarClinicas() {
                     </TableCell>
                   </TableRow>
                 );
-              })}
+              })
+              )}
             </TableBody>
           </Table>
         </CardContent>
