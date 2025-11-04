@@ -11,10 +11,12 @@ export const GoogleAuthButton = ({ disabled = false }: GoogleAuthButtonProps) =>
 
   const handleGoogleSignIn = async () => {
     try {
+      const redirectUrl = import.meta.env.VITE_OAUTH_REDIRECT_URL || window.location.origin;
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `${redirectUrl}/`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',

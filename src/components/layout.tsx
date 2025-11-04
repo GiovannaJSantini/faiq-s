@@ -1,8 +1,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,13 +9,6 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/institucional");
-    }
-  }, [user, loading, navigate]);
 
   if (loading) {
     return (
@@ -30,7 +22,7 @@ export function Layout({ children }: LayoutProps) {
   }
 
   if (!user) {
-    return null;
+    return <Navigate to="/institucional" replace />;
   }
 
   return (

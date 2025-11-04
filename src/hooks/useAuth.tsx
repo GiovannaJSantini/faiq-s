@@ -3,6 +3,7 @@ import { useState, useEffect, createContext, useContext } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { Tables } from '@/integrations/supabase/types';
+import { recordAuthConsents } from '@/utils/consentManager';
 
 type Profile = Tables<'profiles'>;
 
@@ -39,6 +40,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(session?.user ?? null);
         if (session?.user) {
           await fetchProfile(session.user.id);
+          
+          // Record LGPD consent on sign in (new user or returning user)
+          if (event === 'SIGNED_IN') {
+            setTimeout(() => {
+              recordAuthConsents(session.user.id).catch(console.error);
+            }, 0);
+          }
         } else {
           setProfile(null);
           setLoading(false);
@@ -75,11 +83,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signUp = async (email: string, password: string, name: string) => {
+    const redirectUrl = import.meta.env.VITE_OAUTH_REDIRECT_URL || window.location.origin;
+    
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: `${redirectUrl}/`,
         data: {
           name,
         },
