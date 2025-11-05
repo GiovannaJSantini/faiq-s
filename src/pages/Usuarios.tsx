@@ -80,12 +80,14 @@ const Usuarios = () => {
       name: string; 
       role: 'admin' | 'avaliador' | 'cliente' 
     }) => {
+      const redirectUrl = import.meta.env.VITE_OAUTH_REDIRECT_URL || window.location.origin;
+      
       // Criar usuário no auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
+          emailRedirectTo: `${redirectUrl}/`,
           data: { name }
         }
       });
@@ -93,13 +95,16 @@ const Usuarios = () => {
       if (authError) throw authError;
       if (!authData.user) throw new Error('Falha ao criar usuário');
 
-      // Atualizar o role na tabela user_roles
-      const { error: roleError } = await supabase
-        .from('user_roles')
-        .update({ role })
-        .eq('user_id', authData.user.id);
+      // O role 'cliente' é criado automaticamente pelo trigger handle_new_user
+      // Só precisamos atualizar se for admin ou avaliador
+      if (role !== 'cliente') {
+        const { error: roleError } = await supabase
+          .from('user_roles')
+          .update({ role })
+          .eq('user_id', authData.user.id);
 
-      if (roleError) throw roleError;
+        if (roleError) throw roleError;
+      }
 
       return authData.user;
     },
@@ -266,6 +271,7 @@ const Usuarios = () => {
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   placeholder="Digite o e-mail"
+                  disabled={!!editingUser}
                   required
                 />
               </div>
