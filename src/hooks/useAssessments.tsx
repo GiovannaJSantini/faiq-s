@@ -81,6 +81,9 @@ export const useAssessments = (clinicId?: string) => {
         })[];
       })[];
     }) => {
+      // Importar faiqData para buscar nomes corretos
+      const { faiqAreas } = await import('@/data/faiqData');
+      
       // Criar a avaliação
       const { data: assessmentData, error: assessmentError } = await supabase
         .from('assessments')
@@ -92,12 +95,15 @@ export const useAssessments = (clinicId?: string) => {
 
       // Criar area_scores
       for (const areaScore of areaScores) {
-        const { data: areaData, error: areaError } = await supabase
+        const areaData = faiqAreas.find(a => a.id === areaScore.areaId);
+        const areaName = areaData?.name || `Área ${areaScore.areaId}`;
+        
+        const { data: areaDataDb, error: areaError } = await supabase
           .from('area_scores')
           .insert([{
             assessment_id: assessmentData.id,
             area_id: areaScore.areaId,
-            area_name: areaScore.areaId,
+            area_name: areaName,
             total_score: areaScore.totalScore,
             max_score: areaScore.maxScore,
             percentage: areaScore.percentage,
@@ -109,12 +115,15 @@ export const useAssessments = (clinicId?: string) => {
 
         // Criar category_scores
         for (const categoryScore of areaScore.categoryScores) {
-          const { data: categoryData, error: categoryError } = await supabase
+          const categoryData = areaData?.categories.find(c => c.id === categoryScore.categoryId);
+          const categoryName = categoryData?.name || `Categoria ${categoryScore.categoryId}`;
+          
+          const { data: categoryDataDb, error: categoryError } = await supabase
             .from('category_scores')
             .insert([{
-              area_score_id: areaData.id,
+              area_score_id: areaDataDb.id,
               category_id: categoryScore.categoryId,
-              category_name: categoryScore.categoryId,
+              category_name: categoryName,
               total_score: categoryScore.totalScore,
               max_score: categoryScore.maxScore,
               percentage: categoryScore.percentage,
@@ -125,14 +134,20 @@ export const useAssessments = (clinicId?: string) => {
           if (categoryError) throw categoryError;
 
           // Criar indicator_scores
-          const indicatorInserts = categoryScore.indicatorScores.map(indicator => ({
-            category_score_id: categoryData.id,
-            indicator_id: indicator.indicatorId,
-            indicator_name: indicator.indicatorId,
-            score: indicator.score,
-            weight: 1,
-            notes: indicator.notes,
-          }));
+          const indicatorInserts = categoryScore.indicatorScores.map(indicator => {
+            const indicatorData = categoryData?.indicators.find(i => i.id === indicator.indicatorId);
+            const indicatorName = indicatorData?.name || `Indicador ${indicator.indicatorId}`;
+            const weight = indicatorData?.weight || 1;
+            
+            return {
+              category_score_id: categoryDataDb.id,
+              indicator_id: indicator.indicatorId,
+              indicator_name: indicatorName,
+              score: indicator.score,
+              weight: weight,
+              notes: indicator.notes,
+            };
+          });
 
           const { error: indicatorError } = await supabase
             .from('indicator_scores')

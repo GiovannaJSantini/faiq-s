@@ -2,81 +2,131 @@ import { Area, Clinic, Assessment } from '@/types/faiq';
 
 export const faiqAreas: Area[] = [
   {
-    id: 'area-1',
+    id: '1',
     name: 'I. Jornada do Profissional',
     description: 'Avaliação da experiência e desenvolvimento profissional',
     categories: [
       {
-        id: 'cat-1-1',
+        id: '1',
         name: '1. Recrutamento e Seleção',
         description: 'Processos de contratação e integração',
         indicators: [
           {
-            id: 'ind-1-1-1',
-            name: 'I.1.a - Processo estruturado de recrutamento',
-            description: 'A organização possui processo formal e documentado para recrutamento e seleção de profissionais',
+            id: '1-1',
+            name: 'A organização possui descrições de cargos para cada posição, com qualificações mínimas, linhas de reportagem, hierarquia e deveres do cargo.',
+            description: 'Descrições de cargos estruturadas',
             weight: 1
           },
           {
-            id: 'ind-1-1-2',
-            name: 'I.1.b - Critérios técnicos definidos',
-            description: 'Existem critérios claros e objetivos para seleção de profissionais baseados em competências técnicas',
+            id: '1-2',
+            name: 'Possui uma matriz de cargos x salários estabelecidos de acordo com a descrição de cargos',
+            description: 'Matriz de cargos e salários',
             weight: 1
           },
           {
-            id: 'ind-1-1-3',
-            name: 'I.1.c - Programa de integração',
-            description: 'A organização possui processo estruturado de onboarding para novos colaboradores',
+            id: '1-3',
+            name: 'Possui diretrizes claras para política de remuneração, mérito e promoção para seus profissionais',
+            description: 'Políticas de remuneração',
             weight: 1
           }
         ]
       },
       {
-        id: 'cat-1-2',
-        name: '2. Desenvolvimento Profissional',
-        description: 'Capacitação e crescimento profissional',
+        id: '2',
+        name: '2. Onboarding Profissional',
+        description: 'Integração de novos colaboradores',
         indicators: [
           {
-            id: 'ind-1-2-1',
-            name: 'I.2.a - Plano de desenvolvimento individual',
-            description: 'Cada profissional possui PDI estruturado com metas e prazos definidos',
+            id: '2-1',
+            name: 'Possui processo estruturado de integração para novos colaboradores',
+            description: 'Processo de onboarding',
             weight: 1
           },
           {
-            id: 'ind-1-2-2',
-            name: 'I.2.b - Programa de educação continuada',
-            description: 'A organização oferece treinamentos regulares e atualizações técnicas',
+            id: '2-2',
+            name: 'Oferece treinamento inicial obrigatório sobre políticas e procedimentos da organização',
+            description: 'Treinamento inicial',
             weight: 1
           },
           {
-            id: 'ind-1-2-3',
-            name: 'I.2.c - Avaliação de desempenho',
-            description: 'Existe sistema regular de feedback e avaliação de desempenho profissional',
+            id: '2-3',
+            name: 'Define mentor ou supervisor responsável pelo acompanhamento inicial do novo colaborador',
+            description: 'Sistema de mentoria',
             weight: 1
           }
         ]
       },
       {
-        id: 'cat-1-3',
-        name: '3. Ambiente de Trabalho',
-        description: 'Qualidade do ambiente e relações interpessoais',
+        id: '3',
+        name: '3. Cargos x Competências',
+        description: 'Matriz de competências por cargo',
         indicators: [
           {
-            id: 'ind-1-3-1',
-            name: 'I.3.a - Clima organizacional',
-            description: 'A organização realiza pesquisa e monitoramento do clima organizacional',
+            id: '3-1',
+            name: 'Possui matriz de competências técnicas e comportamentais para cada cargo',
+            description: 'Matriz de competências',
             weight: 1
           },
           {
-            id: 'ind-1-3-2',
-            name: 'I.3.b - Comunicação interna',
-            description: 'Existem canais efetivos de comunicação interna entre equipes',
+            id: '3-2',
+            name: 'Define claramente os requisitos de formação e experiência para cada posição',
+            description: 'Requisitos de cargo',
             weight: 1
           },
           {
-            id: 'ind-1-3-3',
-            name: 'I.3.c - Reconhecimento e recompensas',
-            description: 'A organização possui sistema de reconhecimento e recompensas profissionais',
+            id: '3-3',
+            name: 'Estabelece critérios objetivos para progressão de carreira',
+            description: 'Critérios de progressão',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '4',
+        name: '4. Treinamentos',
+        description: 'Capacitação profissional',
+        indicators: [
+          {
+            id: '4-1',
+            name: 'Possui plano anual de capacitação para todos os colaboradores',
+            description: 'Plano de capacitação',
+            weight: 1
+          },
+          {
+            id: '4-2',
+            name: 'Oferece treinamentos específicos para desenvolvimento técnico continuado',
+            description: 'Treinamentos técnicos',
+            weight: 1
+          },
+          {
+            id: '4-3',
+            name: 'Mantém registro de participação e aproveitamento em treinamentos',
+            description: 'Registro de treinamentos',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '5',
+        name: '5. Desenvolvimento',
+        description: 'Desenvolvimento profissional contínuo',
+        indicators: [
+          {
+            id: '5-1',
+            name: 'Realiza avaliações periódicas de desempenho dos colaboradores',
+            description: 'Avaliações de desempenho',
+            weight: 1
+          },
+          {
+            id: '5-2',
+            name: 'Oferece feedback estruturado e planos de desenvolvimento individual',
+            description: 'Feedback e PDI',
+            weight: 1
+          },
+          {
+            id: '5-3',
+            name: 'Possui sistema de reconhecimento e recompensa por performance',
+            description: 'Sistema de reconhecimento',
             weight: 1
           }
         ]
@@ -84,244 +134,106 @@ export const faiqAreas: Area[] = [
     ]
   },
   {
-    id: 'area-2',
+    id: '2',
     name: 'II. Jornada do Cliente',
     description: 'Experiência e cuidado centrado no paciente',
     categories: [
       {
-        id: 'cat-2-1',
+        id: '6',
         name: '1. Admissão do Cliente',
         description: 'Processo de entrada e acolhimento inicial',
         indicators: [
           {
-            id: 'ind-2-1-1',
-            name: 'II.1.a - Diretrizes claras sobre escopo de atendimento',
-            description: 'Possui diretrizes claras sobre o escopo de atendimento da clínica, e perfil de cliente que é atendido',
+            id: '6-1',
+            name: 'Possui diretrizes claras sobre o escopo de atendimento da clínica, e perfil de cliente que é atendido',
+            description: 'Diretrizes de escopo',
             weight: 1
           },
           {
-            id: 'ind-2-1-2',
-            name: 'II.1.b - Processo para captação de leads',
-            description: 'Possui diretrizes e processos para captação de leads',
+            id: '6-2',
+            name: 'Possui diretrizes e processos para captação de leads',
+            description: 'Processos de captação',
             weight: 1
           },
           {
-            id: 'ind-2-1-3',
-            name: 'II.1.c - Triagem de novos clientes',
-            description: 'Realiza processo de triagem de novos clientes com base no perfil da clínica e diretrizes',
-            weight: 1
-          },
-          {
-            id: 'ind-2-1-4',
-            name: 'II.1.d - Coleta de dados sobre fila de espera',
-            description: 'Coleta de dados sobre fila de espera',
-            weight: 1
-          },
-          {
-            id: 'ind-2-1-5',
-            name: 'II.1.e - Comunicação clara aos clientes interessados',
-            description: 'Comunica de forma clara aos clientes interessados no serviço da clínica como acessá-los',
-            weight: 1
-          },
-          {
-            id: 'ind-2-1-6',
-            name: 'II.1.f - Diretrizes para início de serviços',
-            description: 'Possui diretrizes e processo claros para início de serviços',
-            weight: 1
-          },
-          {
-            id: 'ind-2-1-7',
-            name: 'II.1.g - Aplicação padronizada das diretrizes',
-            description: 'Aplica as diretrizes para início dos serviços de forma padronizada para todos os clientes',
-            weight: 1
-          },
-          {
-            id: 'ind-2-1-8',
-            name: 'II.1.h - Entrevista inicial com cliente',
-            description: 'Realiza entrevista inicial com cliente interessado nos serviços',
-            weight: 1
-          },
-          {
-            id: 'ind-2-1-9',
-            name: 'II.1.i - Autorização financeira antes da avaliação',
-            description: 'Busca autorização dos serviços do responsável financeiro antes de iniciar o processo de avaliação',
-            weight: 1
-          },
-          {
-            id: 'ind-2-1-10',
-            name: 'II.1.j - Consentimento informado',
-            description: 'Identifica e obtém consentimento informado para início da avaliação e serviços clínicos',
-            weight: 1
-          },
-          {
-            id: 'ind-2-1-11',
-            name: 'II.1.k - Verificação da equipe de atendimento',
-            description: 'Verifica se a equipe de atendimento possui permissão, competência, tempo e recursos para atender o novo cliente',
-            weight: 1
-          },
-          {
-            id: 'ind-2-1-12',
-            name: 'II.1.l - Documentação coordenada',
-            description: 'Estabelece e coordenada documentação para início do atendimento (autorizações, controle de prestação de serviços)',
-            weight: 1
-          },
-          {
-            id: 'ind-2-1-13',
-            name: 'II.1.m - Comunicação sobre onboarding',
-            description: 'Comunica ao cliente tempo estimado do processo de onboarding, e oferece o guia do cliente com diretrizes, direitos e deveres',
+            id: '6-3',
+            name: 'Possui processo estruturado de triagem e avaliação inicial do cliente',
+            description: 'Triagem estruturada',
             weight: 1
           }
         ]
       },
       {
-        id: 'cat-2-2',
+        id: '7',
         name: '2. Onboarding & Avaliação Inicial',
         description: 'Processo de integração e avaliação inicial do cliente',
         indicators: [
           {
-            id: 'ind-2-2-1',
-            name: 'II.2.a - Onboarding no tempo estipulado',
-            description: 'Realiza o processo de onboarding no tempo estipulado',
+            id: '7-1',
+            name: 'Possui processo padronizado de acolhimento do cliente e família',
+            description: 'Acolhimento padronizado',
             weight: 1
           },
           {
-            id: 'ind-2-2-2',
-            name: 'II.2.c - Documentação prévia do cliente',
-            description: 'Revisa documentação prévia do cliente (análise de avaliações prévias, documentação clínica, dados)',
+            id: '7-2',
+            name: 'Aplica instrumentos de avaliação inicial validados e apropriados',
+            description: 'Instrumentos validados',
             weight: 1
           },
           {
-            id: 'ind-2-2-3',
-            name: 'II.2.d - Escalas adaptativas',
-            description: 'No processo de avaliação, faz uso de escalas adaptativas',
-            weight: 1
-          },
-          {
-            id: 'ind-2-2-4',
-            name: 'II.2.e - Protocolos normativos baseados em evidências',
-            description: 'Para o processo de avaliação, utiliza protocolos normativos de avaliações baseadas em evidências, coerentes com a idade cronológica do cliente, e ao seu nível de desenvolvimento',
-            weight: 1
-          },
-          {
-            id: 'ind-2-2-5',
-            name: 'II.2.f - Avaliação de preferências',
-            description: 'Coleta informações sobre as preferências do clientes e faz uso de avaliação de preferências',
-            weight: 1
-          },
-          {
-            id: 'ind-2-2-6',
-            name: 'II.2.g - Diretrizes para avaliação funcional',
-            description: 'Possui diretrizes claras para avaliação funcional e análise funcional',
-            weight: 1
-          },
-          {
-            id: 'ind-2-2-7',
-            name: 'II.2.h - Análise funcional com consentimento',
-            description: 'Quando necessário, conduz análise funcional garantindo consentimento informado, e equipe treinada para tal prática',
-            weight: 1
-          },
-          {
-            id: 'ind-2-2-8',
-            name: 'II.2.i - Relatório padronizado',
-            description: 'Possui um relatório de devolutiva de avaliação padronizado, com descrição dos resultados, indicação de tipos de serviços, indicação de carga horária, supervisão, responsável parental, e local de atendimento',
-            weight: 1
-          },
-          {
-            id: 'ind-2-2-9',
-            name: 'II.2.j - Cumprimento da carga horária',
-            description: 'Faz esforços para cumprir a carga horária recomendada na avaliação clínica',
+            id: '7-3',
+            name: 'Estabelece metas iniciais baseadas na avaliação realizada',
+            description: 'Metas iniciais',
             weight: 1
           }
         ]
       },
       {
-        id: 'cat-2-3',
+        id: '8',
         name: '3. Intervenção',
         description: 'Processo de intervenção terapêutica',
         indicators: [
           {
-            id: 'ind-2-3-1',
-            name: 'II.3.a - Objetivos claros e mensuráveis',
-            description: 'Com base nos resultados da avaliação, cria objetivos claros, completos e mensuráveis, apropriados ao nível de desenvolvimento e idade',
+            id: '8-1',
+            name: 'Desenvolve planos de intervenção individualizados baseados em evidências',
+            description: 'Planos individualizados',
             weight: 1
           },
           {
-            id: 'ind-2-3-2',
-            name: 'II.3.b - Reagendamento correto',
-            description: 'Programa e reagenda o cliente em tempo indicado e correto (de acordo com a diretriz)',
+            id: '8-2',
+            name: 'Registra sistematicamente o progresso do cliente durante as sessões',
+            description: 'Registro sistemático',
             weight: 1
           },
           {
-            id: 'ind-2-3-3',
-            name: 'II.3.c - Práticas baseadas em evidência',
-            description: 'Utiliza práticas baseadas em evidência para desenvolver o plano de intervenção',
-            weight: 1
-          },
-          {
-            id: 'ind-2-3-4',
-            name: 'II.3.d - Treinamento de supervisão',
-            description: 'Fornece treinamento de supervisão apropriadas para ensino de procedimentos que serão utilizados no plano de tratamento do cliente para a equipe responsável',
-            weight: 1
-          },
-          {
-            id: 'ind-2-3-5',
-            name: 'II.3.e - Implementação do plano',
-            description: 'Implementa o plano de intervenção de acordo com a descrição do protocolo de ensino e/ou redução de comportamentos',
-            weight: 1
-          },
-          {
-            id: 'ind-2-3-6',
-            name: 'II.3.f - Coleta e análise de dados',
-            description: 'Coleta e monitora dados individuais de clientes e faz análise sistemática dos mesmos para tomar decisões sobre a intervenção',
-            weight: 1
-          },
-          {
-            id: 'ind-2-3-7',
-            name: 'II.3.g - Generalização e manutenção',
-            description: 'Programa o ensino para generalização e manutenção de habilidades',
-            weight: 1
-          },
-          {
-            id: 'ind-2-3-8',
-            name: 'II.3.h - Revisão sistemática do plano',
-            description: 'Faz a revisão do plano de intervenção de forma sistematizada',
-            weight: 1
-          },
-          {
-            id: 'ind-2-3-9',
-            name: 'II.3.i - Supervisão proporcional',
-            description: 'Executa a carga horária de supervisão proporcional à carga terapêutica dos casos, conforme melhores práticas da área',
+            id: '8-3',
+            name: 'Realiza ajustes no plano de intervenção baseados no progresso observado',
+            description: 'Ajustes baseados em dados',
             weight: 1
           }
         ]
       },
       {
-        id: 'cat-2-4',
+        id: '9',
         name: '4. Recursos Clínicos',
         description: 'Gestão de recursos e ambiente clínico',
         indicators: [
           {
-            id: 'ind-2-4-1',
-            name: 'II.4.a - Avaliação de satisfação do cliente',
-            description: 'Conduz avaliação da satisfação do cliente de forma sistematizada e frequência adequada',
+            id: '9-1',
+            name: 'Possui materiais e recursos adequados para diferentes tipos de intervenção',
+            description: 'Recursos adequados',
             weight: 1
           },
           {
-            id: 'ind-2-4-2',
-            name: 'II.4.b - Ambiente seguro para atendimento',
-            description: 'Em ambiente clínicos de atendimento, a organização faz esforços para manter o local de prestação de serviços seguro, com disponibilidade de materiais necessários para o atendimento programado do cliente',
+            id: '9-2',
+            name: 'Mantém ambiente terapêutico apropriado e seguro para os atendimentos',
+            description: 'Ambiente apropriado',
             weight: 1
           },
           {
-            id: 'ind-2-4-3',
-            name: 'II.4.c - Coordenação entre especialidades',
-            description: 'A organização possui rotinas de atendimento que promovem a coordenação do cuidado entre as especialidades',
-            weight: 1
-          },
-          {
-            id: 'ind-2-4-4',
-            name: 'II.4.d - Diretrizes para alta e transferência',
-            description: 'Possui diretrizes claras e processos para alta e também transferência do caso para equipe interna e/ou externa',
+            id: '9-3',
+            name: 'Utiliza tecnologias e ferramentas que apoiam o processo terapêutico',
+            description: 'Tecnologias de apoio',
             weight: 1
           }
         ]
@@ -329,50 +241,830 @@ export const faiqAreas: Area[] = [
     ]
   },
   {
-    id: 'area-3',
-    name: 'III. Gestão de Processos',
-    description: 'Eficiência e qualidade dos processos organizacionais',
+    id: '3',
+    name: 'III. Cuidado Interdisciplinar',
+    description: 'Integração e coordenação entre especialidades',
     categories: [
       {
-        id: 'cat-3-1',
-        name: '1. Mapeamento de Processos',
-        description: 'Documentação e padronização de processos',
+        id: '10',
+        name: '1. Diretrizes',
+        description: 'Diretrizes de coordenação interdisciplinar',
         indicators: [
           {
-            id: 'ind-3-1-1',
-            name: 'III.1.a - Processos mapeados e documentados',
-            description: 'A organização possui documentação completa dos processos críticos de trabalho',
+            id: '10-1',
+            name: 'Possui protocolos claros para comunicação entre diferentes especialidades',
+            description: 'Protocolos de comunicação',
             weight: 1
           },
           {
-            id: 'ind-3-1-2',
-            name: 'III.1.b - Indicadores de processo definidos',
-            description: 'Existem métricas de monitoramento definidas para os processos principais',
+            id: '10-2',
+            name: 'Define papéis e responsabilidades de cada área profissional',
+            description: 'Papéis definidos',
             weight: 1
           },
           {
-            id: 'ind-3-1-3',
-            name: 'III.1.c - Revisão periódica dos processos',
-            description: 'Os processos são revisados e atualizados periodicamente',
+            id: '10-3',
+            name: 'Estabelece fluxos de trabalho integrados entre as especialidades',
+            description: 'Fluxos integrados',
             weight: 1
           }
         ]
       },
       {
-        id: 'cat-3-2',
-        name: '2. Controle de Qualidade',
-        description: 'Sistemas de controle e garantia da qualidade',
+        id: '11',
+        name: '2. Avaliação',
+        description: 'Avaliação interdisciplinar',
         indicators: [
           {
-            id: 'ind-3-2-1',
-            name: 'III.2.a - Sistema de auditoria interna',
-            description: 'A organização possui sistema estruturado de auditoria interna',
+            id: '11-1',
+            name: 'Realiza avaliações multidisciplinares de forma coordenada',
+            description: 'Avaliações coordenadas',
             weight: 1
           },
           {
-            id: 'ind-3-2-2',
-            name: 'III.2.b - Planos de ação corretiva',
-            description: 'Existem planos de ação para correção de não conformidades identificadas',
+            id: '11-2',
+            name: 'Integra resultados de diferentes avaliações em um relatório único',
+            description: 'Relatório integrado',
+            weight: 1
+          },
+          {
+            id: '11-3',
+            name: 'Define consenso entre profissionais sobre diagnóstico e necessidades',
+            description: 'Consenso profissional',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '12',
+        name: '3. Plano Individualizado',
+        description: 'Planejamento integrado de intervenções',
+        indicators: [
+          {
+            id: '12-1',
+            name: 'Desenvolve planos de intervenção com participação de todas as especialidades envolvidas',
+            description: 'Planos colaborativos',
+            weight: 1
+          },
+          {
+            id: '12-2',
+            name: 'Define metas compartilhadas e complementares entre as áreas',
+            description: 'Metas compartilhadas',
+            weight: 1
+          },
+          {
+            id: '12-3',
+            name: 'Estabelece cronograma integrado de intervenções',
+            description: 'Cronograma integrado',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '13',
+        name: '4. Rotinas de Qualidade',
+        description: 'Práticas de qualidade interdisciplinar',
+        indicators: [
+          {
+            id: '13-1',
+            name: 'Realiza reuniões regulares de discussão de casos entre equipes',
+            description: 'Reuniões de caso',
+            weight: 1
+          },
+          {
+            id: '13-2',
+            name: 'Monitora a efetividade da comunicação interdisciplinar',
+            description: 'Monitoramento de comunicação',
+            weight: 1
+          },
+          {
+            id: '13-3',
+            name: 'Implementa melhorias baseadas no feedback das equipes',
+            description: 'Melhoria contínua',
+            weight: 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: '4',
+    name: 'IV. Jornada dos Stakeholders',
+    description: 'Relacionamento com partes interessadas',
+    categories: [
+      {
+        id: '14',
+        name: '1. Coordenação e Participação do Cuidador',
+        description: 'Envolvimento de cuidadores',
+        indicators: [
+          {
+            id: '14-1',
+            name: 'Envolve cuidadores no planejamento e definição de metas terapêuticas',
+            description: 'Participação de cuidadores',
+            weight: 1
+          },
+          {
+            id: '14-2',
+            name: 'Oferece orientação e treinamento para cuidadores sobre estratégias de intervenção',
+            description: 'Treinamento de cuidadores',
+            weight: 1
+          },
+          {
+            id: '14-3',
+            name: 'Mantém comunicação regular com cuidadores sobre progresso e ajustes necessários',
+            description: 'Comunicação com cuidadores',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '15',
+        name: '2. Parceria com Agência Financiadora',
+        description: 'Relacionamento com operadoras',
+        indicators: [
+          {
+            id: '15-1',
+            name: 'Mantém comunicação clara e regular com operadoras de saúde',
+            description: 'Comunicação com operadoras',
+            weight: 1
+          },
+          {
+            id: '15-2',
+            name: 'Fornece documentação adequada e no prazo para autorização de procedimentos',
+            description: 'Documentação adequada',
+            weight: 1
+          },
+          {
+            id: '15-3',
+            name: 'Estabelece fluxos eficientes para renovação e continuidade de autorizações',
+            description: 'Fluxos de autorização',
+            weight: 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: '5',
+    name: 'V. Documentação Clínica',
+    description: 'Gestão de documentação e registros',
+    categories: [
+      {
+        id: '16',
+        name: '1. Avaliação',
+        description: 'Documentação de avaliações',
+        indicators: [
+          {
+            id: '16-1',
+            name: 'Utiliza instrumentos padronizados e validados para avaliação inicial',
+            description: 'Instrumentos padronizados',
+            weight: 1
+          },
+          {
+            id: '16-2',
+            name: 'Registra de forma completa e organizada os resultados das avaliações',
+            description: 'Registro organizado',
+            weight: 1
+          },
+          {
+            id: '16-3',
+            name: 'Estabelece hipóteses diagnósticas baseadas em evidências coletadas',
+            description: 'Hipóteses baseadas em evidências',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '17',
+        name: '2. Intervenção',
+        description: 'Documentação de intervenções',
+        indicators: [
+          {
+            id: '17-1',
+            name: 'Documenta planos de intervenção de forma clara e detalhada',
+            description: 'Planos documentados',
+            weight: 1
+          },
+          {
+            id: '17-2',
+            name: 'Registra sistematicamente as sessões e progresso do cliente',
+            description: 'Registro de sessões',
+            weight: 1
+          },
+          {
+            id: '17-3',
+            name: 'Mantém histórico organizado de todas as intervenções realizadas',
+            description: 'Histórico organizado',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '18',
+        name: '3. Coleta e Análise de Dados',
+        description: 'Gestão de dados clínicos',
+        indicators: [
+          {
+            id: '18-1',
+            name: 'Coleta dados de forma sistemática e consistente durante as sessões',
+            description: 'Coleta sistemática',
+            weight: 1
+          },
+          {
+            id: '18-2',
+            name: 'Analisa dados coletados para orientar tomada de decisões clínicas',
+            description: 'Análise de dados',
+            weight: 1
+          },
+          {
+            id: '18-3',
+            name: 'Utiliza gráficos e relatórios para visualizar progresso do cliente',
+            description: 'Visualização de progresso',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '19',
+        name: '4. Alta e Interrupção do Tratamento',
+        description: 'Processo de alta',
+        indicators: [
+          {
+            id: '19-1',
+            name: 'Estabelece critérios claros para alta e interrupção de tratamento',
+            description: 'Critérios de alta',
+            weight: 1
+          },
+          {
+            id: '19-2',
+            name: 'Elabora relatório final completo sobre evolução do cliente',
+            description: 'Relatório final',
+            weight: 1
+          },
+          {
+            id: '19-3',
+            name: 'Fornece orientações para continuidade do cuidado após alta',
+            description: 'Orientações pós-alta',
+            weight: 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: '6',
+    name: 'VI. Qualidade & Sustentabilidade',
+    description: 'Gestão da qualidade e sustentabilidade',
+    categories: [
+      {
+        id: '20',
+        name: '1. Diretrizes Clínicas',
+        description: 'Protocolos e diretrizes',
+        indicators: [
+          {
+            id: '20-1',
+            name: 'Possui protocolos clínicos baseados em evidências científicas atualizadas',
+            description: 'Protocolos baseados em evidências',
+            weight: 1
+          },
+          {
+            id: '20-2',
+            name: 'Define procedimentos padronizados para diferentes tipos de intervenção',
+            description: 'Procedimentos padronizados',
+            weight: 1
+          },
+          {
+            id: '20-3',
+            name: 'Mantém diretrizes atualizadas conforme evolução da área',
+            description: 'Atualização de diretrizes',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '21',
+        name: '2. Treinamento das Diretrizes',
+        description: 'Capacitação em protocolos',
+        indicators: [
+          {
+            id: '21-1',
+            name: 'Oferece treinamento inicial obrigatório sobre diretrizes clínicas',
+            description: 'Treinamento inicial',
+            weight: 1
+          },
+          {
+            id: '21-2',
+            name: 'Realiza atualizações periódicas sobre mudanças em protocolos',
+            description: 'Atualizações periódicas',
+            weight: 1
+          },
+          {
+            id: '21-3',
+            name: 'Avalia conhecimento e aplicação das diretrizes pelos profissionais',
+            description: 'Avaliação de conhecimento',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '22',
+        name: '3. Monitoramento da Implementação',
+        description: 'Monitoramento de conformidade',
+        indicators: [
+          {
+            id: '22-1',
+            name: 'Monitora regularmente a adesão às diretrizes clínicas estabelecidas',
+            description: 'Monitoramento de adesão',
+            weight: 1
+          },
+          {
+            id: '22-2',
+            name: 'Identifica desvios e implementa ações corretivas quando necessário',
+            description: 'Ações corretivas',
+            weight: 1
+          },
+          {
+            id: '22-3',
+            name: 'Mantém registros de conformidade com protocolos estabelecidos',
+            description: 'Registros de conformidade',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '23',
+        name: '4. Dashboard sobre Fidelidade da Implementação',
+        description: 'Monitoramento visual de qualidade',
+        indicators: [
+          {
+            id: '23-1',
+            name: 'Possui sistema de monitoramento em tempo real da fidelidade aos protocolos',
+            description: 'Monitoramento em tempo real',
+            weight: 1
+          },
+          {
+            id: '23-2',
+            name: 'Gera relatórios automáticos sobre conformidade com diretrizes',
+            description: 'Relatórios automáticos',
+            weight: 1
+          },
+          {
+            id: '23-3',
+            name: 'Utiliza indicadores visuais para facilitar acompanhamento da qualidade',
+            description: 'Indicadores visuais',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '24',
+        name: '5. Medida de Qualidade do Serviço',
+        description: 'Avaliação de qualidade',
+        indicators: [
+          {
+            id: '24-1',
+            name: 'Estabelece métricas claras para avaliação da qualidade dos serviços',
+            description: 'Métricas de qualidade',
+            weight: 1
+          },
+          {
+            id: '24-2',
+            name: 'Coleta feedback regular de clientes e familiares sobre satisfação',
+            description: 'Feedback de clientes',
+            weight: 1
+          },
+          {
+            id: '24-3',
+            name: 'Implementa melhorias baseadas em indicadores de qualidade identificados',
+            description: 'Melhorias baseadas em dados',
+            weight: 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: '7',
+    name: 'VII. Compliance',
+    description: 'Conformidade legal e regulatória',
+    categories: [
+      {
+        id: '25',
+        name: '1. Políticas de Privacidade',
+        description: 'Proteção de dados e privacidade',
+        indicators: [
+          {
+            id: '25-1',
+            name: 'Possui políticas claras de proteção de dados pessoais e de saúde',
+            description: 'Políticas de proteção',
+            weight: 1
+          },
+          {
+            id: '25-2',
+            name: 'Implementa medidas de segurança da informação adequadas',
+            description: 'Segurança da informação',
+            weight: 1
+          },
+          {
+            id: '25-3',
+            name: 'Treina colaboradores sobre políticas de privacidade e confidencialidade',
+            description: 'Treinamento em privacidade',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '26',
+        name: '2. Proteção ao Paciente',
+        description: 'Segurança do paciente',
+        indicators: [
+          {
+            id: '26-1',
+            name: 'Estabelece protocolos para garantir segurança física e emocional dos pacientes',
+            description: 'Protocolos de segurança',
+            weight: 1
+          },
+          {
+            id: '26-2',
+            name: 'Possui procedimentos para prevenção de situações de risco ou abuso',
+            description: 'Prevenção de riscos',
+            weight: 1
+          },
+          {
+            id: '26-3',
+            name: 'Mantém ambiente seguro e adequado para atendimento de diferentes perfis',
+            description: 'Ambiente seguro',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '27',
+        name: '3. Requisitos Gerais e Responsabilidade Legal',
+        description: 'Conformidade legal',
+        indicators: [
+          {
+            id: '27-1',
+            name: 'Cumpre todas as exigências legais para funcionamento da clínica',
+            description: 'Conformidade legal',
+            weight: 1
+          },
+          {
+            id: '27-2',
+            name: 'Mantém documentação legal atualizada e em conformidade',
+            description: 'Documentação legal',
+            weight: 1
+          },
+          {
+            id: '27-3',
+            name: 'Possui seguros e coberturas adequadas para proteção da organização',
+            description: 'Seguros adequados',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '28',
+        name: '4. Ética, Integridade e Profissionalismo',
+        description: 'Conduta ética',
+        indicators: [
+          {
+            id: '28-1',
+            name: 'Possui código de ética claro e conhecido por todos os colaboradores',
+            description: 'Código de ética',
+            weight: 1
+          },
+          {
+            id: '28-2',
+            name: 'Estabelece procedimentos para denúncia e apuração de questões éticas',
+            description: 'Procedimentos éticos',
+            weight: 1
+          },
+          {
+            id: '28-3',
+            name: 'Promove cultura organizacional baseada em integridade e profissionalismo',
+            description: 'Cultura de integridade',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '29',
+        name: '5. Saúde, Segurança e Preparação para Emergências',
+        description: 'Gestão de emergências',
+        indicators: [
+          {
+            id: '29-1',
+            name: 'Possui planos de emergência e procedimentos de segurança estabelecidos',
+            description: 'Planos de emergência',
+            weight: 1
+          },
+          {
+            id: '29-2',
+            name: 'Treina colaboradores para situações de emergência e primeiros socorros',
+            description: 'Treinamento em emergências',
+            weight: 1
+          },
+          {
+            id: '29-3',
+            name: 'Mantém equipamentos de segurança e emergência em bom funcionamento',
+            description: 'Equipamentos de segurança',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '30',
+        name: '6. Mídia, Comunicação e Representação',
+        description: 'Comunicação institucional',
+        indicators: [
+          {
+            id: '30-1',
+            name: 'Estabelece diretrizes claras para comunicação externa e uso de mídias sociais',
+            description: 'Diretrizes de comunicação',
+            weight: 1
+          },
+          {
+            id: '30-2',
+            name: 'Possui políticas para uso de imagem e informações de pacientes',
+            description: 'Políticas de imagem',
+            weight: 1
+          },
+          {
+            id: '30-3',
+            name: 'Mantém comunicação institucional consistente e profissional',
+            description: 'Comunicação consistente',
+            weight: 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: '8',
+    name: 'VIII. Diversidade, Equidade e Inclusão',
+    description: 'Promoção de diversidade e inclusão',
+    categories: [
+      {
+        id: '31',
+        name: '1. Colaboradores',
+        description: 'Diversidade na equipe',
+        indicators: [
+          {
+            id: '31-1',
+            name: 'Promove diversidade na contratação e composição das equipes',
+            description: 'Diversidade na contratação',
+            weight: 1
+          },
+          {
+            id: '31-2',
+            name: 'Oferece oportunidades iguais de desenvolvimento para todos os colaboradores',
+            description: 'Oportunidades iguais',
+            weight: 1
+          },
+          {
+            id: '31-3',
+            name: 'Estabelece políticas antidiscriminação e de respeito à diversidade',
+            description: 'Políticas antidiscriminação',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '32',
+        name: '2. Treinamento',
+        description: 'Capacitação em diversidade',
+        indicators: [
+          {
+            id: '32-1',
+            name: 'Oferece treinamentos sobre diversidade, equidade e inclusão',
+            description: 'Treinamentos em DEI',
+            weight: 1
+          },
+          {
+            id: '32-2',
+            name: 'Sensibiliza colaboradores sobre questões de preconceito e discriminação',
+            description: 'Sensibilização',
+            weight: 1
+          },
+          {
+            id: '32-3',
+            name: 'Promove cultura organizacional inclusiva e respeitosa',
+            description: 'Cultura inclusiva',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '33',
+        name: '3. Plano Estratégico',
+        description: 'Estratégia de diversidade',
+        indicators: [
+          {
+            id: '33-1',
+            name: 'Inclui metas de diversidade e inclusão no planejamento estratégico',
+            description: 'Metas de DEI',
+            weight: 1
+          },
+          {
+            id: '33-2',
+            name: 'Estabelece parcerias com organizações que promovem diversidade',
+            description: 'Parcerias em DEI',
+            weight: 1
+          },
+          {
+            id: '33-3',
+            name: 'Monitora indicadores de diversidade e inclusão na organização',
+            description: 'Monitoramento de DEI',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '34',
+        name: '4. Clientes',
+        description: 'Atendimento inclusivo',
+        indicators: [
+          {
+            id: '34-1',
+            name: 'Garante acesso equitativo aos serviços independente de background',
+            description: 'Acesso equitativo',
+            weight: 1
+          },
+          {
+            id: '34-2',
+            name: 'Adapta atendimento para diferentes necessidades culturais e linguísticas',
+            description: 'Atendimento adaptado',
+            weight: 1
+          },
+          {
+            id: '34-3',
+            name: 'Promove ambiente acolhedor e inclusivo para todos os clientes',
+            description: 'Ambiente acolhedor',
+            weight: 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: '9',
+    name: 'IX. Envolvimento com a Comunidade',
+    description: 'Engajamento comunitário',
+    categories: [
+      {
+        id: '35',
+        name: '1. Comunidade Local',
+        description: 'Participação local',
+        indicators: [
+          {
+            id: '35-1',
+            name: 'Participa ativamente de eventos e iniciativas da comunidade local',
+            description: 'Participação comunitária',
+            weight: 1
+          },
+          {
+            id: '35-2',
+            name: 'Oferece ações educativas e de conscientização para a comunidade',
+            description: 'Ações educativas',
+            weight: 1
+          },
+          {
+            id: '35-3',
+            name: 'Estabelece parcerias com organizações locais para projetos conjuntos',
+            description: 'Parcerias locais',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '36',
+        name: '2. Comunidade Científica',
+        description: 'Participação científica',
+        indicators: [
+          {
+            id: '36-1',
+            name: 'Participa de eventos científicos da área com apresentação de trabalhos',
+            description: 'Participação em eventos',
+            weight: 1
+          },
+          {
+            id: '36-2',
+            name: 'Publica pesquisas e estudos de caso em revistas científicas',
+            description: 'Publicações científicas',
+            weight: 1
+          },
+          {
+            id: '36-3',
+            name: 'Colabora com instituições de ensino e pesquisa da área',
+            description: 'Colaborações acadêmicas',
+            weight: 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: '10',
+    name: 'X. Operações Administrativas',
+    description: 'Gestão administrativa e estratégica',
+    categories: [
+      {
+        id: '37',
+        name: '1. Gestão Financeira',
+        description: 'Gestão financeira',
+        indicators: [
+          {
+            id: '37-1',
+            name: 'Possui controles financeiros adequados e atualizados',
+            description: 'Controles financeiros',
+            weight: 1
+          },
+          {
+            id: '37-2',
+            name: 'Realiza planejamento orçamentário anual com acompanhamento mensal',
+            description: 'Planejamento orçamentário',
+            weight: 1
+          },
+          {
+            id: '37-3',
+            name: 'Mantém fluxo de caixa organizado e relatórios gerenciais regulares',
+            description: 'Fluxo de caixa',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '38',
+        name: '2. Princípios Orientadores',
+        description: 'Valores organizacionais',
+        indicators: [
+          {
+            id: '38-1',
+            name: 'Possui missão, visão e valores claramente definidos e comunicados',
+            description: 'Missão e valores',
+            weight: 1
+          },
+          {
+            id: '38-2',
+            name: 'Alinha decisões organizacionais com princípios e valores estabelecidos',
+            description: 'Alinhamento estratégico',
+            weight: 1
+          },
+          {
+            id: '38-3',
+            name: 'Promove cultura organizacional consistente com princípios orientadores',
+            description: 'Cultura organizacional',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '39',
+        name: '3. Governança',
+        description: 'Estrutura de governança',
+        indicators: [
+          {
+            id: '39-1',
+            name: 'Possui estrutura de governança clara com papéis e responsabilidades definidos',
+            description: 'Estrutura de governança',
+            weight: 1
+          },
+          {
+            id: '39-2',
+            name: 'Realiza reuniões regulares de governança com documentação adequada',
+            description: 'Reuniões de governança',
+            weight: 1
+          },
+          {
+            id: '39-3',
+            name: 'Estabelece processos de tomada de decisão transparentes e eficazes',
+            description: 'Processos decisórios',
+            weight: 1
+          }
+        ]
+      },
+      {
+        id: '40',
+        name: '4. Plano Estratégico',
+        description: 'Planejamento estratégico',
+        indicators: [
+          {
+            id: '40-1',
+            name: 'Possui plano estratégico formal com objetivos e metas claras',
+            description: 'Planejamento estratégico',
+            weight: 1
+          },
+          {
+            id: '40-2',
+            name: 'Realiza acompanhamento regular do progresso das metas estratégicas',
+            description: 'Acompanhamento estratégico',
+            weight: 1
+          },
+          {
+            id: '40-3',
+            name: 'Revisa e atualiza periodicamente o planejamento estratégico da organização',
+            description: 'Atualização estratégica',
             weight: 1
           }
         ]

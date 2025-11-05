@@ -546,9 +546,9 @@ const NovaAvaliacao = () => {
             const key = `${area.id}-${category.id}-${index}`;
             const score = (scores[key] || 0) as 0 | 0.5 | 1;
             return {
-              indicatorId: `${area.id}-${category.id}-${index}`,
+              indicatorId: `${category.id}-${index + 1}`,
               score,
-              notes: '',
+              notes: observations || '',
             };
           });
 
@@ -557,7 +557,7 @@ const NovaAvaliacao = () => {
           const percentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
 
           return {
-            categoryId: `${area.id}-${category.id}`,
+            categoryId: `${category.id}`,
             indicatorScores,
             totalScore,
             maxScore,
