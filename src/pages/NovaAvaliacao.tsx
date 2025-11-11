@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ChevronDown, ChevronRight, Save, FileText, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useClinics } from "@/hooks/useClinics";
@@ -450,6 +451,7 @@ const NovaAvaliacao = () => {
   const [openCategories, setOpenCategories] = useState<number[]>([]);
   const [scores, setScores] = useState<Record<string, number>>({});
   const [isSaving, setIsSaving] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
   const { toast } = useToast();
   const { clinics, isLoading: clinicsLoading } = useClinics();
   const { createAssessment } = useAssessments();
@@ -493,7 +495,7 @@ const NovaAvaliacao = () => {
     return { label: "Padrão", color: "bg-standard text-standard-foreground" };
   };
 
-  const handleSubmit = async () => {
+  const handleSaveClick = () => {
     // Validate form data
     const formValidation = assessmentFormSchema.safeParse({
       selectedClinic,
@@ -531,6 +533,12 @@ const NovaAvaliacao = () => {
       });
       return;
     }
+
+    // Open confirmation modal
+    setShowSaveModal(true);
+  };
+
+  const handleConfirmSave = async () => {
 
     setIsSaving(true);
 
@@ -610,6 +618,7 @@ const NovaAvaliacao = () => {
       });
 
       // Navegar para a página de relatórios
+      setShowSaveModal(false);
       setTimeout(() => {
         navigate('/relatorios');
       }, 1500);
@@ -810,7 +819,7 @@ const NovaAvaliacao = () => {
       {/* Save Button */}
       <div className="flex justify-end pt-4">
         <Button 
-          onClick={handleSubmit} 
+          onClick={handleSaveClick} 
           className="gap-2 bg-details hover:bg-details/90" 
           size="lg"
           disabled={isSaving}
@@ -819,6 +828,78 @@ const NovaAvaliacao = () => {
           {isSaving ? "Salvando..." : "Salvar Avaliação"}
         </Button>
       </div>
+
+      {/* Save Confirmation Modal */}
+      <Dialog open={showSaveModal} onOpenChange={setShowSaveModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-details">
+              <Save className="h-5 w-5 text-primary" />
+              Confirmar Salvamento
+            </DialogTitle>
+            <DialogDescription>
+              Revise as informações da avaliação antes de salvar.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <div className="flex justify-between items-start">
+                <span className="text-sm font-medium text-muted-foreground">Clínica:</span>
+                <span className="text-sm text-foreground font-medium text-right">
+                  {clinics.find(c => c.id === selectedClinic)?.name || "Não selecionada"}
+                </span>
+              </div>
+              
+              <div className="flex justify-between items-start">
+                <span className="text-sm font-medium text-muted-foreground">Avaliador:</span>
+                <span className="text-sm text-foreground font-medium text-right">{assessorName}</span>
+              </div>
+              
+              <div className="flex justify-between items-start">
+                <span className="text-sm font-medium text-muted-foreground">Data:</span>
+                <span className="text-sm text-foreground font-medium">
+                  {new Date().toLocaleDateString('pt-BR')}
+                </span>
+              </div>
+            </div>
+
+            <div className="border-t pt-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-details">Pontuação Geral:</span>
+                <span className="text-lg font-bold text-details">{overallScore.toFixed(1)}%</span>
+              </div>
+              
+              <Progress value={overallScore} className="h-3 mb-2" />
+              
+              <div className="flex justify-center">
+                <Badge className={classification.color}>
+                  {classification.label}
+                </Badge>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="flex gap-2 sm:gap-0">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowSaveModal(false)}
+              disabled={isSaving}
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              onClick={handleConfirmSave}
+              disabled={isSaving}
+              className="bg-details hover:bg-details/90"
+            >
+              {isSaving ? "Salvando..." : "Confirmar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
