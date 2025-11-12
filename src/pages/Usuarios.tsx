@@ -7,11 +7,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Edit, Shield, UserCheck, User } from "lucide-react";
+import { Plus, Edit, Shield, UserCheck, User, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { userSchema, userUpdateSchema } from "@/lib/validations/user";
+import { useAuth } from "@/hooks/useAuth";
 
 interface UserDisplay {
   id: string;
@@ -29,8 +30,13 @@ const roleConfig = {
 
 const Usuarios = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserDisplay | null>(null);
   const [password, setPassword] = useState("");
+  const [passwordData, setPasswordData] = useState({
+    newPassword: '',
+    confirmPassword: '',
+  });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -38,6 +44,7 @@ const Usuarios = () => {
   });
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user: currentUser } = useAuth();
 
   // Buscar usuários com seus roles da tabela user_roles
   const { data: users = [], isLoading } = useQuery({
@@ -224,6 +231,50 @@ const Usuarios = () => {
     setIsDialogOpen(true);
   };
 
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast({
+        title: 'Senhas não coincidem',
+        description: 'A nova senha e a confirmação devem ser iguais',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (passwordData.newPassword.length < 6) {
+      toast({
+        title: 'Senha muito curta',
+        description: 'A senha deve ter no mínimo 6 caracteres',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: passwordData.newPassword
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: 'Senha alterada com sucesso!',
+        description: 'Sua nova senha já está ativa',
+      });
+      
+      setIsPasswordDialogOpen(false);
+      setPasswordData({ newPassword: '', confirmPassword: '' });
+    } catch (error: any) {
+      toast({
+        title: 'Erro ao alterar senha',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
@@ -316,6 +367,79 @@ const Usuarios = () => {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Card para alterar senha do usuário logado */}
+      {currentUser && (
+        <Card className="bg-muted/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Lock className="h-5 w-5" />
+              Alterar Minha Senha
+            </CardTitle>
+            <CardDescription>
+              Altere sua senha de acesso ao sistema
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="gap-2">
+                  <Lock className="h-4 w-4" />
+                  Alterar Senha
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Alterar Senha</DialogTitle>
+                  <DialogDescription>
+                    Digite sua nova senha abaixo. A senha deve ter no mínimo 6 caracteres.
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <form onSubmit={handleChangePassword} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="new-password">Nova Senha</Label>
+                    <Input
+                      id="new-password"
+                      type="password"
+                      value={passwordData.newPassword}
+                      onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                      placeholder="Digite a nova senha"
+                      required
+                      minLength={6}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="confirm-password">Confirmar Nova Senha</Label>
+                    <Input
+                      id="confirm-password"
+                      type="password"
+                      value={passwordData.confirmPassword}
+                      onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                      placeholder="Digite a senha novamente"
+                      required
+                      minLength={6}
+                    />
+                  </div>
+                  
+                  <DialogFooter>
+                    <Button type="button" variant="outline" onClick={() => {
+                      setIsPasswordDialogOpen(false);
+                      setPasswordData({ newPassword: '', confirmPassword: '' });
+                    }}>
+                      Cancelar
+                    </Button>
+                    <Button type="submit">
+                      Alterar Senha
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </CardContent>
+        </Card>
+      )}
 
       {isLoading ? (
         <div className="flex items-center justify-center p-12">
