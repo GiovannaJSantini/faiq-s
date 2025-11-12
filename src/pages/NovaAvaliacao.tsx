@@ -816,33 +816,18 @@ const NovaAvaliacao = () => {
         ))}
       </div>
 
-      {/* Save Button - Fixed at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg z-50">
-        <div className="container mx-auto p-4 flex justify-between items-center gap-4">
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:block">
-              <Badge className={classification.color}>
-                {classification.label}
-              </Badge>
-            </div>
-            <span className="text-sm font-medium text-details hidden sm:inline">
-              Pontuação: {overallScore.toFixed(1)}%
-            </span>
-          </div>
-          <Button 
-            onClick={handleSaveClick} 
-            className="gap-2 bg-details hover:bg-details/90 shadow-lg" 
-            size="lg"
-            disabled={isSaving}
-          >
-            <Save className="h-4 w-4" />
-            {isSaving ? "Salvando..." : "Salvar Avaliação"}
-          </Button>
-        </div>
+      {/* Save Button */}
+      <div className="flex justify-end pt-4">
+        <Button 
+          onClick={handleSaveClick} 
+          className="gap-2 bg-details hover:bg-details/90" 
+          size="lg"
+          disabled={isSaving}
+        >
+          <Save className="h-4 w-4" />
+          {isSaving ? "Salvando..." : "Salvar Avaliação"}
+        </Button>
       </div>
-
-      {/* Spacer for fixed button */}
-      <div className="h-20"></div>
 
       {/* Save Confirmation Modal */}
       <Dialog open={showSaveModal} onOpenChange={setShowSaveModal}>
