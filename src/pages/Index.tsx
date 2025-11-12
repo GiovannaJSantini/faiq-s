@@ -10,13 +10,12 @@ import { useAssessments } from "@/hooks/useAssessments";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const navigate = useNavigate();
   const [selectedClinic, setSelectedClinic] = useState<string>("all");
   const { clinics, isLoading: clinicsLoading } = useClinics();
-  const { getAssessmentWithScores, isLoading: assessmentsLoading, error: assessmentsError } = useAssessments();
+  const { getAssessmentWithScores, isLoading: assessmentsLoading } = useAssessments();
 
   // Filtrar avaliações baseado na clínica selecionada
   const filteredAssessments = selectedClinic === "all"
@@ -71,21 +70,10 @@ const Index = () => {
 
   if (clinicsLoading || assessmentsLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Carregando dados...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (assessmentsError) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <p className="text-destructive mb-4">Erro ao carregar dados</p>
-          <Button onClick={() => window.location.reload()}>Tentar novamente</Button>
         </div>
       </div>
     );
