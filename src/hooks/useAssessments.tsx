@@ -202,8 +202,8 @@ export const useAssessments = (clinicId?: string) => {
 
   return {
     assessments,
-    isLoading,
-    error,
+    isLoading: isLoading || getAssessmentWithScores.isLoading,
+    error: error || getAssessmentWithScores.error,
     createAssessment,
     deleteAssessment,
     getAssessmentWithScores: getAssessmentWithScores.data || [],
