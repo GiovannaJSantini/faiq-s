@@ -44,6 +44,8 @@ export const useAssessments = (clinicId?: string) => {
       if (error) throw error;
       return data as AssessmentWithScores[];
     },
+    retry: 2,
+    staleTime: 1000 * 60 * 5,
   });
 
   const getAssessmentWithScores = useQuery({
@@ -67,6 +69,8 @@ export const useAssessments = (clinicId?: string) => {
       if (error) throw error;
       return data as AssessmentWithScores[];
     },
+    retry: 2,
+    staleTime: 1000 * 60 * 5,
   });
 
   const createAssessment = useMutation({
@@ -202,8 +206,8 @@ export const useAssessments = (clinicId?: string) => {
 
   return {
     assessments,
-    isLoading: isLoading || getAssessmentWithScores.isLoading,
-    error: error || getAssessmentWithScores.error,
+    isLoading: getAssessmentWithScores.isLoading,
+    error: getAssessmentWithScores.error,
     createAssessment,
     deleteAssessment,
     getAssessmentWithScores: getAssessmentWithScores.data || [],
