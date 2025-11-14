@@ -16,7 +16,23 @@ import GraficosNiveis from "./pages/GraficosNiveis";
 import Institucional from "./pages/Institucional";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      retryDelay: 1000,
+      staleTime: 1000 * 60 * 5, // 5 minutos
+      gcTime: 1000 * 60 * 10, // 10 minutos
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      networkMode: 'online',
+    },
+    mutations: {
+      retry: 1,
+      networkMode: 'online',
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
