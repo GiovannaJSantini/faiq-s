@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { StatsCards } from "@/components/dashboard/stats-cards";
@@ -16,12 +16,23 @@ const Index = () => {
   const navigate = useNavigate();
   const [selectedClinic, setSelectedClinic] = useState<string>("all");
   const { clinics, isLoading: clinicsLoading } = useClinics();
-  const { getAssessmentWithScores, isLoading: assessmentsLoading, error: assessmentsError } = useAssessments();
+  const { assessments: allAssessments, isLoading: assessmentsLoading, error: assessmentsError } = useAssessments();
+
+  // Safety timeout
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (assessmentsLoading || clinicsLoading) {
+        console.warn('[Index] Loading timeout - consider refreshing');
+      }
+    }, 8000);
+    
+    return () => clearTimeout(timeout);
+  }, [assessmentsLoading, clinicsLoading]);
 
   // Filtrar avaliações baseado na clínica selecionada
   const filteredAssessments = selectedClinic === "all"
-    ? getAssessmentWithScores
-    : getAssessmentWithScores.filter(a => a.clinic_id === selectedClinic);
+    ? allAssessments
+    : allAssessments.filter(a => a.clinic_id === selectedClinic);
 
   // Converter para formato compatível com componentes existentes
   const assessments = filteredAssessments.map(a => ({
