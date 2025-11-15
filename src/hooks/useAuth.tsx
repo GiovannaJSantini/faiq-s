@@ -24,24 +24,44 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      } else {
-        setLoading(false);
-      }
-    });
+    let isMounted = true;
+    let isInitializing = false;
 
-    // Listen for auth changes
+    const initAuth = async () => {
+      if (isInitializing) return;
+      isInitializing = true;
+      
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!isMounted) return;
+        
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          await fetchProfile(session.user.id);
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error initializing auth:', error);
+        if (isMounted) {
+          setLoading(false);
+        }
+      } finally {
+        isInitializing = false;
+      }
+    };
+
+    initAuth();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (!isMounted) return;
+        
         setUser(session?.user ?? null);
         if (session?.user) {
           await fetchProfile(session.user.id);
           
-          // Record LGPD consent on sign in (new user or returning user)
           if (event === 'SIGNED_IN') {
             setTimeout(() => {
               recordAuthConsents(session.user.id).catch(console.error);
@@ -54,33 +74,41 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     );
 
-    return () => subscription?.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription?.unsubscribe();
+    };
   }, []);
 
   const fetchProfile = async (userId: string) => {
-    const timeoutId = setTimeout(() => {
-      console.warn('Profile fetch timeout - setting loading to false');
-      setLoading(false);
-    }, 8000); // Timeout de 8 segundos
-
+    let timeoutId: NodeJS.Timeout | null = null;
+    
     try {
+      timeoutId = setTimeout(() => {
+        console.warn('Profile fetch timeout - setting loading to false');
+        setLoading(false);
+      }, 5000); // Reduzido para 5 segundos
+
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .maybeSingle();
 
-      clearTimeout(timeoutId);
+      if (timeoutId) clearTimeout(timeoutId);
 
       if (error && error.code !== 'PGRST116') {
-        throw error;
+        console.error('Profile fetch error:', error);
+        setProfile(null);
+        return;
       }
       
       setProfile(data);
     } catch (error) {
       console.error('Error fetching profile:', error);
+      setProfile(null);
     } finally {
-      clearTimeout(timeoutId);
+      if (timeoutId) clearTimeout(timeoutId);
       setLoading(false);
     }
   };
