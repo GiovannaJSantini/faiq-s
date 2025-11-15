@@ -27,23 +27,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     let isMounted = true;
     let isInitializing = false;
 
+    console.log('[useAuth] Initializing auth...');
+
     const initAuth = async () => {
       if (isInitializing) return;
       isInitializing = true;
       
       try {
         const { data: { session } } = await supabase.auth.getSession();
+        console.log('[useAuth] Session:', session?.user?.id || 'none');
         
         if (!isMounted) return;
         
         setUser(session?.user ?? null);
         if (session?.user) {
-          await fetchProfile(session.user.id);
+          fetchProfile(session.user.id);
         } else {
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error initializing auth:', error);
+        console.error('[useAuth] Error initializing auth:', error);
         if (isMounted) {
           setLoading(false);
         }
@@ -51,6 +54,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isInitializing = false;
       }
     };
+
+    // Global timeout to prevent infinite loading
+    const globalTimeout = setTimeout(() => {
+      console.error('[useAuth] Global timeout - forcing loading to false');
+      setLoading(false);
+    }, 10000);
 
     initAuth();
 
@@ -60,7 +69,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         
         setUser(session?.user ?? null);
         if (session?.user) {
-          await fetchProfile(session.user.id);
+          setTimeout(() => {
+            fetchProfile(session.user.id);
+          }, 0);
           
           if (event === 'SIGNED_IN') {
             setTimeout(() => {
@@ -76,6 +87,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return () => {
       isMounted = false;
+      clearTimeout(globalTimeout);
       subscription?.unsubscribe();
     };
   }, []);
@@ -84,10 +96,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     let timeoutId: NodeJS.Timeout | null = null;
     
     try {
+      console.log('[useAuth] Fetching profile for user:', userId);
+      
       timeoutId = setTimeout(() => {
-        console.warn('Profile fetch timeout - setting loading to false');
+        console.warn('[useAuth] Profile fetch timeout - setting loading to false');
         setLoading(false);
-      }, 5000); // Reduzido para 5 segundos
+      }, 5000);
 
       const { data, error } = await supabase
         .from('profiles')
@@ -98,17 +112,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (timeoutId) clearTimeout(timeoutId);
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Profile fetch error:', error);
+        console.error('[useAuth] Profile fetch error:', error);
         setProfile(null);
         return;
       }
       
+      console.log('[useAuth] Profile loaded:', data?.id || 'none');
       setProfile(data);
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error('[useAuth] Error fetching profile:', error);
       setProfile(null);
     } finally {
       if (timeoutId) clearTimeout(timeoutId);
+      console.log('[useAuth] Setting loading to false');
       setLoading(false);
     }
   };

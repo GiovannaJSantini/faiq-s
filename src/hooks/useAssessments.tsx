@@ -20,38 +20,13 @@ export const useAssessments = (clinicId?: string) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const {
-    data: assessments = [],
-    isLoading,
-    error
-  } = useQuery({
+  // Single unified query for assessments with all scores
+  const assessmentsQuery = useQuery({
     queryKey: ['assessments', clinicId],
     queryFn: async () => {
+      console.log('[useAssessments] Fetching assessments, clinicId:', clinicId || 'all');
+      
       let query = supabase
-        .from('assessments')
-        .select(`
-          *,
-          clinic:clinics(*)
-        `)
-        .order('assessment_date', { ascending: false });
-      
-      if (clinicId) {
-        query = query.eq('clinic_id', clinicId);
-      }
-      
-      const { data, error } = await query;
-      
-      if (error) throw error;
-      return data as AssessmentWithScores[];
-    },
-    retry: 2,
-    staleTime: 1000 * 60 * 5,
-  });
-
-  const getAssessmentWithScores = useQuery({
-    queryKey: ['assessment-with-scores'],
-    queryFn: async () => {
-      const { data, error } = await supabase
         .from('assessments')
         .select(`
           *,
@@ -66,11 +41,19 @@ export const useAssessments = (clinicId?: string) => {
         `)
         .order('assessment_date', { ascending: false });
       
+      if (clinicId) {
+        query = query.eq('clinic_id', clinicId);
+      }
+      
+      const { data, error } = await query;
+      
       if (error) throw error;
+      
+      console.log('[useAssessments] Loaded', data?.length || 0, 'assessments');
       return data as AssessmentWithScores[];
     },
-    retry: 2,
-    staleTime: 1000 * 60 * 5,
+    retry: 1,
+    staleTime: 1000 * 60 * 2,
   });
 
   const createAssessment = useMutation({
@@ -205,11 +188,10 @@ export const useAssessments = (clinicId?: string) => {
   });
 
   return {
-    assessments,
-    isLoading: getAssessmentWithScores.isLoading,
-    error: getAssessmentWithScores.error,
+    assessments: assessmentsQuery.data || [],
+    isLoading: assessmentsQuery.isLoading,
+    error: assessmentsQuery.error,
     createAssessment,
     deleteAssessment,
-    getAssessmentWithScores: getAssessmentWithScores.data || [],
   };
 };

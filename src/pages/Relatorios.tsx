@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -26,10 +26,21 @@ export default function Relatorios() {
   const [selectedClinic, setSelectedClinic] = useState<string>("all");
   const [reportType, setReportType] = useState<string>("geral");
   const { clinics, isLoading: clinicsLoading } = useClinics();
-  const { getAssessmentWithScores, isLoading: assessmentsLoading } = useAssessments();
+  const { assessments: dbAssessments, isLoading: assessmentsLoading } = useAssessments();
+
+  // Safety timeout
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (assessmentsLoading || clinicsLoading) {
+        console.warn('[Relatorios] Loading timeout - consider refreshing');
+      }
+    }, 8000);
+    
+    return () => clearTimeout(timeout);
+  }, [assessmentsLoading, clinicsLoading]);
 
   // Converter dados do banco para formato compatível
-  const assessments: Assessment[] = getAssessmentWithScores.map(a => ({
+  const assessments: Assessment[] = dbAssessments.map(a => ({
     id: a.id,
     clinicId: a.clinic_id,
     clinicName: a.clinic?.name || 'Desconhecida',
