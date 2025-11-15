@@ -1,8 +1,10 @@
 export interface Indicator {
   id: string;
+  code: string;
   name: string;
   description: string;
   weight: number;
+  classification: 'padrao' | 'qualidade' | 'excelencia';
 }
 
 export interface Category {
