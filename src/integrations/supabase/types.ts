@@ -14,6 +14,80 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_report_analyses: {
+        Row: {
+          action_plan_12_months: string | null
+          action_plan_30_days: string | null
+          action_plan_90_days: string | null
+          area_specific_recommendations: Json | null
+          assessment_id: string
+          created_at: string | null
+          edited_by: string | null
+          executive_summary: string | null
+          generated_at: string | null
+          id: string
+          is_manually_edited: boolean | null
+          last_edited_at: string | null
+          priority_recommendations: string | null
+          risk_analysis: string | null
+          swot_opportunities: string | null
+          swot_strengths: string | null
+          swot_threats: string | null
+          swot_weaknesses: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          action_plan_12_months?: string | null
+          action_plan_30_days?: string | null
+          action_plan_90_days?: string | null
+          area_specific_recommendations?: Json | null
+          assessment_id: string
+          created_at?: string | null
+          edited_by?: string | null
+          executive_summary?: string | null
+          generated_at?: string | null
+          id?: string
+          is_manually_edited?: boolean | null
+          last_edited_at?: string | null
+          priority_recommendations?: string | null
+          risk_analysis?: string | null
+          swot_opportunities?: string | null
+          swot_strengths?: string | null
+          swot_threats?: string | null
+          swot_weaknesses?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          action_plan_12_months?: string | null
+          action_plan_30_days?: string | null
+          action_plan_90_days?: string | null
+          area_specific_recommendations?: Json | null
+          assessment_id?: string
+          created_at?: string | null
+          edited_by?: string | null
+          executive_summary?: string | null
+          generated_at?: string | null
+          id?: string
+          is_manually_edited?: boolean | null
+          last_edited_at?: string | null
+          priority_recommendations?: string | null
+          risk_analysis?: string | null
+          swot_opportunities?: string | null
+          swot_strengths?: string | null
+          swot_threats?: string | null
+          swot_weaknesses?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_report_analyses_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: true
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       area_scores: {
         Row: {
           area_id: string
