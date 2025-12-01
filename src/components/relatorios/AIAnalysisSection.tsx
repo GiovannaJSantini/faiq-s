@@ -136,7 +136,7 @@ export function AIAnalysisSection({ assessmentId }: AIAnalysisSectionProps) {
               <Sparkles className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">Nenhuma análise gerada ainda</h3>
               <p className="text-muted-foreground mb-4">
-                Clique no botão abaixo para gerar uma análise inteligente desta avaliação
+                Clique no botão abaixo para gerar uma análise estratégica desta avaliação
               </p>
               <Button
                 onClick={() => generateAnalysis()}
@@ -151,7 +151,7 @@ export function AIAnalysisSection({ assessmentId }: AIAnalysisSectionProps) {
                 ) : (
                   <>
                     <Sparkles className="h-5 w-5 mr-2" />
-                    Gerar Análise com IA
+                    Gerar Análise Estratégica
                   </>
                 )}
               </Button>

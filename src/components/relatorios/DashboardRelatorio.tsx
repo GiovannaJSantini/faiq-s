@@ -1,29 +1,25 @@
 import { Assessment } from "@/types/faiq";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, PieChart, Pie, Legend } from 'recharts';
 import { faiqAreas } from "@/data/faiqData";
+import { AlertCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface DashboardRelatorioProps {
   assessment: Assessment;
 }
 
 export function DashboardRelatorio({ assessment }: DashboardRelatorioProps) {
-  // Dados para o radar de maturidade por área
+  // 4.1 Radar de Maturidade (Escala 0-1)
   const radarData = assessment.areaScores.map((area) => {
     const areaData = faiqAreas.find(a => a.id === area.areaId);
     return {
-      area: areaData?.name.replace(/^[IVX]+\.\s*/, '') || `Área ${area.areaId}`,
-      score: area.percentage
+      area: areaData?.name.replace(/^[IVX]+\.\s*/, '').replace(/^Área \d+:\s*/, '') || `Área ${area.areaId}`,
+      score: area.percentage / 100 // Convertendo para escala 0-1
     };
   });
 
-  // Dados para o gráfico de distribuição (Padrão, Qualidade, Excelência)
-  const totalIndicators = assessment.areaScores.reduce((sum, area) => 
-    sum + area.categoryScores.reduce((catSum, cat) => 
-      catSum + cat.indicatorScores.length, 0
-    ), 0
-  );
-
+  // 4.2 Barras de Distribuição (Padrão, Qualidade, Excelência)
   const excellenceCount = assessment.areaScores.reduce((sum, area) => 
     sum + area.categoryScores.reduce((catSum, cat) => 
       catSum + cat.indicatorScores.filter(ind => ind.score === 1).length, 0
@@ -43,79 +39,117 @@ export function DashboardRelatorio({ assessment }: DashboardRelatorioProps) {
   );
 
   const distributionData = [
-    { name: 'Excelência', value: excellenceCount, color: '#1FA87A' },
-    { name: 'Qualidade', value: qualityCount, color: '#3B82F6' },
-    { name: 'Padrão', value: standardCount, color: '#F28C28' }
+    { name: 'Excelência', value: excellenceCount, color: 'hsl(var(--primary))' },
+    { name: 'Qualidade', value: qualityCount, color: 'hsl(var(--chart-quality))' },
+    { name: 'Padrão', value: standardCount, color: 'hsl(var(--chart-standard))' }
   ];
 
-  // Dados para Pareto de riscos (áreas com menor score)
-  const paretoData = [...assessment.areaScores]
-    .sort((a, b) => a.percentage - b.percentage)
-    .slice(0, 5)
-    .map((area) => {
-      const areaData = faiqAreas.find(a => a.id === area.areaId);
-      return {
-        area: areaData?.name.replace(/^[IVX]+\.\s*/, '') || `Área ${area.areaId}`,
-        score: area.percentage,
-        gap: 100 - area.percentage
-      };
-    });
-
-  // Dados para o heatmap (categorias por área)
-  const heatmapData = assessment.areaScores.map((area) => {
+  // 4.3 Painel de Conformidade por Área
+  const conformityData = assessment.areaScores.map((area) => {
     const areaData = faiqAreas.find(a => a.id === area.areaId);
-    const categories = area.categoryScores.map((cat) => ({
-      name: cat.categoryId,
-      score: cat.percentage
-    }));
-    
     return {
-      area: areaData?.name.replace(/^[IVX]+\.\s*/, '') || `Área ${area.areaId}`,
-      avgScore: area.percentage,
-      categories
+      area: areaData?.name.replace(/^[IVX]+\.\s*/, '').replace(/^Área \d+:\s*/, '') || `Área ${area.areaId}`,
+      percentage: area.percentage
     };
   });
 
-  const getColor = (score: number) => {
-    if (score >= 70) return '#1FA87A';
-    if (score >= 50) return '#3B82F6';
-    return '#F28C28';
+  // 4.4 Heatmap de Risco
+  const heatmapData = assessment.areaScores.map((area) => {
+    const areaData = faiqAreas.find(a => a.id === area.areaId);
+    const riskLevel = area.percentage >= 70 ? 'Baixo' : area.percentage >= 50 ? 'Moderado' : 'Alto';
+    return {
+      area: areaData?.name.replace(/^[IVX]+\.\s*/, '').replace(/^Área \d+:\s*/, '') || `Área ${area.areaId}`,
+      score: area.percentage,
+      riskLevel
+    };
+  }).sort((a, b) => a.score - b.score); // Ordenar por maior risco
+
+  // 4.5 Indicadores Críticos (score = 0)
+  const criticalIndicators: Array<{area: string, category: string, indicator: string}> = [];
+  assessment.areaScores.forEach((area) => {
+    const areaData = faiqAreas.find(a => a.id === area.areaId);
+    area.categoryScores.forEach((cat) => {
+      const categoryData = areaData?.categories.find(c => c.id === cat.categoryId);
+      cat.indicatorScores.forEach((ind, idx) => {
+        if (ind.score === 0) {
+          const indicator = categoryData?.indicators[idx];
+          if (indicator) {
+            criticalIndicators.push({
+              area: areaData?.name.replace(/^[IVX]+\.\s*/, '').replace(/^Área \d+:\s*/, '') || `Área ${area.areaId}`,
+              category: categoryData?.name || `Categoria ${cat.categoryId}`,
+              indicator: indicator.code
+            });
+          }
+        }
+      });
+    });
+  });
+
+  const getColorByScore = (score: number) => {
+    if (score >= 70) return 'hsl(var(--primary))';
+    if (score >= 50) return 'hsl(var(--chart-quality))';
+    return 'hsl(var(--chart-standard))';
+  };
+
+  const getRiskColor = (score: number) => {
+    if (score >= 70) return 'hsl(var(--chart-low-risk))'; // Cinza claro
+    if (score >= 50) return 'hsl(var(--chart-medium-risk))'; // Laranja médio
+    return 'hsl(var(--chart-high-risk))'; // Laranja forte
   };
 
   return (
     <div className="grid gap-6">
-      {/* Radar de Maturidade */}
+      {/* 4.1 Radar de Maturidade */}
       <Card>
         <CardHeader>
-          <CardTitle>Radar de Maturidade por Área</CardTitle>
+          <CardTitle>Painel de Maturidade por Área</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground mt-2">
+            O painel a seguir apresenta o nível de maturidade da organização nas dez áreas estruturantes da FAIQ.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={400}>
+          <ResponsiveContainer width="100%" height={450}>
             <RadarChart data={radarData}>
-              <PolarGrid />
+              <PolarGrid stroke="hsl(var(--border))" strokeWidth={0.5} />
               <PolarAngleAxis 
                 dataKey="area" 
-                tick={{ fill: '#4B535A', fontSize: 12 }}
+                tick={{ fill: 'hsl(var(--foreground))', fontSize: 11, fontWeight: 500 }}
               />
-              <PolarRadiusAxis angle={90} domain={[0, 100]} />
+              <PolarRadiusAxis 
+                angle={90} 
+                domain={[0, 1]} 
+                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}
+              />
               <Radar 
-                name="Score" 
+                name="Maturidade" 
                 dataKey="score" 
-                stroke="#1FA87A" 
-                fill="#1FA87A" 
-                fillOpacity={0.6} 
+                stroke="hsl(var(--primary))" 
+                fill="hsl(var(--primary))" 
+                fillOpacity={0.3} 
+                strokeWidth={2}
               />
-              <Tooltip />
+              <Tooltip 
+                formatter={(value: number) => `${(value * 100).toFixed(1)}%`}
+                contentStyle={{ 
+                  backgroundColor: 'hsl(var(--popover))', 
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '6px'
+                }}
+              />
             </RadarChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
 
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Distribuição por Nível */}
+        {/* 4.2 Distribuição por Categoria */}
         <Card>
           <CardHeader>
             <CardTitle>Distribuição por Classificação</CardTitle>
+            <CardDescription className="text-sm text-muted-foreground mt-2">
+              Este bloco sintetiza o desempenho global, permitindo a visualização da distribuição entre níveis essenciais, intermediários e avançados.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -126,68 +160,136 @@ export function DashboardRelatorio({ assessment }: DashboardRelatorioProps) {
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  outerRadius={80}
+                  outerRadius={90}
                   label={(entry) => `${entry.name}: ${entry.value}`}
+                  labelLine={{ stroke: 'hsl(var(--border))' }}
                 >
                   {distributionData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip />
-                <Legend />
+                <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--popover))', border: '1px solid hsl(var(--border))', borderRadius: '6px' }} />
+                <Legend wrapperStyle={{ fontSize: '13px' }} />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        {/* Pareto de Riscos */}
+        {/* 4.4 Mapa de Calor (Heatmap de Risco) */}
         <Card>
           <CardHeader>
-            <CardTitle>Pareto de Oportunidades (5 Menores Scores)</CardTitle>
+            <CardTitle>Mapa de Riscos por Área</CardTitle>
+            <CardDescription className="text-sm text-muted-foreground mt-2">
+              Intensidade de risco baseada no nível de maturidade: Baixo (≥70%), Moderado (50-70%), Alto (&lt;50%).
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={paretoData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" domain={[0, 100]} />
-                <YAxis dataKey="area" type="category" width={100} tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Bar dataKey="score" fill="#1FA87A">
-                  {paretoData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={getColor(entry.score)} />
+              <BarChart data={heatmapData} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeWidth={0.5} />
+                <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10 }} />
+                <YAxis dataKey="area" type="category" width={120} tick={{ fontSize: 10 }} />
+                <Tooltip 
+                  formatter={(value: number) => `${value.toFixed(1)}%`}
+                  contentStyle={{ backgroundColor: 'hsl(var(--popover))', border: '1px solid hsl(var(--border))', borderRadius: '6px' }}
+                />
+                <Bar dataKey="score" radius={[0, 4, 4, 0]}>
+                  {heatmapData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={getRiskColor(entry.score)} />
                   ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+            <div className="flex justify-center gap-4 mt-4 text-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded" style={{ backgroundColor: 'hsl(var(--chart-low-risk))' }} />
+                <span>Baixo</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded" style={{ backgroundColor: 'hsl(var(--chart-medium-risk))' }} />
+                <span>Moderado</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded" style={{ backgroundColor: 'hsl(var(--chart-high-risk))' }} />
+                <span>Alto</span>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Heatmap de Categorias */}
+      {/* 4.3 Painel de Conformidade */}
       <Card>
         <CardHeader>
-          <CardTitle>Heatmap: Score por Área</CardTitle>
+          <CardTitle>Painel de Conformidade por Área</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground mt-2">
+            Percentual de conformidade para cada uma das dez áreas estruturantes da FAIQ.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={heatmapData}>
-              <CartesianGrid strokeDasharray="3 3" />
+            <BarChart data={conformityData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeWidth={0.5} />
               <XAxis 
                 dataKey="area" 
                 angle={-45} 
                 textAnchor="end" 
-                height={120}
+                height={140}
                 tick={{ fontSize: 10 }}
               />
-              <YAxis domain={[0, 100]} />
-              <Tooltip />
-              <Bar dataKey="avgScore" radius={[8, 8, 0, 0]}>
-                {heatmapData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={getColor(entry.avgScore)} />
+              <YAxis 
+                domain={[0, 100]} 
+                tick={{ fontSize: 10 }}
+                label={{ value: 'Conformidade (%)', angle: -90, position: 'insideLeft', style: { fontSize: 11 } }}
+              />
+              <Tooltip 
+                formatter={(value: number) => `${value.toFixed(1)}%`}
+                contentStyle={{ backgroundColor: 'hsl(var(--popover))', border: '1px solid hsl(var(--border))', borderRadius: '6px' }}
+              />
+              <Bar dataKey="percentage" radius={[6, 6, 0, 0]}>
+                {conformityData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={getColorByScore(entry.percentage)} />
                 ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      {/* 4.5 Indicadores Críticos */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-chart-high-risk" />
+            Indicadores Críticos (Nota 0)
+          </CardTitle>
+          <CardDescription className="text-sm text-muted-foreground mt-2">
+            Lista de indicadores que receberam pontuação zero, requerendo atenção imediata.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {criticalIndicators.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <p>✓ Nenhum indicador crítico identificado</p>
+              <p className="text-sm mt-2">Todos os indicadores atingiram pelo menos o nível básico.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {criticalIndicators.map((item, idx) => (
+                <div key={idx} className="border-l-2 border-chart-high-risk bg-muted/30 px-4 py-3 rounded-r">
+                  <div className="flex items-start gap-3">
+                    <Badge variant="outline" className="mt-0.5 text-xs border-chart-high-risk text-chart-high-risk">
+                      {item.indicator}
+                    </Badge>
+                    <div className="flex-1">
+                      <p className="font-medium text-sm">{item.area}</p>
+                      <p className="text-xs text-muted-foreground">{item.category}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -86,7 +86,7 @@ export function GraficosNiveisRelatorio({ assessment }: GraficosNiveisRelatorioP
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold text-foreground">Avaliação FAIQ-S por Níveis de Qualidade</h1>
         <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">  
-          Estrutura de avaliação organizada em três níveis: Padrão, Qualidade e Excelência
+          Estrutura de avaliação organizada em três níveis - Padrão (atendimento mínimo), Qualidade (processo estruturado) e Excelência (processo robusto e auditável)
         </p>
       </div>
 
@@ -108,7 +108,7 @@ export function GraficosNiveisRelatorio({ assessment }: GraficosNiveisRelatorioP
               <CardHeader>
                 <CardTitle>Distribuição por Níveis</CardTitle>
                 <CardDescription>
-                  Porcentagem de indicadores em cada nível de qualidade
+                  Visualização proporcional da classificação dos indicadores avaliados
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -137,7 +137,7 @@ export function GraficosNiveisRelatorio({ assessment }: GraficosNiveisRelatorioP
               <CardHeader>
                 <CardTitle>Comparativo por Níveis</CardTitle>
                 <CardDescription>
-                  Número de indicadores classificados em cada nível
+                  Contagem absoluta de indicadores classificados em cada nível de maturidade
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -158,7 +158,7 @@ export function GraficosNiveisRelatorio({ assessment }: GraficosNiveisRelatorioP
             <CardHeader>
               <CardTitle>Desempenho por Área FAIQ-S</CardTitle>
               <CardDescription>
-                Distribuição das 10 áreas do FAIQ-S pelos níveis de qualidade
+                Distribuição das 10 áreas estruturantes pelos níveis de qualidade - Padrão, Qualidade e Excelência
               </CardDescription>
             </CardHeader>
             <CardContent>

@@ -165,7 +165,7 @@ export default function Relatorios() {
             <TabsTrigger value="dashboard">Dashboards</TabsTrigger>
             <TabsTrigger value="relatorio">Relatório Completo</TabsTrigger>
             <TabsTrigger value="graficos-niveis">Gráficos Níveis</TabsTrigger>
-            <TabsTrigger value="analise-ia">Análise IA</TabsTrigger>
+            <TabsTrigger value="analise-ia">Análise Estratégica</TabsTrigger>
           </TabsList>
           
           <TabsContent value="dashboard" className="mt-6">
