@@ -1,30 +1,86 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { CategoryPerformanceChart } from "@/components/dashboard/category-performance-chart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart3, PieChart as PieChartIcon } from "lucide-react";
+import { Assessment } from "@/types/faiq";
+import { faiqAreas } from "@/data/faiqData";
 
-const levelData = [
-  { name: "Padrão", count: 45, color: "hsl(var(--standard))" },
-  { name: "Qualidade", count: 30, color: "hsl(var(--quality))" },
-  { name: "Excelência", count: 25, color: "hsl(var(--excellence))" }
-];
+interface GraficosNiveisRelatorioProps {
+  assessment: Assessment;
+}
 
-const areasData = [
-  { area: "I. Jornada do Profissional", padrao: 12, qualidade: 8, excelencia: 5 },
-  { area: "II. Jornada do Cliente", padrao: 10, qualidade: 7, excelencia: 8 },
-  { area: "III. Gestão de Processos", padrao: 8, qualidade: 9, excelencia: 6 },
-  { area: "IV. Liderança e Governança", padrao: 15, qualidade: 5, excelencia: 3 },
-  { area: "V. Estratégia e Inovação", padrao: 11, qualidade: 8, excelencia: 7 },
-  { area: "VI. Resultados Organizacionais", padrao: 14, qualidade: 6, excelencia: 4 },
-  { area: "VII. Informação e Conhecimento", padrao: 9, qualidade: 9, excelencia: 8 },
-  { area: "VIII. Responsabilidade Social", padrao: 13, qualidade: 7, excelencia: 5 },
-  { area: "IX. Relacionamento Interpessoal", padrao: 7, qualidade: 11, excelencia: 9 },
-  { area: "X. Sustentabilidade e Meio Ambiente", padrao: 6, qualidade: 10, excelencia: 12 }
-];
+export function GraficosNiveisRelatorio({ assessment }: GraficosNiveisRelatorioProps) {
+  // Calcular distribuição por níveis baseado nos indicadores reais
+  const calculateLevelDistribution = () => {
+    let excellenceCount = 0;
+    let qualityCount = 0;
+    let standardCount = 0;
 
-const GraficosNiveis = () => {
+    assessment.areaScores.forEach(areaScore => {
+      areaScore.categoryScores.forEach(categoryScore => {
+        categoryScore.indicatorScores.forEach(indicatorScore => {
+          // Classificar baseado no score do indicador
+          if (indicatorScore.score >= 0.8) {
+            excellenceCount++;
+          } else if (indicatorScore.score >= 0.5) {
+            qualityCount++;
+          } else {
+            standardCount++;
+          }
+        });
+      });
+    });
+
+    return [
+      { name: "Padrão", count: standardCount, color: "hsl(var(--standard))" },
+      { name: "Qualidade", count: qualityCount, color: "hsl(var(--quality))" },
+      { name: "Excelência", count: excellenceCount, color: "hsl(var(--excellence))" }
+    ];
+  };
+
+  // Calcular dados por área
+  const calculateAreasData = () => {
+    return faiqAreas.map(area => {
+      const areaScore = assessment.areaScores.find(as => as.areaId === area.id);
+      
+      if (!areaScore) {
+        return {
+          area: area.name,
+          padrao: 0,
+          qualidade: 0,
+          excelencia: 0
+        };
+      }
+
+      let excellenceCount = 0;
+      let qualityCount = 0;
+      let standardCount = 0;
+
+      areaScore.categoryScores.forEach(categoryScore => {
+        categoryScore.indicatorScores.forEach(indicatorScore => {
+          if (indicatorScore.score >= 0.8) {
+            excellenceCount++;
+          } else if (indicatorScore.score >= 0.5) {
+            qualityCount++;
+          } else {
+            standardCount++;
+          }
+        });
+      });
+
+      return {
+        area: area.name,
+        padrao: standardCount,
+        qualidade: qualityCount,
+        excelencia: excellenceCount
+      };
+    });
+  };
+
+  const levelData = calculateLevelDistribution();
+  const areasData = calculateAreasData();
+
   return (
     <div className="container mx-auto p-6 space-y-8">
       <div className="text-center space-y-4">
@@ -52,7 +108,7 @@ const GraficosNiveis = () => {
               <CardHeader>
                 <CardTitle>Distribuição por Níveis</CardTitle>
                 <CardDescription>
-                  Porcentagem de organizações em cada nível de qualidade
+                  Porcentagem de indicadores em cada nível de qualidade
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -81,7 +137,7 @@ const GraficosNiveis = () => {
               <CardHeader>
                 <CardTitle>Comparativo por Níveis</CardTitle>
                 <CardDescription>
-                  Número de organizações classificadas em cada nível
+                  Número de indicadores classificados em cada nível
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -129,11 +185,9 @@ const GraficosNiveis = () => {
         </TabsContent>
 
         <TabsContent value="categories">
-          <CategoryPerformanceChart />
+          <CategoryPerformanceChart assessment={assessment} />
         </TabsContent>
       </Tabs>
     </div>
   );
-};
-
-export default GraficosNiveis;
+}

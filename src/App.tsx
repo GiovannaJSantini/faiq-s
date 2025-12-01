@@ -12,7 +12,7 @@ import GerenciarClinicas from "./pages/GerenciarClinicas";
 import Relatorios from "./pages/Relatorios";
 import IndicadoresFaiq from "./pages/IndicadoresFaiq";
 import Usuarios from "./pages/Usuarios";
-import GraficosNiveis from "./pages/GraficosNiveis";
+
 import Institucional from "./pages/Institucional";
 import NotFound from "./pages/NotFound";
 
@@ -55,7 +55,6 @@ const App = () => (
                   <Route path="/relatorios" element={<Relatorios />} />
                   <Route path="/indicadores" element={<IndicadoresFaiq />} />
                   <Route path="/usuarios" element={<Usuarios />} />
-                  <Route path="/graficos-niveis" element={<GraficosNiveis />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>
