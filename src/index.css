@@ -1,141 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* FAIQ-S Design System - Nova Paleta Institucional */
-
 @layer base {
   :root {
+    /* Scientific Color System - Verde e Laranja Institucionais */
     --background: 0 0% 100%;
-    --foreground: 0 0% 18%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 18%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 18%;
-
-    /* Nova paleta institucional */
-    --primary: 155 56% 40%;        /* Verde: #2AA97C */
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 155 56% 45%;
-
-    --secondary: 38 100% 48%;       /* Laranja: #F4A300 */
-    --secondary-foreground: 0 0% 18%;
-
-    --muted: 35 32% 82%;            /* Bege: #D8C3A5 */
-    --muted-foreground: 0 0% 18%;
-
-    --accent: 38 100% 48%;          /* Laranja: #F4A300 */
-    --accent-foreground: 0 0% 18%;
-
-    /* Níveis de qualidade com nova paleta */
-    --excellence: 155 56% 40%;      /* Verde: #2AA97C */
-    --excellence-foreground: 0 0% 98%;
-    --excellence-light: 155 56% 95%;
-
-    --quality: 38 100% 48%;         /* Laranja: #F4A300 */
-    --quality-foreground: 0 0% 18%;
-    --quality-light: 38 100% 95%;
-
-    --standard: 35 32% 65%;         /* Bege escuro: #A68A6A */
-    --standard-foreground: 0 0% 18%;
-    --standard-light: 35 32% 92%;
-
-    --success: 155 56% 40%;         /* Verde: #2AA97C */
-    --success-foreground: 0 0% 98%;
-    --success-light: 155 56% 95%;
-
-    --warning: 38 100% 48%;         /* Laranja: #F4A300 */
-    --warning-foreground: 0 0% 18%;
-    --warning-light: 38 100% 95%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 35 32% 88%;
-    --input: 35 32% 88%;
-    --ring: 155 56% 40%;
-
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(155 56% 50%));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(40 100% 55%));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
-    --gradient-institutional: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--muted)) 100%);
+    --foreground: 204 20% 20%;
     
-    --shadow-soft: 0 2px 8px -2px hsl(var(--primary) / 0.08);
-    --shadow-medium: 0 4px 16px -4px hsl(var(--primary) / 0.12);
-    --shadow-strong: 0 8px 32px -8px hsl(var(--primary) / 0.16);
-    --shadow-institutional: 0 10px 40px -10px hsl(var(--primary) / 0.15);
-
-    --radius: 0.75rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 155 56% 40%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 35 32% 85%;
-    --sidebar-accent-foreground: 0 0% 20%;
-    --sidebar-border: 35 32% 88%;
-    --sidebar-ring: 155 56% 40%;
+    /* Primary - Verde Institucional */
+    --primary: 154 68% 39%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 154 68% 85%;
+    
+    /* Secondary - Cinza Científico */
+    --secondary: 204 15% 92%;
+    --secondary-foreground: 204 20% 25%;
+    
+    /* Accent - Laranja Destaque */
+    --accent: 30 88% 56%;
+    --accent-foreground: 0 0% 100%;
+    
+    /* Muted - Cinzas Neutros */
+    --muted: 204 15% 95%;
+    --muted-foreground: 204 10% 45%;
+    
+    /* Border & Input */
+    --border: 204 15% 87%;
+    --input: 204 15% 87%;
+    --ring: 154 68% 39%;
+    
+    /* Card */
+    --card: 0 0% 100%;
+    --card-foreground: 204 20% 20%;
+    
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 204 20% 20%;
+    
+    /* Destructive */
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Success - Verde Suave */
+    --success: 154 68% 39%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 154 68% 92%;
+    
+    /* Warning - Laranja Suave */
+    --warning: 30 88% 56%;
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 30 88% 93%;
+    
+    /* Assessment Levels - Mantendo compatibilidade */
+    --excellence: 154 68% 39%;
+    --excellence-foreground: 0 0% 100%;
+    --excellence-light: 154 68% 92%;
+    
+    --quality: 30 88% 56%;
+    --quality-foreground: 0 0% 100%;
+    --quality-light: 30 88% 93%;
+    
+    --standard: 204 10% 45%;
+    --standard-foreground: 0 0% 100%;
+    --standard-light: 204 15% 92%;
+    
+    /* Sidebar - Fundo Claro Científico */
+    --sidebar-background: 204 15% 98%;
+    --sidebar-foreground: 204 20% 25%;
+    --sidebar-primary: 154 68% 39%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 204 15% 92%;
+    --sidebar-accent-foreground: 204 20% 25%;
+    --sidebar-border: 204 15% 90%;
+    --sidebar-ring: 154 68% 39%;
+    
+    /* Scientific Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(154, 68%, 39%) 0%, hsl(154, 68%, 50%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(30, 88%, 56%) 0%, hsl(30, 88%, 65%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(154, 68%, 39%) 0%, hsl(154, 68%, 92%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(154, 68%, 39%) 0%, hsl(204, 43%, 21%) 100%);
+    --gradient-institutional: linear-gradient(to right, hsl(154, 68%, 39%), hsl(30, 88%, 56%));
+    
+    /* Scientific Shadows */
+    --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-medium: 0 2px 4px 0 rgb(0 0 0 / 0.08);
+    --shadow-strong: 0 4px 8px 0 rgb(0 0 0 / 0.10);
+    --shadow-institutional: 0 4px 12px 0 rgb(28 124 84 / 0.12);
+    
+    --radius: 6px;
   }
 
   .dark {
-    --background: 0 0% 8%;
-    --foreground: 0 0% 95%;
-
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 95%;
-
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 95%;
-
-    --primary: 155 56% 45%;
-    --primary-foreground: 0 0% 8%;
-    --primary-glow: 155 56% 55%;
-
-    --secondary: 38 100% 55%;
-    --secondary-foreground: 0 0% 8%;
-
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
-
-    --accent: 38 100% 55%;
-    --accent-foreground: 0 0% 8%;
-
-    --excellence: 155 56% 45%;
-    --excellence-foreground: 0 0% 8%;
-    --excellence-light: 155 56% 15%;
-
-    --quality: 38 100% 55%;
-    --quality-foreground: 0 0% 8%;
-    --quality-light: 38 100% 15%;
-
-    --standard: 35 32% 70%;
-    --standard-foreground: 0 0% 8%;
-    --standard-light: 35 32% 15%;
-
-    --success: 155 56% 45%;
-    --success-foreground: 0 0% 8%;
-    --success-light: 155 56% 15%;
-
-    --warning: 38 100% 55%;
-    --warning-foreground: 0 0% 8%;
-    --warning-light: 38 100% 15%;
-
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 155 56% 45%;
-
-    --sidebar-background: 0 0% 10%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 155 56% 45%;
-    --sidebar-primary-foreground: 0 0% 8%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 15%;
-    --sidebar-ring: 155 56% 45%;
+    --background: 204 20% 8%;
+    --foreground: 204 5% 95%;
+    
+    --primary: 154 68% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 154 68% 25%;
+    
+    --secondary: 204 15% 15%;
+    --secondary-foreground: 204 5% 90%;
+    
+    --accent: 30 88% 60%;
+    --accent-foreground: 0 0% 100%;
+    
+    --muted: 204 15% 12%;
+    --muted-foreground: 204 10% 60%;
+    
+    --border: 204 15% 18%;
+    --input: 204 15% 18%;
+    --ring: 154 68% 45%;
+    
+    --card: 204 20% 10%;
+    --card-foreground: 204 5% 95%;
+    
+    --popover: 204 20% 10%;
+    --popover-foreground: 204 5% 95%;
+    
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --success: 154 68% 45%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 154 68% 20%;
+    
+    --warning: 30 88% 60%;
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 30 88% 25%;
+    
+    --excellence: 154 68% 45%;
+    --excellence-foreground: 0 0% 100%;
+    --excellence-light: 154 68% 20%;
+    
+    --quality: 30 88% 60%;
+    --quality-foreground: 0 0% 100%;
+    --quality-light: 30 88% 25%;
+    
+    --standard: 204 10% 50%;
+    --standard-foreground: 0 0% 100%;
+    --standard-light: 204 15% 20%;
+    
+    --sidebar-background: 204 20% 10%;
+    --sidebar-foreground: 204 5% 90%;
+    --sidebar-primary: 154 68% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 204 15% 15%;
+    --sidebar-accent-foreground: 204 5% 90%;
+    --sidebar-border: 204 15% 18%;
+    --sidebar-ring: 154 68% 45%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(154, 68%, 45%) 0%, hsl(154, 68%, 55%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(30, 88%, 60%) 0%, hsl(30, 88%, 70%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(154, 68%, 45%) 0%, hsl(154, 68%, 25%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(154, 68%, 45%) 0%, hsl(204, 43%, 30%) 100%);
+    --gradient-institutional: linear-gradient(to right, hsl(154, 68%, 45%), hsl(30, 88%, 60%));
+    
+    --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+    --shadow-medium: 0 2px 4px 0 rgb(0 0 0 / 0.20);
+    --shadow-strong: 0 4px 8px 0 rgb(0 0 0 / 0.25);
+    --shadow-institutional: 0 4px 12px 0 rgb(28 124 84 / 0.20);
   }
 }
 
@@ -143,44 +169,66 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground antialiased font-lato;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
 
-/* Melhorias de tipografia e espaçamento para design institucional */
 @layer components {
+  /* Scientific Chart Container */
   .chart-container {
-    @apply bg-card border border-border rounded-xl shadow-soft p-6;
+    @apply bg-card border border-border rounded-lg p-6 shadow-soft;
   }
   
+  /* Metric Cards - Clean Lab Style */
   .metric-card {
-    @apply bg-gradient-to-br from-card to-muted/20 border border-border rounded-lg p-4 shadow-soft hover:shadow-medium transition-all duration-200;
+    @apply bg-card border border-border rounded-lg p-6 shadow-soft transition-all duration-200 hover:shadow-medium;
   }
   
+  /* Institutional Cards */
   .institutional-card {
-    @apply bg-white border border-border rounded-xl p-6 shadow-institutional hover:shadow-strong transition-all duration-300;
+    @apply bg-card border border-border rounded-lg p-8 shadow-medium hover:shadow-strong transition-all duration-300;
   }
   
+  /* Scientific Gradients */
   .hero-gradient {
     @apply bg-gradient-hero;
   }
   
+  /* Section Headers */
   .section-header {
-    @apply text-2xl font-bold text-foreground mb-2 tracking-tight;
+    @apply text-3xl font-semibold text-foreground tracking-tight;
   }
   
   .section-description {
-    @apply text-muted-foreground leading-relaxed;
+    @apply text-base text-muted-foreground leading-relaxed;
   }
   
+  /* Buttons - Verde Primary, Laranja Accent */
   .institutional-button {
-    @apply bg-accent hover:bg-accent/90 text-accent-foreground font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-soft hover:shadow-medium;
+    @apply bg-primary text-primary-foreground font-medium px-6 py-3 rounded-md shadow-soft hover:bg-primary/90 transition-all duration-150;
+  }
+  
+  .institutional-button-accent {
+    @apply bg-accent text-accent-foreground font-medium px-6 py-3 rounded-md shadow-soft hover:bg-accent/90 transition-all duration-150;
   }
   
   .institutional-button-secondary {
-    @apply bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-soft hover:shadow-medium;
+    @apply bg-secondary text-secondary-foreground font-medium px-6 py-3 rounded-md shadow-soft hover:bg-secondary/80 transition-all duration-150;
+  }
+  
+  /* Status Feedback - Scientific */
+  .status-success {
+    @apply bg-success-light text-success border border-success/20 rounded-md px-3 py-2 text-sm font-medium;
+  }
+  
+  .status-warning {
+    @apply bg-warning-light text-warning border border-warning/20 rounded-md px-3 py-2 text-sm font-medium;
+  }
+  
+  .status-error {
+    @apply bg-destructive/10 text-destructive border border-destructive/20 rounded-md px-3 py-2 text-sm font-medium;
   }
 }
