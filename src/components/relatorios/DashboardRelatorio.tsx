@@ -43,9 +43,9 @@ export function DashboardRelatorio({ assessment }: DashboardRelatorioProps) {
   );
 
   const distributionData = [
-    { name: 'Excelência', value: excellenceCount, color: 'hsl(var(--chart-1))' },
-    { name: 'Qualidade', value: qualityCount, color: 'hsl(var(--chart-2))' },
-    { name: 'Padrão', value: standardCount, color: 'hsl(var(--chart-3))' }
+    { name: 'Excelência', value: excellenceCount, color: '#1FA87A' },
+    { name: 'Qualidade', value: qualityCount, color: '#3B82F6' },
+    { name: 'Padrão', value: standardCount, color: '#F28C28' }
   ];
 
   // Dados para Pareto de riscos (áreas com menor score)
@@ -77,9 +77,9 @@ export function DashboardRelatorio({ assessment }: DashboardRelatorioProps) {
   });
 
   const getColor = (score: number) => {
-    if (score >= 70) return 'hsl(var(--chart-1))';
-    if (score >= 50) return 'hsl(var(--chart-2))';
-    return 'hsl(var(--chart-3))';
+    if (score >= 70) return '#1FA87A';
+    if (score >= 50) return '#3B82F6';
+    return '#F28C28';
   };
 
   return (
@@ -95,14 +95,14 @@ export function DashboardRelatorio({ assessment }: DashboardRelatorioProps) {
               <PolarGrid />
               <PolarAngleAxis 
                 dataKey="area" 
-                tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }}
+                tick={{ fill: '#4B535A', fontSize: 12 }}
               />
               <PolarRadiusAxis angle={90} domain={[0, 100]} />
               <Radar 
                 name="Score" 
                 dataKey="score" 
-                stroke="hsl(var(--primary))" 
-                fill="hsl(var(--primary))" 
+                stroke="#1FA87A" 
+                fill="#1FA87A" 
                 fillOpacity={0.6} 
               />
               <Tooltip />
@@ -152,7 +152,7 @@ export function DashboardRelatorio({ assessment }: DashboardRelatorioProps) {
                 <XAxis type="number" domain={[0, 100]} />
                 <YAxis dataKey="area" type="category" width={100} tick={{ fontSize: 11 }} />
                 <Tooltip />
-                <Bar dataKey="score" fill="hsl(var(--primary))">
+                <Bar dataKey="score" fill="#1FA87A">
                   {paretoData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={getColor(entry.score)} />
                   ))}
