@@ -14,7 +14,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { useUserRole } from "@/hooks/useUserRole";
 
 const mainItems = [
@@ -41,8 +40,8 @@ export function AppSidebar() {
   
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive 
-      ? "bg-primary/10 text-primary font-medium border-r-2 border-primary" 
-      : "hover:bg-muted/50 text-muted-foreground hover:text-foreground";
+      ? "bg-primary/10 text-primary font-medium border-l-2 border-primary" 
+      : "hover:bg-sidebar-accent text-sidebar-foreground hover:text-primary transition-all duration-150";
 
   const handleViewToggle = () => {
     navigate("/institucional");
@@ -69,16 +68,16 @@ export function AppSidebar() {
 
   return (
     <Sidebar className={state === "collapsed" ? "w-16" : "w-64"}>
-      <SidebarContent className="bg-card">
-        <div className="p-4 border-b">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <Activity className="w-4 h-4 text-white" />
+      <SidebarContent className="bg-sidebar-background border-r border-sidebar-border">
+        <div className="p-4 border-b border-sidebar-border">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-soft">
+              <Activity className="w-5 h-5 text-primary-foreground" strokeWidth={2} />
             </div>
             {state !== "collapsed" && (
               <div>
-                <h2 className="font-bold text-primary">FAIQ-S</h2>
-                <p className="text-xs text-muted-foreground">Sistema de Qualidade</p>
+                <h2 className="font-semibold text-primary tracking-tight">FAIQ-S</h2>
+                <p className="text-xs text-muted-foreground font-medium">Sistema de Qualidade</p>
               </div>
             )}
           </div>
@@ -86,7 +85,9 @@ export function AppSidebar() {
 
         {filteredMainItems.length > 0 && (
           <SidebarGroup>
-            <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-4">
+              Menu Principal
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {filteredMainItems.map((item) => (
@@ -97,8 +98,8 @@ export function AppSidebar() {
                         end 
                         className={getNavCls}
                       >
-                        <item.icon className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-2'}`} />
-                        {state !== "collapsed" && <span>{item.title}</span>}
+                        <item.icon className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-3'}`} strokeWidth={1.5} />
+                        {state !== "collapsed" && <span className="font-medium">{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -110,7 +111,9 @@ export function AppSidebar() {
 
         {filteredSystemItems.length > 0 && (
           <SidebarGroup>
-            <SidebarGroupLabel>Sistema</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-4">
+              Sistema
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {filteredSystemItems.map((item) => (
@@ -120,8 +123,8 @@ export function AppSidebar() {
                         to={item.url} 
                         className={getNavCls}
                       >
-                        <item.icon className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-2'}`} />
-                        {state !== "collapsed" && <span>{item.title}</span>}
+                        <item.icon className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-3'}`} strokeWidth={1.5} />
+                        {state !== "collapsed" && <span className="font-medium">{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -132,19 +135,16 @@ export function AppSidebar() {
         )}
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t">
-        <div className="flex flex-col gap-2">
-          <Separator />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleViewToggle}
-            className="w-full justify-start text-muted-foreground hover:text-foreground"
-          >
-            <Eye className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-2'}`} />
-            {state !== "collapsed" && <span>Visualização Cliente</span>}
-          </Button>
-        </div>
+      <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar-background">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleViewToggle}
+          className="w-full justify-start text-muted-foreground hover:text-primary hover:bg-sidebar-accent transition-all duration-150"
+        >
+          <Eye className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-3'}`} strokeWidth={1.5} />
+          {state !== "collapsed" && <span className="font-medium">Visualização Cliente</span>}
+        </Button>
       </SidebarFooter>
     </Sidebar>
   );
