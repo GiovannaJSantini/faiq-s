@@ -1722,6 +1722,93 @@ export const faiqAreas: Area[] = [
             classification: 'qualidade'
           }
         ]
+      },
+      {
+        id: '7-6',
+        name: '6. Mídia, Comunicação e Representação',
+        description: 'Comunicação ética e uso de mídia',
+        indicators: [
+          {
+            id: 'VII.6.a',
+            code: 'VII.6.a',
+            name: 'A organização comunica em seus canais a representação precisa dos serviços prestados',
+            description: 'Representação precisa de serviços',
+            weight: 1,
+            classification: 'qualidade'
+          },
+          {
+            id: 'VII.6.b',
+            code: 'VII.6.b',
+            name: 'Proíbe declarações falsas ou enganosas',
+            description: 'Proibição de declarações falsas',
+            weight: 1,
+            classification: 'qualidade'
+          },
+          {
+            id: 'VII.6.c',
+            code: 'VII.6.c',
+            name: 'Possui diretrizes e políticas para uso da organização em redes sociais',
+            description: 'Diretrizes para redes sociais',
+            weight: 1,
+            classification: 'qualidade'
+          },
+          {
+            id: 'VII.6.d',
+            code: 'VII.6.d',
+            name: 'Uso cauteloso de depoimentos por profissionais clínicos, com diretrizes descritas',
+            description: 'Depoimentos de profissionais',
+            weight: 1,
+            classification: 'qualidade'
+          },
+          {
+            id: 'VII.6.e',
+            code: 'VII.6.e',
+            name: 'Uso ético de depoimentos de pacientes',
+            description: 'Depoimentos de pacientes',
+            weight: 1,
+            classification: 'qualidade'
+          },
+          {
+            id: 'VII.6.f',
+            code: 'VII.6.f',
+            name: 'Proibição de compartilhamento de informações identificáveis nas redes sociais',
+            description: 'Proteção de informações',
+            weight: 1,
+            classification: 'padrao'
+          },
+          {
+            id: 'VII.6.g',
+            code: 'VII.6.g',
+            name: 'Uso de histórias de pacientes com chamada pública ou relatos espontâneos',
+            description: 'Histórias de pacientes',
+            weight: 1,
+            classification: 'padrao'
+          },
+          {
+            id: 'VII.6.h',
+            code: 'VII.6.h',
+            name: 'Protocolos e procedimentos de gravações durante sessões clínicas',
+            description: 'Protocolos de gravação',
+            weight: 1,
+            classification: 'padrao'
+          },
+          {
+            id: 'VII.6.i',
+            code: 'VII.6.i',
+            name: 'Protocolos para separar marketing de atendimento clínico',
+            description: 'Separação marketing/clínico',
+            weight: 1,
+            classification: 'qualidade'
+          },
+          {
+            id: 'VII.6.j',
+            code: 'VII.6.j',
+            name: 'Renovação anual de autorizações de imagem e instruções para revogação',
+            description: 'Renovação de autorizações',
+            weight: 1,
+            classification: 'padrao'
+          }
+        ]
       }
     ]
   },

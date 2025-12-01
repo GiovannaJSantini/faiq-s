@@ -16,8 +16,10 @@ export const assessmentFormSchema = z.object({
 });
 
 export const indicatorScoreSchema = z.number()
-  .int('Pontuação deve ser um número inteiro')
   .min(0, 'Pontuação mínima é 0')
-  .max(2, 'Pontuação máxima é 2');
+  .max(1, 'Pontuação máxima é 1')
+  .refine((val) => val === 0 || val === 0.5 || val === 1, {
+    message: 'Pontuação deve ser 0, 0.5 ou 1'
+  });
 
 export type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
