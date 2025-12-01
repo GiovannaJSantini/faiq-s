@@ -21,6 +21,7 @@ import { RelatorioCompleto } from "@/components/relatorios/RelatorioCompleto";
 import { DashboardRelatorio } from "@/components/relatorios/DashboardRelatorio";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AIAnalysisSection } from "@/components/relatorios/AIAnalysisSection";
+import { GraficosNiveisRelatorio } from "@/components/relatorios/GraficosNiveisRelatorio";
 
 export default function Relatorios() {
   const { toast } = useToast();
@@ -160,9 +161,10 @@ export default function Relatorios() {
         </div>
 
         <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="dashboard">Dashboards</TabsTrigger>
             <TabsTrigger value="relatorio">Relatório Completo</TabsTrigger>
+            <TabsTrigger value="graficos-niveis">Gráficos Níveis</TabsTrigger>
             <TabsTrigger value="analise-ia">Análise IA</TabsTrigger>
           </TabsList>
           
@@ -176,6 +178,12 @@ export default function Relatorios() {
                 assessment={selectedAssessment} 
                 clinicName={selectedAssessment.clinicName}
               />
+            </ScrollArea>
+          </TabsContent>
+
+          <TabsContent value="graficos-niveis" className="mt-6">
+            <ScrollArea className="h-[calc(100vh-250px)]">
+              <GraficosNiveisRelatorio assessment={selectedAssessment} />
             </ScrollArea>
           </TabsContent>
 

@@ -1,6 +1,6 @@
 
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { BarChart3, Building2, FileText, Activity, Home, Users, Grid2X2, Eye } from "lucide-react";
+import { BarChart3, Building2, FileText, Activity, Home, Users, Eye } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -20,7 +20,6 @@ const mainItems = [
   { title: "Dashboard", url: "/", icon: Home, roles: ['admin', 'avaliador'] },
   { title: "Nova Avaliação", url: "/avaliacao", icon: Activity, roles: ['admin', 'avaliador'] },
   { title: "Gerenciar Clínicas", url: "/clinicas", icon: Building2, roles: ['admin'] },
-  { title: "Gráficos de Níveis", url: "/graficos-niveis", icon: Grid2X2, roles: ['admin', 'avaliador'] },
   { title: "Relatórios", url: "/relatorios", icon: BarChart3, roles: ['admin', 'avaliador', 'cliente'] },
 ];
 

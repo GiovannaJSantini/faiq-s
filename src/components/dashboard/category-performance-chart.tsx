@@ -23,6 +23,7 @@ import {
 import { faiqAreas, sampleAssessments } from "@/data/faiqData";
 import { useState } from "react";
 import { TrendingUp, TrendingDown, Award, Target, BarChart3 } from "lucide-react";
+import { Assessment } from "@/types/faiq";
 
 interface CategoryData {
   name: string;
@@ -34,7 +35,11 @@ interface CategoryData {
   completedIndicators: number;
 }
 
-export function CategoryPerformanceChart() {
+interface CategoryPerformanceChartProps {
+  assessment?: Assessment;
+}
+
+export function CategoryPerformanceChart({ assessment }: CategoryPerformanceChartProps = {}) {
   const [viewMode, setViewMode] = useState<'bars' | 'radar' | 'pie'>('bars');
 
   // Processar dados das categorias - TODAS as categorias de TODAS as áreas
@@ -42,9 +47,9 @@ export function CategoryPerformanceChart() {
   
   faiqAreas.forEach(area => {
     area.categories.forEach(category => {
-      // Buscar dados da avaliação mais recente
-      const assessment = sampleAssessments[0];
-      const areaScore = assessment?.areaScores.find(as => as.areaId === area.id);
+      // Usar assessment passado como prop ou fallback para dados de exemplo
+      const assessmentData = assessment || sampleAssessments[0];
+      const areaScore = assessmentData?.areaScores.find(as => as.areaId === area.id);
       const categoryScore = areaScore?.categoryScores.find(cs => cs.categoryId === category.id);
       
       const percentage = categoryScore?.percentage || Math.random() * 100;
