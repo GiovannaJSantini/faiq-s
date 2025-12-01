@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useClinics } from "@/hooks/useClinics";
 import { useAssessments } from "@/hooks/useAssessments";
 import { generateAssessmentPDF } from "@/utils/pdfGenerator";
+import { supabase } from "@/integrations/supabase/client";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useAuth } from "@/hooks/useAuth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -91,9 +92,21 @@ export default function Relatorios() {
     ? clinics.find(c => c.id === selectedClinic)
     : null;
 
-  const handleGeneratePDF = (assessment: Assessment) => {
+  const handleGeneratePDF = async (assessment: Assessment) => {
     try {
-      generateAssessmentPDF(assessment, assessment.clinicName);
+      // Fetch AI analysis if available
+      const { data: aiAnalysisData } = await supabase
+        .from("ai_report_analyses")
+        .select("*")
+        .eq("assessment_id", assessment.id)
+        .single();
+      
+      const aiAnalysis = aiAnalysisData ? {
+        ...aiAnalysisData,
+        area_specific_recommendations: aiAnalysisData.area_specific_recommendations as Record<string, string> | null
+      } : null;
+      
+      generateAssessmentPDF(assessment, assessment.clinicName, aiAnalysis);
       toast({
         title: "PDF gerado com sucesso",
         description: "O relatório foi baixado automaticamente",
