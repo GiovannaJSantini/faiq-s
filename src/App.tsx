@@ -14,7 +14,6 @@ import IndicadoresFaiq from "./pages/IndicadoresFaiq";
 import Usuarios from "./pages/Usuarios";
 
 import Institucional from "./pages/Institucional";
-import Lumen from "./pages/Lumen";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -45,7 +44,6 @@ const App = () => (
           <Routes>
             {/* Rota institucional (sem sidebar) */}
             <Route path="/institucional" element={<Institucional />} />
-            <Route path="/lumen" element={<Lumen />} />
             
             {/* Rotas do sistema interno (com sidebar) */}
             <Route path="/*" element={
