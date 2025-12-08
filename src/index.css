@@ -6,176 +6,176 @@
 
 @layer base {
   :root {
-    /* Scientific Color System - Verde e Laranja Institucionais */
+    /* FAIQ-S Brand Color System - Azul Navy, Dourado e Teal */
     --background: 0 0% 100%;
-    --foreground: 204 20% 20%;
+    --foreground: 220 25% 18%;
     
-    /* Primary - Verde Institucional */
-    --primary: 154 68% 39%;
+    /* Primary - Azul Navy Profundo */
+    --primary: 225 45% 22%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 154 68% 85%;
+    --primary-glow: 225 45% 85%;
     
-    /* Secondary - Cinza Científico */
-    --secondary: 204 15% 92%;
-    --secondary-foreground: 204 20% 25%;
+    /* Secondary - Teal Institucional */
+    --secondary: 185 75% 20%;
+    --secondary-foreground: 0 0% 100%;
     
-    /* Accent - Laranja Destaque */
-    --accent: 30 88% 56%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent - Dourado FAIQ-S */
+    --accent: 43 72% 52%;
+    --accent-foreground: 220 25% 15%;
     
-    /* Muted - Cinzas Neutros */
-    --muted: 204 15% 95%;
-    --muted-foreground: 204 10% 45%;
+    /* Muted - Cinzas com tom Teal */
+    --muted: 185 15% 95%;
+    --muted-foreground: 220 15% 45%;
     
     /* Border & Input */
-    --border: 204 15% 87%;
-    --input: 204 15% 87%;
-    --ring: 154 68% 39%;
+    --border: 185 15% 87%;
+    --input: 185 15% 87%;
+    --ring: 43 72% 52%;
     
     /* Card */
     --card: 0 0% 100%;
-    --card-foreground: 204 20% 20%;
+    --card-foreground: 220 25% 18%;
     
     /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 204 20% 20%;
+    --popover-foreground: 220 25% 18%;
     
     /* Destructive */
-    --destructive: 0 72% 58%;
+    --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
     
-    /* Success - Verde Suave */
-    --success: 154 68% 39%;
+    /* Success - Teal */
+    --success: 185 75% 25%;
     --success-foreground: 0 0% 100%;
-    --success-light: 154 68% 92%;
+    --success-light: 185 75% 92%;
     
-    /* Warning - Laranja Suave */
-    --warning: 30 88% 56%;
-    --warning-foreground: 0 0% 100%;
-    --warning-light: 30 88% 93%;
+    /* Warning - Dourado */
+    --warning: 43 72% 52%;
+    --warning-foreground: 220 25% 15%;
+    --warning-light: 43 72% 92%;
     
-    /* Assessment Levels - Mantendo compatibilidade */
-    --excellence: 154 68% 39%;
-    --excellence-foreground: 0 0% 100%;
-    --excellence-light: 154 68% 92%;
+    /* Assessment Levels */
+    --excellence: 43 72% 52%;
+    --excellence-foreground: 220 25% 15%;
+    --excellence-light: 43 72% 92%;
     
-    --quality: 30 88% 56%;
+    --quality: 185 75% 25%;
     --quality-foreground: 0 0% 100%;
-    --quality-light: 30 88% 93%;
+    --quality-light: 185 75% 92%;
     
-    --standard: 204 10% 45%;
+    --standard: 220 15% 50%;
     --standard-foreground: 0 0% 100%;
-    --standard-light: 204 15% 92%;
+    --standard-light: 220 15% 92%;
     
     /* Corporate Chart Colors for Reports */
-    --chart-quality: 220 70% 50%;
-    --chart-standard: 30 88% 56%;
-    --chart-low-risk: 210 16% 82%;
-    --chart-medium-risk: 30 80% 65%;
-    --chart-high-risk: 30 80% 52%;
+    --chart-quality: 185 75% 25%;
+    --chart-standard: 220 15% 50%;
+    --chart-low-risk: 185 30% 85%;
+    --chart-medium-risk: 43 72% 60%;
+    --chart-high-risk: 43 72% 45%;
     
-    /* Sidebar - Fundo Claro Científico */
-    --sidebar-background: 204 15% 98%;
-    --sidebar-foreground: 204 20% 25%;
-    --sidebar-primary: 154 68% 39%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 204 15% 92%;
-    --sidebar-accent-foreground: 204 20% 25%;
-    --sidebar-border: 204 15% 90%;
-    --sidebar-ring: 154 68% 39%;
+    /* Sidebar - Azul Navy Escuro */
+    --sidebar-background: 225 45% 18%;
+    --sidebar-foreground: 43 72% 92%;
+    --sidebar-primary: 43 72% 52%;
+    --sidebar-primary-foreground: 220 25% 15%;
+    --sidebar-accent: 225 45% 25%;
+    --sidebar-accent-foreground: 43 72% 92%;
+    --sidebar-border: 225 45% 28%;
+    --sidebar-ring: 43 72% 52%;
     
-    /* Scientific Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(154, 68%, 39%) 0%, hsl(154, 68%, 50%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(30, 88%, 56%) 0%, hsl(30, 88%, 65%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(154, 68%, 39%) 0%, hsl(154, 68%, 92%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(154, 68%, 39%) 0%, hsl(204, 43%, 21%) 100%);
-    --gradient-institutional: linear-gradient(to right, hsl(154, 68%, 39%), hsl(30, 88%, 56%));
+    /* FAIQ-S Brand Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(225, 45%, 22%) 0%, hsl(185, 75%, 20%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(43, 72%, 52%) 0%, hsl(43, 72%, 62%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(185, 75%, 25%) 0%, hsl(185, 75%, 92%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(185, 75%, 20%) 0%, hsl(225, 45%, 18%) 100%);
+    --gradient-institutional: linear-gradient(to right, hsl(225, 45%, 22%), hsl(43, 72%, 52%));
     
-    /* Scientific Shadows */
-    --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-medium: 0 2px 4px 0 rgb(0 0 0 / 0.08);
-    --shadow-strong: 0 4px 8px 0 rgb(0 0 0 / 0.10);
-    --shadow-institutional: 0 4px 12px 0 rgb(28 124 84 / 0.12);
+    /* Shadows */
+    --shadow-soft: 0 1px 3px 0 rgb(0 0 0 / 0.08);
+    --shadow-medium: 0 4px 6px 0 rgb(0 0 0 / 0.10);
+    --shadow-strong: 0 8px 16px 0 rgb(0 0 0 / 0.12);
+    --shadow-institutional: 0 4px 12px 0 rgb(30 42 74 / 0.15);
     
-    --radius: 6px;
+    --radius: 8px;
   }
 
   .dark {
-    --background: 204 20% 8%;
-    --foreground: 204 5% 95%;
+    --background: 225 35% 8%;
+    --foreground: 43 20% 95%;
     
-    --primary: 154 68% 45%;
+    --primary: 225 45% 35%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 154 68% 25%;
+    --primary-glow: 225 45% 20%;
     
-    --secondary: 204 15% 15%;
-    --secondary-foreground: 204 5% 90%;
+    --secondary: 185 75% 28%;
+    --secondary-foreground: 0 0% 100%;
     
-    --accent: 30 88% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 43 72% 55%;
+    --accent-foreground: 220 25% 10%;
     
-    --muted: 204 15% 12%;
-    --muted-foreground: 204 10% 60%;
+    --muted: 225 25% 12%;
+    --muted-foreground: 220 10% 60%;
     
-    --border: 204 15% 18%;
-    --input: 204 15% 18%;
-    --ring: 154 68% 45%;
+    --border: 225 25% 18%;
+    --input: 225 25% 18%;
+    --ring: 43 72% 55%;
     
-    --card: 204 20% 10%;
-    --card-foreground: 204 5% 95%;
+    --card: 225 30% 10%;
+    --card-foreground: 43 20% 95%;
     
-    --popover: 204 20% 10%;
-    --popover-foreground: 204 5% 95%;
+    --popover: 225 30% 10%;
+    --popover-foreground: 43 20% 95%;
     
-    --destructive: 0 72% 58%;
+    --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
     
-    --success: 154 68% 45%;
+    --success: 185 75% 35%;
     --success-foreground: 0 0% 100%;
-    --success-light: 154 68% 20%;
+    --success-light: 185 75% 18%;
     
-    --warning: 30 88% 60%;
-    --warning-foreground: 0 0% 100%;
-    --warning-light: 30 88% 25%;
+    --warning: 43 72% 55%;
+    --warning-foreground: 220 25% 10%;
+    --warning-light: 43 72% 22%;
     
-    --excellence: 154 68% 45%;
-    --excellence-foreground: 0 0% 100%;
-    --excellence-light: 154 68% 20%;
+    --excellence: 43 72% 55%;
+    --excellence-foreground: 220 25% 10%;
+    --excellence-light: 43 72% 22%;
     
-    --quality: 30 88% 60%;
+    --quality: 185 75% 35%;
     --quality-foreground: 0 0% 100%;
-    --quality-light: 30 88% 25%;
+    --quality-light: 185 75% 18%;
     
-    --standard: 204 10% 50%;
+    --standard: 220 15% 55%;
     --standard-foreground: 0 0% 100%;
-    --standard-light: 204 15% 20%;
+    --standard-light: 220 15% 22%;
     
     /* Corporate Chart Colors for Reports (dark mode) */
-    --chart-quality: 220 70% 60%;
-    --chart-standard: 30 88% 60%;
-    --chart-low-risk: 210 16% 30%;
-    --chart-medium-risk: 30 80% 55%;
-    --chart-high-risk: 30 80% 50%;
+    --chart-quality: 185 75% 40%;
+    --chart-standard: 220 15% 55%;
+    --chart-low-risk: 185 30% 25%;
+    --chart-medium-risk: 43 72% 50%;
+    --chart-high-risk: 43 72% 40%;
     
-    --sidebar-background: 204 20% 10%;
-    --sidebar-foreground: 204 5% 90%;
-    --sidebar-primary: 154 68% 45%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 204 15% 15%;
-    --sidebar-accent-foreground: 204 5% 90%;
-    --sidebar-border: 204 15% 18%;
-    --sidebar-ring: 154 68% 45%;
+    --sidebar-background: 225 45% 12%;
+    --sidebar-foreground: 43 72% 90%;
+    --sidebar-primary: 43 72% 55%;
+    --sidebar-primary-foreground: 220 25% 10%;
+    --sidebar-accent: 225 45% 18%;
+    --sidebar-accent-foreground: 43 72% 90%;
+    --sidebar-border: 225 45% 22%;
+    --sidebar-ring: 43 72% 55%;
     
-    --gradient-primary: linear-gradient(135deg, hsl(154, 68%, 45%) 0%, hsl(154, 68%, 55%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(30, 88%, 60%) 0%, hsl(30, 88%, 70%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(154, 68%, 45%) 0%, hsl(154, 68%, 25%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(154, 68%, 45%) 0%, hsl(204, 43%, 30%) 100%);
-    --gradient-institutional: linear-gradient(to right, hsl(154, 68%, 45%), hsl(30, 88%, 60%));
+    --gradient-primary: linear-gradient(135deg, hsl(225, 45%, 35%) 0%, hsl(185, 75%, 28%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(43, 72%, 55%) 0%, hsl(43, 72%, 65%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(185, 75%, 35%) 0%, hsl(185, 75%, 18%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(185, 75%, 28%) 0%, hsl(225, 45%, 12%) 100%);
+    --gradient-institutional: linear-gradient(to right, hsl(225, 45%, 35%), hsl(43, 72%, 55%));
     
-    --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.15);
-    --shadow-medium: 0 2px 4px 0 rgb(0 0 0 / 0.20);
-    --shadow-strong: 0 4px 8px 0 rgb(0 0 0 / 0.25);
-    --shadow-institutional: 0 4px 12px 0 rgb(28 124 84 / 0.20);
+    --shadow-soft: 0 1px 3px 0 rgb(0 0 0 / 0.20);
+    --shadow-medium: 0 4px 6px 0 rgb(0 0 0 / 0.25);
+    --shadow-strong: 0 8px 16px 0 rgb(0 0 0 / 0.30);
+    --shadow-institutional: 0 4px 12px 0 rgb(30 42 74 / 0.25);
   }
 }
 
@@ -191,12 +191,12 @@
 }
 
 @layer components {
-  /* Scientific Chart Container */
+  /* FAIQ-S Chart Container */
   .chart-container {
     @apply bg-card border border-border rounded-lg p-6 shadow-soft;
   }
   
-  /* Metric Cards - Clean Lab Style */
+  /* Metric Cards - Clean Professional Style */
   .metric-card {
     @apply bg-card border border-border rounded-lg p-6 shadow-soft transition-all duration-200 hover:shadow-medium;
   }
@@ -206,7 +206,7 @@
     @apply bg-card border border-border rounded-lg p-8 shadow-medium hover:shadow-strong transition-all duration-300;
   }
   
-  /* Scientific Gradients */
+  /* Hero Gradient */
   .hero-gradient {
     @apply bg-gradient-hero;
   }
@@ -220,20 +220,20 @@
     @apply text-base text-muted-foreground leading-relaxed;
   }
   
-  /* Buttons - Verde Primary, Laranja Accent */
+  /* Buttons - Navy Primary, Gold Accent */
   .institutional-button {
-    @apply bg-primary text-primary-foreground font-medium px-6 py-3 rounded-md shadow-soft hover:bg-primary/90 transition-all duration-150;
+    @apply bg-primary text-primary-foreground font-medium px-6 py-3 rounded-lg shadow-soft hover:bg-primary/90 transition-all duration-150;
   }
   
   .institutional-button-accent {
-    @apply bg-accent text-accent-foreground font-medium px-6 py-3 rounded-md shadow-soft hover:bg-accent/90 transition-all duration-150;
+    @apply bg-accent text-accent-foreground font-semibold px-6 py-3 rounded-lg shadow-soft hover:bg-accent/90 transition-all duration-150;
   }
   
   .institutional-button-secondary {
-    @apply bg-secondary text-secondary-foreground font-medium px-6 py-3 rounded-md shadow-soft hover:bg-secondary/80 transition-all duration-150;
+    @apply bg-secondary text-secondary-foreground font-medium px-6 py-3 rounded-lg shadow-soft hover:bg-secondary/80 transition-all duration-150;
   }
   
-  /* Status Feedback - Scientific */
+  /* Status Feedback */
   .status-success {
     @apply bg-success-light text-success border border-success/20 rounded-md px-3 py-2 text-sm font-medium;
   }
@@ -244,5 +244,20 @@
   
   .status-error {
     @apply bg-destructive/10 text-destructive border border-destructive/20 rounded-md px-3 py-2 text-sm font-medium;
+  }
+  
+  /* Gold Text Utility */
+  .text-gold {
+    @apply text-accent;
+  }
+  
+  /* Navy Background Utility */
+  .bg-navy {
+    @apply bg-primary;
+  }
+  
+  /* Teal Background Utility */
+  .bg-teal {
+    @apply bg-secondary;
   }
 }

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useUserRole } from "@/hooks/useUserRole";
+import faiqLogo from "@/assets/faiq-s-logo.jpeg";
 
 const mainItems = [
   { title: "Dashboard", url: "/", icon: Home, roles: ['admin', 'avaliador'] },
@@ -39,8 +40,8 @@ export function AppSidebar() {
   
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive 
-      ? "bg-primary/10 text-primary font-medium border-l-2 border-primary" 
-      : "hover:bg-sidebar-accent text-sidebar-foreground hover:text-primary transition-all duration-150";
+      ? "bg-sidebar-accent text-sidebar-primary font-medium border-l-2 border-sidebar-primary" 
+      : "hover:bg-sidebar-accent text-sidebar-foreground hover:text-sidebar-primary transition-all duration-150";
 
   const handleViewToggle = () => {
     navigate("/institucional");
@@ -58,8 +59,8 @@ export function AppSidebar() {
   if (isLoading) {
     return (
       <Sidebar className={state === "collapsed" ? "w-16" : "w-64"}>
-        <SidebarContent className="bg-card flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <SidebarContent className="bg-sidebar-background flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sidebar-primary"></div>
         </SidebarContent>
       </Sidebar>
     );
@@ -70,13 +71,15 @@ export function AppSidebar() {
       <SidebarContent className="bg-sidebar-background border-r border-sidebar-border">
         <div className="p-4 border-b border-sidebar-border">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-soft">
-              <Activity className="w-5 h-5 text-primary-foreground" strokeWidth={2} />
-            </div>
+            <img 
+              src={faiqLogo} 
+              alt="FAIQ-S Logo" 
+              className="w-10 h-10 rounded-lg object-cover shadow-soft"
+            />
             {state !== "collapsed" && (
               <div>
-                <h2 className="font-semibold text-primary tracking-tight">FAIQ-S</h2>
-                <p className="text-xs text-muted-foreground font-medium">Sistema de Qualidade</p>
+                <h2 className="font-semibold text-sidebar-primary tracking-tight">FAIQ-S</h2>
+                <p className="text-xs text-sidebar-foreground/70 font-medium">Sistema de Qualidade</p>
               </div>
             )}
           </div>
@@ -84,7 +87,7 @@ export function AppSidebar() {
 
         {filteredMainItems.length > 0 && (
           <SidebarGroup>
-            <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-4">
+            <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground/60 uppercase tracking-wide px-4">
               Menu Principal
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -110,7 +113,7 @@ export function AppSidebar() {
 
         {filteredSystemItems.length > 0 && (
           <SidebarGroup>
-            <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-4">
+            <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground/60 uppercase tracking-wide px-4">
               Sistema
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -139,7 +142,7 @@ export function AppSidebar() {
           variant="ghost"
           size="sm"
           onClick={handleViewToggle}
-          className="w-full justify-start text-muted-foreground hover:text-primary hover:bg-sidebar-accent transition-all duration-150"
+          className="w-full justify-start text-sidebar-foreground/70 hover:text-sidebar-primary hover:bg-sidebar-accent transition-all duration-150"
         >
           <Eye className={`h-4 w-4 ${state === "collapsed" ? 'mx-auto' : 'mr-3'}`} strokeWidth={1.5} />
           {state !== "collapsed" && <span className="font-medium">Visualização Cliente</span>}
