@@ -1,8 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import { CategoryPerformanceChart } from "@/components/dashboard/category-performance-chart";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart3, PieChart as PieChartIcon } from "lucide-react";
 import { Assessment } from "@/types/faiq";
 import { faiqAreas } from "@/data/faiqData";
 
@@ -90,104 +87,87 @@ export function GraficosNiveisRelatorio({ assessment }: GraficosNiveisRelatorioP
         </p>
       </div>
 
-      <Tabs defaultValue="areas" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-8">
-          <TabsTrigger value="areas" className="flex items-center gap-2">
-            <BarChart3 className="w-4 h-4" />
-            Desempenho por Área
-          </TabsTrigger>
-          <TabsTrigger value="categories" className="flex items-center gap-2">
-            <PieChartIcon className="w-4 h-4" />
-            Desempenho por Categoria
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="areas" className="space-y-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Card className="chart-container">
-              <CardHeader>
-                <CardTitle>Distribuição por Níveis</CardTitle>
-                <CardDescription>
-                  Visualização proporcional da classificação dos indicadores avaliados
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={levelData}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="count"
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {levelData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            <Card className="chart-container">
-              <CardHeader>
-                <CardTitle>Comparativo por Níveis</CardTitle>
-                <CardDescription>
-                  Contagem absoluta de indicadores classificados em cada nível de maturidade
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={levelData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </div>
-
+      <div className="space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card className="chart-container">
             <CardHeader>
-              <CardTitle>Desempenho por Área FAIQ-S</CardTitle>
+              <CardTitle>Distribuição por Níveis</CardTitle>
               <CardDescription>
-                Distribuição das 10 áreas estruturantes pelos níveis de qualidade - Padrão, Qualidade e Excelência
+                Visualização proporcional da classificação dos indicadores avaliados
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={500}>
-                <BarChart data={areasData} margin={{ top: 20, right: 30, left: 20, bottom: 100 }}>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={levelData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="count"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {levelData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card className="chart-container">
+            <CardHeader>
+              <CardTitle>Comparativo por Níveis</CardTitle>
+              <CardDescription>
+                Contagem absoluta de indicadores classificados em cada nível de maturidade
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={levelData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis 
-                    dataKey="area" 
-                    angle={-45}
-                    textAnchor="end"
-                    height={120}
-                    fontSize={12}
-                    stroke="hsl(var(--muted-foreground))"
-                  />
+                  <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
                   <YAxis stroke="hsl(var(--muted-foreground))" />
                   <Tooltip />
-                  <Bar dataKey="padrao" stackId="a" fill="hsl(var(--standard))" name="Padrão" />
-                  <Bar dataKey="qualidade" stackId="a" fill="hsl(var(--quality))" name="Qualidade" />
-                  <Bar dataKey="excelencia" stackId="a" fill="hsl(var(--excellence))" name="Excelência" />
+                  <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
 
-        <TabsContent value="categories">
-          <CategoryPerformanceChart assessment={assessment} />
-        </TabsContent>
-      </Tabs>
+        <Card className="chart-container">
+          <CardHeader>
+            <CardTitle>Desempenho por Área FAIQ-S</CardTitle>
+            <CardDescription>
+              Distribuição das 10 áreas estruturantes pelos níveis de qualidade - Padrão, Qualidade e Excelência
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={500}>
+              <BarChart data={areasData} margin={{ top: 20, right: 30, left: 20, bottom: 100 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis 
+                  dataKey="area" 
+                  angle={-45}
+                  textAnchor="end"
+                  height={120}
+                  fontSize={12}
+                  stroke="hsl(var(--muted-foreground))"
+                />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip />
+                <Bar dataKey="padrao" stackId="a" fill="hsl(var(--standard))" name="Padrão" />
+                <Bar dataKey="qualidade" stackId="a" fill="hsl(var(--quality))" name="Qualidade" />
+                <Bar dataKey="excelencia" stackId="a" fill="hsl(var(--excellence))" name="Excelência" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
