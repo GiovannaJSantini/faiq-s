@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, Sparkles, Edit, Save, RotateCcw } from "lucide-react";
+import { Loader2, FileText, Edit, Save, RotateCcw } from "lucide-react";
 import { useAIAnalysis, AIAnalysis } from "@/hooks/useAIAnalysis";
 import { Badge } from "@/components/ui/badge";
+import { sanitizeText } from "@/lib/textSanitizer";
 
 interface AIAnalysisSectionProps {
   assessmentId: string;
@@ -39,13 +40,20 @@ export function AIAnalysisSection({ assessmentId }: AIAnalysisSectionProps) {
     }
   };
 
+  // Sanitize value for display (removes markdown, emojis, etc.)
+  const getDisplayValue = (value: string | null | undefined): string => {
+    if (!value) return '';
+    return editMode ? value : sanitizeText(value);
+  };
+
   const renderEditableField = (
     field: keyof AIAnalysis,
     label: string,
     description?: string,
     rows: number = 6
   ) => {
-    const value = editMode[field] ? (editedValues[field] as string) : (analysis?.[field] as string);
+    const rawValue = editMode[field] ? (editedValues[field] as string) : (analysis?.[field] as string);
+    const displayValue = editMode[field] ? rawValue : sanitizeText(rawValue);
     const isEditing = editMode[field];
 
     return (
@@ -93,7 +101,7 @@ export function AIAnalysisSection({ assessmentId }: AIAnalysisSectionProps) {
           </div>
         </div>
         <Textarea
-          value={value || ""}
+          value={displayValue || ""}
           onChange={(e) => setEditedValues({ ...editedValues, [field]: e.target.value })}
           rows={rows}
           disabled={!isEditing}
@@ -118,11 +126,11 @@ export function AIAnalysisSection({ assessmentId }: AIAnalysisSectionProps) {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-primary" />
-                Análise Inteligente com IA
+                <FileText className="h-5 w-5 text-primary" />
+                Análise Estratégica
               </CardTitle>
               <CardDescription>
-                Análise automática gerada por IA com campos editáveis
+                Análise estruturada com insights acionáveis e campos editáveis
               </CardDescription>
             </div>
             {analysis?.is_manually_edited && (
@@ -133,7 +141,7 @@ export function AIAnalysisSection({ assessmentId }: AIAnalysisSectionProps) {
         <CardContent className="space-y-6">
           {!analysis ? (
             <div className="text-center py-8">
-              <Sparkles className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">Nenhuma análise gerada ainda</h3>
               <p className="text-muted-foreground mb-4">
                 Clique no botão abaixo para gerar uma análise estratégica desta avaliação
@@ -150,7 +158,7 @@ export function AIAnalysisSection({ assessmentId }: AIAnalysisSectionProps) {
                   </>
                 ) : (
                   <>
-                    <Sparkles className="h-5 w-5 mr-2" />
+                    <FileText className="h-5 w-5 mr-2" />
                     Gerar Análise Estratégica
                   </>
                 )}
@@ -182,8 +190,8 @@ export function AIAnalysisSection({ assessmentId }: AIAnalysisSectionProps) {
 
               {renderEditableField(
                 "executive_summary",
-                "📝 Sumário Executivo",
-                "Visão geral dos principais achados da avaliação",
+                "Sumário Executivo",
+                "Visão geral dos principais achados e nível de maturidade institucional",
                 8
               )}
 
@@ -192,26 +200,26 @@ export function AIAnalysisSection({ assessmentId }: AIAnalysisSectionProps) {
               <div className="grid md:grid-cols-2 gap-6">
                 {renderEditableField(
                   "swot_strengths",
-                  "💪 Forças (SWOT)",
-                  "Pontos fortes identificados",
+                  "Forças Institucionais",
+                  "Processos consolidados e competências identificadas",
                   6
                 )}
                 {renderEditableField(
                   "swot_weaknesses",
-                  "⚠️ Fraquezas (SWOT)",
-                  "Pontos fracos identificados",
+                  "Áreas de Atenção",
+                  "Lacunas e pontos de melhoria identificados",
                   6
                 )}
                 {renderEditableField(
                   "swot_opportunities",
-                  "🎯 Oportunidades (SWOT)",
-                  "Oportunidades de melhoria",
+                  "Oportunidades Estratégicas",
+                  "Potenciais de fortalecimento e desenvolvimento",
                   6
                 )}
                 {renderEditableField(
                   "swot_threats",
-                  "🚨 Ameaças (SWOT)",
-                  "Riscos e ameaças",
+                  "Riscos Identificados",
+                  "Ameaças e vulnerabilidades mapeadas",
                   6
                 )}
               </div>
@@ -220,8 +228,8 @@ export function AIAnalysisSection({ assessmentId }: AIAnalysisSectionProps) {
 
               {renderEditableField(
                 "risk_analysis",
-                "⚠️ Análise de Riscos",
-                "Riscos identificados com severidade e estratégias de mitigação",
+                "Mapa de Riscos por Categoria",
+                "Riscos categorizados (clínico, regulatório, organizacional) com severidade e estratégias de mitigação",
                 8
               )}
 
@@ -229,31 +237,31 @@ export function AIAnalysisSection({ assessmentId }: AIAnalysisSectionProps) {
 
               {renderEditableField(
                 "priority_recommendations",
-                "🎯 Recomendações Prioritárias",
-                "Top 5 ações ordenadas por impacto",
+                "Ações Prioritárias",
+                "Top 5 ações ordenadas por impacto institucional",
                 8
               )}
 
               <Separator />
 
               <div className="space-y-6">
-                <h3 className="text-lg font-semibold">📅 Planos de Ação</h3>
+                <h3 className="text-lg font-semibold">Planos de Ação</h3>
                 {renderEditableField(
                   "action_plan_30_days",
-                  "30 Dias - Ações Imediatas",
-                  "Ações de curto prazo e rápidas vitórias",
+                  "Horizonte Crítico (0-30 dias)",
+                  "Ações imediatas para mitigação de riscos prioritários",
                   6
                 )}
                 {renderEditableField(
                   "action_plan_90_days",
-                  "90 Dias - Melhorias Estruturais",
-                  "Ações de médio prazo com impacto estrutural",
+                  "Horizonte Estratégico (30-90 dias)",
+                  "Implementação de melhorias estruturais e capacitações",
                   6
                 )}
                 {renderEditableField(
                   "action_plan_12_months",
-                  "12 Meses - Transformação Estratégica",
-                  "Ações de longo prazo para transformação organizacional",
+                  "Horizonte de Maturidade (90-360 dias)",
+                  "Consolidação de governança e transformação institucional",
                   6
                 )}
               </div>
