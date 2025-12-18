@@ -14,7 +14,7 @@ serve(async (req) => {
 
   try {
     const { assessmentId } = await req.json();
-    console.log('Starting AI analysis for assessment:', assessmentId);
+    console.log('Starting analysis for assessment:', assessmentId);
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -56,7 +56,7 @@ serve(async (req) => {
 
     console.log('Assessment data fetched successfully');
 
-    // Build comprehensive context for AI
+    // Build comprehensive context
     const contextData = {
       clinic: assessment.clinics,
       assessmentDate: assessment.assessment_date,
@@ -80,6 +80,44 @@ serve(async (req) => {
       }))
     };
 
+    // System prompt for institutional premium output
+    const systemPrompt = `Você é um consultor clínico sênior especializado em gestão de qualidade hospitalar e farmacêutica, com experiência em governança clínica, compliance regulatório e excelência operacional.
+
+REGRAS DE FORMATAÇÃO OBRIGATÓRIAS:
+- NUNCA use markdown (**, __, ###, *, etc.)
+- NUNCA mencione inteligência artificial, IA, algoritmos ou sistemas automatizados
+- Use linguagem técnica, objetiva e institucional
+- Evite superlativos desnecessários e elogios genéricos
+- Parágrafos devem ter no máximo 4 linhas
+- Use bullet points com "• " (ponto com espaço) para listas
+- Escreva como se fosse um relatório de consultoria clínica premium
+
+TERMINOLOGIA PADRONIZADA (use consistentemente):
+- "qualidade clínica" (não "qualidade de atendimento")
+- "governança clínica" (não "gestão clínica")  
+- "maturidade institucional" (não "nível de desenvolvimento")
+- "compliance regulatório" (não "conformidade com regras")
+- "risco clínico" para impactos em segurança do paciente
+- "risco regulatório" para exposições legais e normativas
+- "risco organizacional" para impactos operacionais e de gestão
+
+CATEGORIZAÇÃO DE RISCOS:
+- Classifique CADA risco como: [Risco Clínico], [Risco Regulatório] ou [Risco Organizacional]
+- Vincule cada risco a uma área específica avaliada
+- Indique severidade: alto, moderado ou baixo
+
+PLANOS DE AÇÃO:
+- Derive CADA ação diretamente dos achados da avaliação
+- Evite recomendações genéricas não baseadas nos dados
+- Inclua: objetivo, responsável sugerido e evidência esperada
+- Seja específico e acionável
+
+ESTILO DO DOCUMENTO:
+- O texto deve parecer produzido manualmente por consultores especialistas
+- Deve ser confortável para leitura executiva
+- Defensável em auditorias e conselhos técnicos
+- Permitir leitura rápida por diretores e decisores`;
+
     // Call Lovable AI Gateway
     const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -92,19 +130,19 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `Você é um consultor sênior especializado em gestão de qualidade e processos organizacionais para clínicas de saúde e farmácias. Analise avaliações FAIQ-S e gere insights acionáveis, priorizando áreas com maior impacto no negócio e segurança do paciente. Seja específico, prático e orientado a resultados.`
+            content: systemPrompt
           },
           {
             role: 'user',
-            content: `Analise a seguinte avaliação FAIQ-S e gere uma análise detalhada:
+            content: `Analise a seguinte avaliação FAIQ-S e gere uma análise institucional estruturada:
 
-CLÍNICA: ${contextData.clinic.name} (${contextData.clinic.type})
+INSTITUIÇÃO: ${contextData.clinic.name} (${contextData.clinic.type})
 LOCALIZAÇÃO: ${contextData.clinic.location}
-DATA: ${contextData.assessmentDate}
-PONTUAÇÃO GERAL: ${contextData.overallScore.toFixed(1)}%
-CLASSIFICAÇÃO: ${contextData.classification}
+DATA DA AVALIAÇÃO: ${contextData.assessmentDate}
+MATURIDADE GERAL: ${contextData.overallScore.toFixed(1)}%
+CLASSIFICAÇÃO: ${contextData.classification === 'excelencia' ? 'Excelência' : contextData.classification === 'qualidade' ? 'Qualidade' : 'Padrão'}
 
-ÁREAS AVALIADAS:
+RESULTADOS POR ÁREA:
 ${contextData.areas.map((area: any) => `
 ${area.name}: ${area.score.toFixed(1)}%
 ${area.categories.map((cat: any) => `  - ${cat.name}: ${cat.score.toFixed(1)}%`).join('\n')}
@@ -114,64 +152,64 @@ INDICADORES CRÍTICOS (score < 0.5):
 ${contextData.areas.flatMap((area: any) => 
   area.categories.flatMap((cat: any) => 
     cat.indicators.filter((ind: any) => ind.score < 0.5)
-      .map((ind: any) => `- ${ind.name}: ${ind.score} ${ind.notes ? '(Obs: ' + ind.notes + ')' : ''}`)
+      .map((ind: any) => `- [${area.name}] ${ind.name}: ${ind.score} ${ind.notes ? '(Obs: ' + ind.notes + ')' : ''}`)
   )
 ).join('\n')}
 
-Gere uma análise estruturada usando a ferramenta fornecida.`
+Gere uma análise institucional premium usando a ferramenta fornecida. Lembre-se: sem markdown, sem menção a IA, linguagem institucional e técnica.`
           }
         ],
         tools: [{
           type: 'function',
           function: {
             name: 'generate_analysis',
-            description: 'Gera análise estruturada da avaliação FAIQ-S',
+            description: 'Gera análise institucional estruturada da avaliação FAIQ-S',
             parameters: {
               type: 'object',
               properties: {
                 executive_summary: {
                   type: 'string',
-                  description: 'Sumário executivo (2-3 parágrafos) destacando principais achados, pontuação geral e nível de maturidade'
+                  description: 'Sumário executivo direto e estratégico (2-3 parágrafos SEM markdown). Incluir: nível de maturidade institucional, principais riscos identificados, áreas prioritárias de atenção. Evitar elogios genéricos.'
                 },
                 swot_strengths: {
                   type: 'string',
-                  description: 'Forças identificadas (3-5 pontos em bullet list)'
+                  description: 'Forças institucionais identificadas (3-5 pontos com bullet "• "). Processos consolidados, competências diferenciadas, áreas com governança madura.'
                 },
                 swot_weaknesses: {
                   type: 'string',
-                  description: 'Fraquezas identificadas (3-5 pontos em bullet list)'
+                  description: 'Áreas de atenção identificadas (3-5 pontos com bullet "• "). Lacunas em processos, riscos operacionais, deficiências de governança.'
                 },
                 swot_opportunities: {
                   type: 'string',
-                  description: 'Oportunidades de melhoria (3-5 pontos em bullet list)'
+                  description: 'Oportunidades estratégicas (3-5 pontos com bullet "• "). Potenciais de desenvolvimento, alavancas de maturidade, diferenciais competitivos possíveis.'
                 },
                 swot_threats: {
                   type: 'string',
-                  description: 'Ameaças e riscos (3-5 pontos em bullet list)'
+                  description: 'Riscos e ameaças mapeados (3-5 pontos com bullet "• "). Vulnerabilidades regulatórias, riscos clínicos, exposições organizacionais.'
                 },
                 risk_analysis: {
                   type: 'string',
-                  description: 'Análise de riscos detalhada com severidade e estratégias de mitigação'
+                  description: 'Mapa de riscos CATEGORIZADO. Cada risco deve ter: categoria [Risco Clínico/Regulatório/Organizacional], área vinculada, severidade (alto/moderado/baixo), impacto potencial e estratégia de mitigação. SEM markdown.'
                 },
                 priority_recommendations: {
                   type: 'string',
-                  description: 'Top 5 recomendações prioritárias ordenadas por impacto'
+                  description: 'Top 5 ações prioritárias ordenadas por impacto institucional. Cada ação deve ser ESPECÍFICA, derivada dos achados, com responsável sugerido e evidência esperada. SEM markdown, usar bullets "• ".'
                 },
                 action_plan_30_days: {
                   type: 'string',
-                  description: 'Plano de ação para 30 dias (ações imediatas e rápidas vitórias)'
+                  description: 'Plano de ação 0-30 dias (horizonte crítico). Ações ESPECÍFICAS para mitigação de riscos prioritários identificados. Incluir: objetivo, responsável, evidência. Derivar dos achados, sem ações genéricas. SEM markdown.'
                 },
                 action_plan_90_days: {
                   type: 'string',
-                  description: 'Plano de ação para 90 dias (melhorias estruturais)'
+                  description: 'Plano de ação 30-90 dias (horizonte estratégico). Implementação de melhorias estruturais e capacitações. Ações ESPECÍFICAS derivadas dos achados. SEM markdown.'
                 },
                 action_plan_12_months: {
                   type: 'string',
-                  description: 'Plano de ação para 12 meses (transformação estratégica)'
+                  description: 'Plano de ação 90-360 dias (horizonte de maturidade). Consolidação de governança e transformação institucional. Ações ESPECÍFICAS para elevação sustentável. SEM markdown.'
                 },
                 area_specific_recommendations: {
                   type: 'object',
-                  description: 'Recomendações específicas para cada área com score < 75%',
+                  description: 'Recomendações específicas para cada área com score abaixo de 75%. Chave = nome da área, valor = recomendação específica.',
                   additionalProperties: {
                     type: 'string'
                   }
@@ -208,7 +246,7 @@ Gere uma análise estruturada usando a ferramenta fornecida.`
 
     if (aiResponse.status === 402) {
       return new Response(JSON.stringify({ 
-        error: 'Créditos de IA esgotados. Adicione créditos ao workspace.' 
+        error: 'Créditos esgotados. Adicione créditos ao workspace.' 
       }), {
         status: 402,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -218,16 +256,16 @@ Gere uma análise estruturada usando a ferramenta fornecida.`
     if (!aiResponse.ok) {
       const errorText = await aiResponse.text();
       console.error('AI Gateway error:', aiResponse.status, errorText);
-      throw new Error('Erro ao gerar análise IA');
+      throw new Error('Erro ao gerar análise');
     }
 
     const aiData = await aiResponse.json();
-    console.log('AI analysis generated successfully');
+    console.log('Analysis generated successfully');
 
     // Extract tool call arguments
     const toolCall = aiData.choices[0].message.tool_calls?.[0];
     if (!toolCall) {
-      throw new Error('AI não retornou análise estruturada');
+      throw new Error('Análise não retornou dados estruturados');
     }
 
     const analysis = JSON.parse(toolCall.function.arguments);

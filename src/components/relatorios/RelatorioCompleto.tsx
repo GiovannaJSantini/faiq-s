@@ -4,7 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { ClassificationBadge } from "@/components/ui/classification-badge";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Building2, Calendar, User, TrendingUp, CheckCircle, AlertTriangle, Target } from "lucide-react";
+import { Building2, Calendar, User, TrendingUp, CheckCircle, AlertTriangle, Target, Shield, Scale, Briefcase } from "lucide-react";
+import { sanitizeText, categorizeRisk } from "@/lib/textSanitizer";
 import { faiqAreas } from "@/data/faiqData";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -131,11 +132,21 @@ export function RelatorioCompleto({ assessment, clinicName }: RelatorioCompletoP
             </div>
           </div>
 
-          <p className="text-muted-foreground leading-relaxed italic border-l-2 border-primary pl-4">
-            A análise identifica padrões de maturidade consistentes em {strongAreas.length} áreas-chave, 
-            com oportunidades estratégicas de fortalecimento em {improvementAreas.length} dimensões críticas 
-            que impactam diretamente a governança clínica e a consistência operacional.
-          </p>
+          <div className="border-l-2 border-primary pl-4 space-y-3">
+            <p className="text-muted-foreground leading-relaxed">
+              A avaliação demonstra maturidade institucional {assessment.overallPercentage >= 70 ? 'avançada' : assessment.overallPercentage >= 50 ? 'intermediária' : 'inicial'} ({assessment.overallPercentage.toFixed(1)}%), 
+              com processos consolidados em {strongAreas.length} áreas estruturantes e necessidade de 
+              fortalecimento em {improvementAreas.length} dimensões com impacto direto na governança clínica.
+            </p>
+            {improvementAreas.length > 0 && (
+              <p className="text-sm text-chart-high-risk font-medium">
+                Principais riscos institucionais identificados nas áreas: {improvementAreas.map(a => {
+                  const areaData = faiqAreas.find(ad => ad.id === a.areaId);
+                  return areaData?.name.replace(/^[IVX]+\.\s*/, '').replace(/^Área \d+:\s*/, '');
+                }).join(', ')}.
+              </p>
+            )}
+          </div>
 
           <Separator />
 
@@ -272,12 +283,36 @@ export function RelatorioCompleto({ assessment, clinicName }: RelatorioCompletoP
                     </div>
                   )}
 
-                  <div className="pt-3 border-t">
-                    <p className="text-xs italic text-muted-foreground">
-                      <strong>Impacto Operacional e Clínico:</strong> As evidências observadas nesta área impactam 
-                      diretamente a consistência da intervenção e a governança clínica, com reflexos em conformidade 
-                      regulatória e qualidade percebida pelos stakeholders.
+                  <div className="pt-3 border-t space-y-2">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Leitura Estratégica</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {areaScore.percentage >= 70 
+                        ? `Esta área demonstra maturidade institucional consolidada, com processos auditáveis e sustentáveis. Recomenda-se manutenção do padrão atual e compartilhamento de boas práticas com demais áreas.`
+                        : areaScore.percentage >= 50
+                        ? `Apesar de resultados intermediários, esta área apresenta riscos residuais relevantes do ponto de vista regulatório e de governança clínica. Priorizar estruturação de processos nos próximos 90 dias.`
+                        : `Esta área representa vulnerabilidade institucional significativa, com impacto direto em compliance regulatório e qualidade do cuidado. Ação corretiva imediata recomendada nos próximos 30 dias.`
+                      }
                     </p>
+                    <div className="flex gap-2 mt-2">
+                      {areaScore.percentage < 70 && (
+                        <>
+                          <Badge variant="outline" className="text-xs flex items-center gap-1">
+                            <Shield className="h-3 w-3" />
+                            Risco Clínico
+                          </Badge>
+                          <Badge variant="outline" className="text-xs flex items-center gap-1">
+                            <Scale className="h-3 w-3" />
+                            Risco Regulatório
+                          </Badge>
+                        </>
+                      )}
+                      {areaScore.percentage < 50 && (
+                        <Badge variant="outline" className="text-xs flex items-center gap-1">
+                          <Briefcase className="h-3 w-3" />
+                          Risco Organizacional
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

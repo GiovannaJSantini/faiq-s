@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { faiqAreas } from '@/data/faiqData';
 import { AIAnalysis } from '@/hooks/useAIAnalysis';
-
+import { sanitizeText, formatRiskAnalysis } from '@/lib/textSanitizer';
 // Corporate Color Palette
 const PRIMARY_COLOR: [number, number, number] = [31, 168, 122]; // #1FA87A - Verde Institucional
 const ACCENT_COLOR: [number, number, number] = [242, 140, 40]; // #F28C28 - Laranja
@@ -59,12 +59,13 @@ export const generateAssessmentPDF = (
     currentY += 7;
   };
 
-  // Helper: Body text
+  // Helper: Body text with sanitization
   const addBodyText = (text: string, indent: number = 20) => {
+    const sanitized = sanitizeText(text);
     doc.setTextColor(...GRAY_DARK);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    const lines = doc.splitTextToSize(text, 190 - indent);
+    const lines = doc.splitTextToSize(sanitized, 190 - indent);
     lines.forEach((line: string) => {
       checkPageBreak(7);
       doc.text(line, indent, currentY);
@@ -72,13 +73,14 @@ export const generateAssessmentPDF = (
     });
   };
 
-  // Helper: Bullet point
+  // Helper: Bullet point with sanitization
   const addBullet = (text: string) => {
+    const sanitized = sanitizeText(text);
     checkPageBreak(7);
     doc.setTextColor(...GRAY_DARK);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    const lines = doc.splitTextToSize(text, 160);
+    const lines = doc.splitTextToSize(sanitized, 160);
     lines.forEach((line: string, index: number) => {
       checkPageBreak(7);
       if (index === 0) {
@@ -278,16 +280,17 @@ export const generateAssessmentPDF = (
   }
   currentY += 5;
 
-  // Consolidated interpretation
+  // Consolidated interpretation with institutional language
   addSubsectionTitle('Interpretação Consolidada');
   const governanceLevel = assessment.overallPercentage >= 70 ? 'robusta' :
                          assessment.overallPercentage >= 50 ? 'em desenvolvimento' : 'incipiente';
+  const riskLevel = criticalIndicators.length > 10 ? 'significativa' : criticalIndicators.length > 5 ? 'moderada' : 'controlada';
   addBodyText(
-    `A análise evidencia governança clínica ${governanceLevel}, com ${excellenceCount} indicadores ` +
+    `A avaliação evidencia governança clínica ${governanceLevel}, com ${excellenceCount} indicadores ` +
     `em nível de excelência (${((excellenceCount/totalIndicators)*100).toFixed(1)}%) e ${standardCount} indicadores ` +
     `em nível padrão (${((standardCount/totalIndicators)*100).toFixed(1)}%). ` +
-    `Os achados indicam ${criticalIndicators.length > 10 ? 'necessidade crítica' : criticalIndicators.length > 5 ? 'necessidade moderada' : 'baixa necessidade'} ` +
-    `de intervenções corretivas imediatas, com foco em redução de variabilidade operacional e fortalecimento de controles internos.`
+    `A exposição a riscos institucionais é ${riskLevel}, demandando ` +
+    `${criticalIndicators.length > 10 ? 'plano de ação emergencial com acompanhamento executivo' : criticalIndicators.length > 5 ? 'priorização de intervenções corretivas' : 'manutenção de monitoramento contínuo'}.`
   );
   currentY += 10;
 
@@ -553,7 +556,7 @@ export const generateAssessmentPDF = (
   
   addSectionTitle('6. Análise Qualitativa Detalhada');
 
-  // 6.1 SWOT Analysis
+  // 6.1 SWOT Analysis with sanitization
   addSubsectionTitle('6.1. Análise SWOT');
   
   // Use AI analysis if available, otherwise generate basic SWOT
@@ -563,10 +566,10 @@ export const generateAssessmentPDF = (
   let swotThreats = '';
 
   if (aiAnalysis) {
-    swotStrengths = aiAnalysis.swot_strengths || '';
-    swotWeaknesses = aiAnalysis.swot_weaknesses || '';
-    swotOpportunities = aiAnalysis.swot_opportunities || '';
-    swotThreats = aiAnalysis.swot_threats || '';
+    swotStrengths = sanitizeText(aiAnalysis.swot_strengths || '');
+    swotWeaknesses = sanitizeText(aiAnalysis.swot_weaknesses || '');
+    swotOpportunities = sanitizeText(aiAnalysis.swot_opportunities || '');
+    swotThreats = sanitizeText(aiAnalysis.swot_threats || '');
   } else {
     // Generate basic SWOT
     const strongAreasTop = assessment.areaScores.filter(a => a.percentage >= 70);
@@ -622,9 +625,11 @@ export const generateAssessmentPDF = (
 
   currentY = (doc as any).lastAutoTable.finalY + 15;
 
-  // 6.2 Risk Map
+  // 6.2 Risk Map with categorization
   checkPageBreak(40);
-  addSubsectionTitle('6.2. Mapa de Riscos por Área');
+  addSubsectionTitle('6.2. Mapa de Riscos por Categoria');
+  addBodyText('Classificação: [Risco Clínico] impacto em segurança do paciente | [Risco Regulatório] exposição legal/normativa | [Risco Organizacional] impacto operacional');
+  currentY += 5;
   
   const riskMapData = assessment.areaScores.map(areaScore => {
     const areaData = faiqAreas.find(a => a.id === areaScore.areaId);
@@ -632,17 +637,20 @@ export const generateAssessmentPDF = (
                      areaScore.percentage >= 50 ? 'Moderado' : 'Alto';
     const riskColor: [number, number, number] = areaScore.percentage >= 70 ? [200, 238, 220] :
                      areaScore.percentage >= 50 ? [255, 243, 205] : [255, 226, 201];
+    const riskCategory = areaScore.percentage < 50 ? 'Clínico / Regulatório' : 
+                        areaScore.percentage < 70 ? 'Organizacional' : 'Controlado';
     
     return [
       areaData?.name.replace(/^Área \d+: /, '') || `Área ${areaScore.areaId}`,
       `${areaScore.percentage.toFixed(1)}%`,
+      riskCategory,
       { content: riskLevel, styles: { fillColor: riskColor, fontStyle: 'bold' as const } }
     ];
   });
 
   autoTable(doc, {
     startY: currentY,
-    head: [['Área', 'Conformidade', 'Nível de Risco']],
+    head: [['Área', 'Conformidade', 'Categoria de Risco', 'Severidade']],
     body: riskMapData,
     theme: 'grid',
     headStyles: {
@@ -655,9 +663,10 @@ export const generateAssessmentPDF = (
       fontSize: 9
     },
     columnStyles: {
-      0: { cellWidth: 100 },
-      1: { cellWidth: 35, halign: 'center' },
-      2: { cellWidth: 35, halign: 'center' }
+      0: { cellWidth: 75 },
+      1: { cellWidth: 30, halign: 'center' },
+      2: { cellWidth: 45, halign: 'center' },
+      3: { cellWidth: 30, halign: 'center' }
     }
   });
 
@@ -694,40 +703,42 @@ export const generateAssessmentPDF = (
 
   // Use AI action plans if available
   if (aiAnalysis && (aiAnalysis.action_plan_30_days || aiAnalysis.action_plan_90_days || aiAnalysis.action_plan_12_months)) {
-    // 7.1 Critical (0-30 days)
+    // 7.1 Critical (0-30 days) with sanitization
     if (aiAnalysis.action_plan_30_days) {
       addSubsectionTitle('7.1. Horizonte Crítico (0-30 dias)');
-      addBodyText(aiAnalysis.action_plan_30_days);
+      addBodyText(sanitizeText(aiAnalysis.action_plan_30_days));
       currentY += 5;
     }
 
-    // 7.2 Strategic (30-90 days)
+    // 7.2 Strategic (30-90 days) with sanitization
     if (aiAnalysis.action_plan_90_days) {
       checkPageBreak(30);
       addSubsectionTitle('7.2. Horizonte Estratégico (30-90 dias)');
-      addBodyText(aiAnalysis.action_plan_90_days);
+      addBodyText(sanitizeText(aiAnalysis.action_plan_90_days));
       currentY += 5;
     }
 
-    // 7.3 Maturity (90-180 days) - split from 12 months
+    // 7.3 Maturity (90-180 days) with sanitization
     checkPageBreak(30);
     addSubsectionTitle('7.3. Horizonte de Maturidade (90-180 dias)');
     if (aiAnalysis.action_plan_12_months) {
-      const firstHalf = aiAnalysis.action_plan_12_months.substring(0, Math.floor(aiAnalysis.action_plan_12_months.length / 2));
+      const sanitized = sanitizeText(aiAnalysis.action_plan_12_months);
+      const firstHalf = sanitized.substring(0, Math.floor(sanitized.length / 2));
       addBodyText(firstHalf);
     } else {
-      addBodyText('• Consolidar processos estruturados no horizonte anterior\n• Implementar auditorias internas periódicas\n• Desenvolver indicadores de qualidade e dashboards de acompanhamento');
+      addBodyText('Consolidar processos estruturados no horizonte anterior. Implementar auditorias internas periódicas. Desenvolver indicadores de qualidade e dashboards de acompanhamento.');
     }
     currentY += 5;
 
-    // 7.4 Excellence (180-360 days)
+    // 7.4 Excellence (180-360 days) with sanitization
     checkPageBreak(30);
     addSubsectionTitle('7.4. Horizonte de Excelência (180-360 dias)');
     if (aiAnalysis.action_plan_12_months) {
-      const secondHalf = aiAnalysis.action_plan_12_months.substring(Math.floor(aiAnalysis.action_plan_12_months.length / 2));
+      const sanitized = sanitizeText(aiAnalysis.action_plan_12_months);
+      const secondHalf = sanitized.substring(Math.floor(sanitized.length / 2));
       addBodyText(secondHalf);
     } else {
-      addBodyText('• Buscar certificações e acreditações setoriais\n• Implementar cultura de inovação e melhoria contínua\n• Desenvolver benchmarking com organizações de excelência');
+      addBodyText('Buscar certificações e acreditações setoriais. Implementar cultura de inovação e melhoria contínua. Desenvolver benchmarking com organizações de excelência.');
     }
     currentY += 5;
   } else {
@@ -803,15 +814,16 @@ export const generateAssessmentPDF = (
   
   addSectionTitle('8. Recomendações Finais');
   
-  const recommendationText = aiAnalysis?.priority_recommendations ||
-    'Recomenda-se consolidar processos estruturantes que elevem a qualidade clínica, fortaleçam a governança ' +
+  const recommendationText = aiAnalysis?.priority_recommendations 
+    ? sanitizeText(aiAnalysis.priority_recommendations)
+    : 'Recomenda-se consolidar processos estruturantes que elevem a qualidade clínica, fortaleçam a governança ' +
     'e reduzam variabilidade operacional. A priorização deve focar em:\n\n' +
-    '• Estruturação imediata de áreas com conformidade abaixo de 50%, com acompanhamento executivo semanal;\n' +
-    '• Desenvolvimento de cultura de qualidade e compliance através de treinamentos estruturados e comunicação institucional;\n' +
-    '• Implementação de sistema de gestão integrado com indicadores de desempenho e dashboards de monitoramento;\n' +
-    '• Estabelecimento de comitês de qualidade com reuniões periódicas e planos de ação documentados;\n' +
-    '• Preparação para processos de certificação e acreditação setorial, alinhando práticas às melhores evidências disponíveis;\n' +
-    '• Auditoria interna periódica para garantir sustentabilidade das melhorias implementadas.';
+    'Estruturação imediata de áreas com conformidade abaixo de 50%, com acompanhamento executivo semanal.\n' +
+    'Desenvolvimento de cultura de qualidade e compliance através de treinamentos estruturados e comunicação institucional.\n' +
+    'Implementação de sistema de gestão integrado com indicadores de desempenho e dashboards de monitoramento.\n' +
+    'Estabelecimento de comitês de qualidade com reuniões periódicas e planos de ação documentados.\n' +
+    'Preparação para processos de certificação e acreditação setorial, alinhando práticas às melhores evidências disponíveis.\n' +
+    'Auditoria interna periódica para garantir sustentabilidade das melhorias implementadas.';
 
   addBodyText(recommendationText);
   currentY += 10;
