@@ -4,6 +4,7 @@ import { Mail, Phone, Menu, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { AuthModal } from "@/components/auth/AuthModal";
+import fluidaLogoHorizontal from "@/assets/fluida-logo-horizontal.jpeg";
 interface LumenLayoutProps {
   children: ReactNode;
 }
@@ -37,14 +38,12 @@ export function LumenLayout({
       <header className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#1FA87A] to-[#168F67] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">L</span>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">Grupo Fluida</h1>
-                <p className="text-xs text-muted-foreground">Consultoria em Excelência Clínica</p>
-              </div>
+            <div className="flex items-center">
+              <img 
+                src={fluidaLogoHorizontal} 
+                alt="Fluida - Consultoria em Excelência Clínica" 
+                className="h-12 w-auto"
+              />
             </div>
 
             {/* Desktop Navigation */}
@@ -122,11 +121,11 @@ export function LumenLayout({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold">
-                </span>
-                </div>
-                <h3 className="text-lg font-bold">Grupo Fluida</h3>
+                <img 
+                  src={fluidaLogoHorizontal} 
+                  alt="Fluida" 
+                  className="h-10 w-auto brightness-0 invert"
+                />
               </div>
               <p className="text-white/80 text-sm">Consultoria especializada em qualidade clínica, governança e sustentabilidade institucional para clínicas para populações neurodivergentes</p>
             </div>

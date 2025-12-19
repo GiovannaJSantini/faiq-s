@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Mail } from "lucide-react";
+import fluidaLogoVertical from "@/assets/fluida-logo-vertical.jpeg";
+
 export function HeroSection() {
   return <section className="relative bg-gradient-to-br from-[#1FA87A]/10 via-background to-background py-20 lg:py-32">
       <div className="container mx-auto px-4">
@@ -27,15 +29,12 @@ export function HeroSection() {
           </div>
 
           <div className="relative hidden lg:block">
-            <div className="aspect-square bg-gradient-to-br from-[#1FA87A]/20 to-[#1FA87A]/5 rounded-2xl flex items-center justify-center">
-              <div className="text-center space-y-4 p-8">
-                <div className="w-24 h-24 bg-[#1FA87A] rounded-full flex items-center justify-center mx-auto">
-                  <span className="text-4xl text-white font-bold">GF</span>
-                </div>
-                <p className="text-lg font-semibold text-foreground">
-                  Grupo Fluida<br />Consultoria Clínica
-                </p>
-              </div>
+            <div className="aspect-square bg-gradient-to-br from-[#1FA87A]/20 to-[#1FA87A]/5 rounded-2xl flex items-center justify-center p-8">
+              <img 
+                src={fluidaLogoVertical} 
+                alt="Fluida - Consultoria em Excelência Clínica" 
+                className="max-w-[280px] w-full h-auto rounded-xl"
+              />
             </div>
           </div>
         </div>
