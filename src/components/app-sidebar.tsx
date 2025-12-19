@@ -3,7 +3,7 @@ import { BarChart3, Building2, FileText, Activity, Home, Users, Eye } from "luci
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarFooter, useSidebar } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useUserRole } from "@/hooks/useUserRole";
-import faiqLogo from "@/assets/faiq-s-logo.jpeg";
+import fluidaLogo from "@/assets/fluida-logo-horizontal.jpeg";
 const mainItems = [{
   title: "Dashboard",
   url: "/",
@@ -71,7 +71,7 @@ export function AppSidebar() {
       <SidebarContent className="bg-sidebar-background border-r border-sidebar-border">
         <div className="p-4 border-b border-sidebar-border">
           <div className="flex items-center gap-3">
-            <img src={faiqLogo} alt="FAIQ-S Logo" className="w-10 h-10 rounded-lg object-cover shadow-soft" />
+            <img src={fluidaLogo} alt="Fluida Logo" className="w-10 h-10 rounded-lg object-cover shadow-soft" />
             {state !== "collapsed" && <div>
                 <h2 className="font-semibold text-sidebar-primary tracking-tight">Grupo Fluida</h2>
                 <p className="text-xs text-sidebar-foreground/70 font-medium">Sistema de Qualidade</p>
