@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Mail } from "lucide-react";
-
 export function HeroSection() {
-  return (
-    <section className="relative bg-gradient-to-br from-[#1FA87A]/10 via-background to-background py-20 lg:py-32">
+  return <section className="relative bg-gradient-to-br from-[#1FA87A]/10 via-background to-background py-20 lg:py-32">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
@@ -17,20 +15,13 @@ export function HeroSection() {
             
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button size="lg" asChild>
-                <a 
-                  href="https://forms.gle/zEAZXbcQ5eCK1McbA" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
+                <a href="https://forms.gle/zEAZXbcQ5eCK1McbA" target="_blank" rel="noopener noreferrer">
                   Solicitar Orçamento
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </a>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <a href="mailto:grupofluida@gmail.com">
-                  <Mail className="mr-2 w-4 h-4" />
-                  Falar com a equipe
-                </a>
+                
               </Button>
             </div>
           </div>
@@ -49,6 +40,5 @@ export function HeroSection() {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 }
