@@ -42,7 +42,7 @@ export function LumenLayout({
                 <span className="text-white font-bold text-lg">L</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">Lumen</h1>
+                <h1 className="text-xl font-bold text-foreground">Grupo Fluida</h1>
                 <p className="text-xs text-muted-foreground">Consultoria em Excelência Clínica</p>
               </div>
             </div>
@@ -123,14 +123,12 @@ export function LumenLayout({
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold">L</span>
+                  <span className="text-white font-bold">
+                </span>
                 </div>
                 <h3 className="text-lg font-bold">Grupo Fluida</h3>
               </div>
-              <p className="text-white/80 text-sm">
-                Consultoria especializada em excelência clínica, desenvolvimento organizacional 
-                e serviços para o espectro autista (TEA).
-              </p>
+              <p className="text-white/80 text-sm">Consultoria especializada em qualidade clínica, governança e sustentabilidade institucional para clínicas para populações neurodivergentes</p>
             </div>
 
             <div>
@@ -144,18 +142,10 @@ export function LumenLayout({
               </div>
             </div>
 
-            <div>
-              <h4 className="font-semibold mb-4">Links</h4>
-              <ul className="space-y-2 text-sm text-white/80">
-                <li><a href="#" className="hover:text-white transition-colors">Política de Privacidade</a></li>
-                
-              </ul>
-            </div>
+            
           </div>
 
-          <div className="border-t border-white/20 mt-8 pt-6 text-center text-sm text-white/80">
-            <p>© 2025 Grupo Fluida. Todos os direitos reservados.</p>
-          </div>
+          
         </div>
       </footer>
 
