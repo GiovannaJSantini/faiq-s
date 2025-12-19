@@ -4,7 +4,7 @@ import { Shield, Award, Crown } from "lucide-react";
 const levels = [
   {
     icon: Shield,
-    name: "Essencial",
+    name: "Padrão",
     tagline: "Base segura e estruturada",
     description: "Fundamentação técnica para instituições que buscam estabelecer processos básicos de qualidade e organização clínica.",
     color: "bg-blue-500"
