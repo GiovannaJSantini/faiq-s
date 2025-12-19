@@ -4,25 +4,27 @@ import { Mail, Phone, Menu, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { AuthModal } from "@/components/auth/AuthModal";
-
 interface LumenLayoutProps {
   children: ReactNode;
 }
-
-export function LumenLayout({ children }: LumenLayoutProps) {
+export function LumenLayout({
+  children
+}: LumenLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const { user } = useAuth();
+  const {
+    user
+  } = useAuth();
   const navigate = useNavigate();
-
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({
+        behavior: 'smooth'
+      });
       setMobileMenuOpen(false);
     }
   };
-
   const handleLoginClick = () => {
     if (user) {
       navigate('/');
@@ -30,9 +32,7 @@ export function LumenLayout({ children }: LumenLayoutProps) {
       setAuthModalOpen(true);
     }
   };
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50">
         <div className="container mx-auto px-4 py-4">
@@ -76,17 +76,13 @@ export function LumenLayout({ children }: LumenLayoutProps) {
             </nav>
 
             {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden text-foreground"
-            >
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden text-foreground">
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
 
           {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <nav className="lg:hidden mt-4 pb-4 flex flex-col gap-3">
+          {mobileMenuOpen && <nav className="lg:hidden mt-4 pb-4 flex flex-col gap-3">
               <button onClick={() => scrollToSection('sobre')} className="text-left text-foreground hover:text-primary transition-colors py-2">
                 Sobre
               </button>
@@ -111,8 +107,7 @@ export function LumenLayout({ children }: LumenLayoutProps) {
               <Button onClick={() => scrollToSection('orcamento')} className="w-full">
                 Solicitar Orçamento
               </Button>
-            </nav>
-          )}
+            </nav>}
         </div>
       </header>
 
@@ -130,7 +125,7 @@ export function LumenLayout({ children }: LumenLayoutProps) {
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold">L</span>
                 </div>
-                <h3 className="text-lg font-bold">Lumen</h3>
+                <h3 className="text-lg font-bold">Grupo Fluida</h3>
               </div>
               <p className="text-white/80 text-sm">
                 Consultoria especializada em excelência clínica, desenvolvimento organizacional 
@@ -141,13 +136,10 @@ export function LumenLayout({ children }: LumenLayoutProps) {
             <div>
               <h4 className="font-semibold mb-4">Contato</h4>
               <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  <span>+55 (11) 99999-9999</span>
-                </div>
+                
                 <div className="flex items-center gap-2">
                   <Mail className="w-4 h-4" />
-                  <span>contato@lumen.com.br</span>
+                  <span>grupofluida@gmail.com</span>
                 </div>
               </div>
             </div>
@@ -156,18 +148,17 @@ export function LumenLayout({ children }: LumenLayoutProps) {
               <h4 className="font-semibold mb-4">Links</h4>
               <ul className="space-y-2 text-sm text-white/80">
                 <li><a href="#" className="hover:text-white transition-colors">Política de Privacidade</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Termos de Uso</a></li>
+                
               </ul>
             </div>
           </div>
 
           <div className="border-t border-white/20 mt-8 pt-6 text-center text-sm text-white/80">
-            <p>&copy; 2024 Lumen Consultoria. Todos os direitos reservados.</p>
+            <p>© 2025 Grupo Fluida. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
 
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
-    </div>
-  );
+    </div>;
 }
