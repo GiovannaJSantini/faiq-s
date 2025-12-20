@@ -1,16 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import fluidaLogoVertical from "@/assets/fluida-logo-vertical.jpeg";
-
-const highlights = [
-  "Qualidade clínica baseada em evidências",
-  "Governança institucional estruturada",
-  "Processos certificáveis"
-];
-
+const highlights = ["Qualidade clínica baseada em evidências", "Governança institucional estruturada", "Processos certificáveis"];
 export function HeroSection() {
-  return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+  return <section className="relative min-h-[90vh] flex items-center overflow-hidden">
       {/* Background with gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-secondary/20 via-background to-accent/10" />
       
@@ -42,12 +35,10 @@ export function HeroSection() {
             
             {/* Highlights */}
             <ul className="space-y-3">
-              {highlights.map((item, index) => (
-                <li key={index} className="flex items-center gap-3 text-foreground">
+              {highlights.map((item, index) => <li key={index} className="flex items-center gap-3 text-foreground">
                   <CheckCircle2 className="w-5 h-5 text-secondary flex-shrink-0" />
                   <span>{item}</span>
-                </li>
-              ))}
+                </li>)}
             </ul>
             
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -71,26 +62,19 @@ export function HeroSection() {
               <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl blur-xl" />
               
               <div className="relative aspect-square bg-gradient-to-br from-card to-muted rounded-3xl flex items-center justify-center p-12 shadow-xl border border-border/50">
-                <img 
-                  src={fluidaLogoVertical} 
-                  alt="Fluida - Consultoria em Excelência Clínica" 
-                  className="max-w-[280px] w-full h-auto rounded-xl shadow-lg"
-                />
+                <img src={fluidaLogoVertical} alt="Fluida - Consultoria em Excelência Clínica" className="max-w-[280px] w-full h-auto rounded-xl shadow-lg" />
               </div>
               
               {/* Floating badges */}
               <div className="absolute -top-4 -right-4 px-4 py-2 bg-card rounded-full shadow-lg border border-border flex items-center gap-2">
                 <div className="w-3 h-3 bg-success rounded-full animate-pulse" />
-                <span className="text-sm font-medium">FAIQ-S Certificado</span>
+                
               </div>
               
-              <div className="absolute -bottom-4 -left-4 px-4 py-2 bg-card rounded-full shadow-lg border border-border">
-                <span className="text-sm font-medium text-muted-foreground">+50 clínicas atendidas</span>
-              </div>
+              
             </div>
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 }
