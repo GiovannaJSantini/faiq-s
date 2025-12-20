@@ -118,7 +118,7 @@ export function LumenLayout({
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             <div className="space-y-4">
-              <img src={fluidaLogoHorizontal} alt="Fluida" className="h-10 w-auto brightness-0 invert" />
+              
               <p className="text-background/70 text-sm leading-relaxed">
                 Consultoria especializada em qualidade clínica, governança e sustentabilidade 
                 institucional para clínicas para populações neurodivergentes.
